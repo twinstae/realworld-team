@@ -1,0 +1,40 @@
+{
+  "name": "front-realworld",
+  "version": "1.0.0",
+  "description": "realworld front react, redux, typescript with test",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack serve --progress --mode development",
+    "build": "webpack --progress --mode production"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twinstae/realworld-team.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/twinstae/realworld-team/issues"
+  },
+  "homepage": "https://github.com/twinstae/realworld-team#readme",
+  "dependencies": {
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-scripts": "3.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-react": "^7.12.10",
+    "babel-loader": "^8.2.2",
+    "css-loader": "^5.0.1",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.19.0",
+    "webpack-cli": "^4.4.0",
+    "webpack-dev-server": "^3.11.2"
+  }
+}
