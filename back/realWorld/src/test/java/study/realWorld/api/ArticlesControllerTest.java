@@ -1,22 +1,19 @@
 package study.realWorld.api;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import study.realWorld.api.dto.ArticleListDto;
 import study.realWorld.api.dto.ArticleResponseDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.HashMap;
 
-@ExtendWith(SpringExtension.class)
+//@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ArticlesControllerTest {
 
@@ -27,7 +24,7 @@ public class ArticlesControllerTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void articleResponseDtoTest(){
+    public void articleResponseDtoTest() {
         String title = "제목";
         String description = "개요";
         String body = "내용";
@@ -45,7 +42,7 @@ public class ArticlesControllerTest {
     }
 
     @Test
-    public void getArticleListTest(){
+    public void getArticleListTest() {
         String title = "제목";
         String description = "개요";
         String body = "내용";

@@ -1,4 +1,4 @@
-package study.realWorld.api;
+package study.realWorld.api.Controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
