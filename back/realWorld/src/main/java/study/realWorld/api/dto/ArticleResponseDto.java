@@ -13,14 +13,11 @@ public class ArticleResponseDto {
     private String body;
 
     @Builder
-    public ArticleResponseDto(String title, String description, String body) {
-        this.slug = toSlug(title);
+    public ArticleResponseDto(String slug,String title, String description, String body) {
+        this.slug = slug;
         this.title = title;
         this.description = description;
         this.body = body;
     }
 
-    public static String toSlug(String title) {
-        return title.toLowerCase().replaceAll("[\\&|[\\uFE30-\\uFFA0]|\\’|\\”|\\s\\?\\,\\.]+", "-");
-    }
 }
