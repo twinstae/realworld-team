@@ -2,70 +2,71 @@ package study.realWorld.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import study.realWorld.ArticlesTestingUtil;
 import study.realWorld.api.dto.ArticleListDto;
-import study.realWorld.api.dto.ArticleResponseDto;
+import study.realWorld.api.dto.ArticleDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
-//@ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArticlesControllerTest {
-
+public class ArticlesControllerTest extends ArticlesTestingUtil {
     @LocalServerPort
     private int port;
 
     @Autowired
     private TestRestTemplate restTemplate;
 
+    private String baseUrl(){
+        return "http://localhost:" + port + "/api/articles";
+    }
+
     @Test
     public void articleResponseDtoTest() {
-        String title = "제목";
-        String description = "개요";
-        String body = "내용";
-
-        ArticleResponseDto dto = ArticleResponseDto
+        ArticleDto responseDto = ArticleDto
                 .builder()
                 .title(title)
                 .description(description)
                 .body(body)
                 .build();
 
-        assertThat(dto.getTitle()).isEqualTo(title);
-        assertThat(dto.getDescription()).isEqualTo(description);
-        assertThat(dto.getBody()).isEqualTo(body);
+        assertArticlesResponseEqualToDto(responseDto, createDto);
     }
 
     @Test
     public void getArticleListTest() {
-        String title = "제목";
-        String description = "개요";
-        String body = "내용";
-
-        String baseUrl = "http://localhost:" + port + "/api/articles";
-
-        // restTemplate? http요청을 모의해주는 친구 = mockMvc perform
+        createArticleInit();
 
         ResponseEntity<ArticleListDto> responseEntity = restTemplate.getForEntity(
-                baseUrl, ArticleListDto.class
+                baseUrl(), ArticleListDto.class
         );
 
-        assertThat(responseEntity.getStatusCode())
-                .isEqualTo(HttpStatus.OK);
+        assertStatus(responseEntity, HttpStatus.OK);
 
         ArticleListDto responseBody = responseEntity.getBody();
-
         assertThat(responseBody.getArticlesCount()).isEqualTo(2);
 
-        ArticleResponseDto first = responseBody.getArticles().get(0);
+        ArticleDto first = responseBody.getArticles().get(0);
+        assertArticlesResponseEqualToDto(first, createDto);
+    }
 
-        assertThat(first.getTitle()).isEqualTo(title);
-        assertThat(first.getDescription()).isEqualTo(description);
-        assertThat(first.getBody()).isEqualTo(body);
+    private void assertStatus(ResponseEntity responseEntity, HttpStatus expectedStatus) {
+        assertThat(responseEntity.getStatusCode()).isEqualTo(expectedStatus);
+    }
+
+    @Test
+    public void getArticleBySlugTest(){
+        createArticleInit();
+
+        String url = baseUrl() + "/" + createDto.getSlug();
+        ResponseEntity<ArticleListDto> responseEntity = restTemplate.getForEntity(
+                url, ArticleListDto.class
+        );
+
+        assertStatus(responseEntity, HttpStatus.OK);
+
+        ArticleListDto responseBody = responseEntity.getBody();
     }
 }
