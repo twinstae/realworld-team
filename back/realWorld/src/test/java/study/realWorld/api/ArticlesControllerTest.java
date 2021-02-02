@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import study.realWorld.ArticlesTestingUtil;
 import study.realWorld.api.dto.ArticleListDto;
 import study.realWorld.api.dto.ArticleDto;
+import study.realWorld.api.dto.ArticleResponseDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -61,12 +62,15 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
         createArticleInit();
 
         String url = baseUrl() + "/" + createDto.getSlug();
-        ResponseEntity<ArticleListDto> responseEntity = restTemplate.getForEntity(
-                url, ArticleListDto.class
+
+        System.out.println(url);
+        ResponseEntity<ArticleResponseDto> responseEntity = restTemplate.getForEntity(
+                url, ArticleResponseDto.class
         );
 
         assertStatus(responseEntity, HttpStatus.OK);
 
-        ArticleListDto responseBody = responseEntity.getBody();
+        ArticleResponseDto responseBody = responseEntity.getBody();
+        assertArticlesResponseEqualToDto(responseBody.getArticle(), createDto);
     }
 }

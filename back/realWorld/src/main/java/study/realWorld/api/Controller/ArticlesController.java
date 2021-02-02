@@ -1,19 +1,26 @@
 package study.realWorld.api.Controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import study.realWorld.api.dto.ArticleListDto;
 import study.realWorld.api.dto.ArticleDto;
+import study.realWorld.api.dto.ArticleResponseDto;
+import study.realWorld.service.ArticlesService;
 
+import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/api/articles")
 public class ArticlesController {
 
+    private final ArticlesService articlesService;
 
     @GetMapping
     public ResponseEntity<ArticleListDto> getArticles(){
@@ -38,8 +45,9 @@ public class ArticlesController {
         return ResponseEntity.ok(new ArticleListDto(data));
     }
 
-    @GetMapping
-    public ResponseEntity<> getArticleBySlug(){
-
+    @GetMapping("/{slug}")
+    public ResponseEntity<ArticleResponseDto> getArticleBySlug(@PathVariable String slug){
+        ArticleDto articleDto = articlesService.findBySlug(slug);
+        return ResponseEntity.ok(new ArticleResponseDto(articleDto));
     }
 }

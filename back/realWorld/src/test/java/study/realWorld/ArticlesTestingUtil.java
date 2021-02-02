@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import study.realWorld.api.dto.ArticleCreateDto;
 import study.realWorld.api.dto.ArticleDto;
+import study.realWorld.api.dto.ArticleResponseDto;
 import study.realWorld.entity.Articles;
 import study.realWorld.repository.ArticlesRepository;
 

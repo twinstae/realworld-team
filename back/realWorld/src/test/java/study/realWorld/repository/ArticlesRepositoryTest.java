@@ -12,6 +12,6 @@ class ArticlesRepositoryTest extends ArticlesTestingUtil {
         createArticleInit();
 
         Articles articles = articlesRepository.findOneBySlug(createDto.getSlug());
-        assertEqualToDto(articles, createDto);
+        assertArticlesEqualToDto(articles, createDto);
     }
 }
