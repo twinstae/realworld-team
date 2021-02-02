@@ -9,8 +9,8 @@ class ArticlesRepositoryTest extends ArticlesTestingUtil {
 
     @Test
     public void findOneBySlugTest() throws Exception {
+        createArticleInit();
 
-        articlesRepository.save(dto.toEntity()); // 이렇게 하면 ArticleCreateDto를 Entity로 바꿔서 repository에 저장.
         Articles articles = articlesRepository.findOneBySlug(dto.getSlug());
         assertEqualToDto(articles, dto);
     }
