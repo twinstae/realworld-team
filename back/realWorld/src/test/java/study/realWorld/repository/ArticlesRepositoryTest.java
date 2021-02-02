@@ -11,7 +11,7 @@ class ArticlesRepositoryTest extends ArticlesTestingUtil {
     public void findOneBySlugTest() throws Exception {
         createArticleInit();
 
-        Articles articles = articlesRepository.findOneBySlug(dto.getSlug());
-        assertEqualToDto(articles, dto);
+        Articles articles = articlesRepository.findOneBySlug(createDto.getSlug());
+        assertEqualToDto(articles, createDto);
     }
 }

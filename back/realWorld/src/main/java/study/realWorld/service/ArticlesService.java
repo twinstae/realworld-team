@@ -1,7 +1,7 @@
 package study.realWorld.service;
 
-import study.realWorld.api.dto.ArticleResponseDto;
+import study.realWorld.api.dto.ArticleDto;
 
 public interface ArticlesService {
-    ArticleResponseDto findBySlug(String slug);
+    ArticleDto findBySlug(String slug);
 }
