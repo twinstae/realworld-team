@@ -1,10 +1,8 @@
 package study.realWorld.repository;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.Transactional;
 import study.realWorld.entity.User;
 
@@ -13,9 +11,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Transactional
 class UserJpaRepositoryTest {
-
 
     @Autowired
     private UserRepository userRepository;
@@ -84,8 +80,6 @@ class UserJpaRepositoryTest {
 
      @Test
      void findByEmailTest() throws Exception {
-
-
          User user1 = User
                  .builder()
                  .userName("User1")

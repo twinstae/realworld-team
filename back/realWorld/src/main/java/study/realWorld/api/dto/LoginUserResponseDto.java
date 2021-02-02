@@ -9,7 +9,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class LoginUserResponseDto {
-
     private String username;
     private String email;
 
@@ -18,6 +17,4 @@ public class LoginUserResponseDto {
         this.username = username;
         this.email = email;
     }
-
-
 }
