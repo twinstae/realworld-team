@@ -3,5 +3,10 @@ package study.realWorld.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import study.realWorld.entity.User;
 
-public interface UserJpaRepository extends JpaRepository<User, Long> {
+import java.util.List;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+
+
+    boolean findByEmail(String email);
 }

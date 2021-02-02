@@ -1,15 +1,13 @@
 package study.realWorld.entity;
 
 
+import com.sun.istack.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -18,12 +16,14 @@ public class User {
 
     @Id
     @GeneratedValue
-    @Column(name = "USER_ID")
+    @Column(name = "user_id")
     private Long id;
 
     private String userName;
 
-    @Column(nullable = false, unique = true) //null불가능, Unique하게..
+    //null불가능, Unique하게..
+    @NotNull
+    @Column(name="user_email",unique = true)
     private String email;
 
     //bio??
