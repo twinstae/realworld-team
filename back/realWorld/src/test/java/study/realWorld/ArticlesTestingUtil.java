@@ -26,4 +26,8 @@ public class ArticlesTestingUtil {
         assertThat(articles.getDescription()).isEqualTo(testDto.getDescription());
         assertThat(articles.getBody()).isEqualTo(testDto.getBody());
     }
+
+    protected void createArticleInit() {
+        articlesRepository.save(dto.toEntity());
+    }
 }
