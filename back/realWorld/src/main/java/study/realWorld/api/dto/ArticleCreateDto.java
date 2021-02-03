@@ -25,6 +25,7 @@ public class ArticleCreateDto {
         return title.toLowerCase().replaceAll("[\\&|[\\uFE30-\\uFFA0]|\\’|\\”|\\s?,.]+", "-");
     }
 
+
     public Articles toEntity(){
         return Articles
                 .builder()
