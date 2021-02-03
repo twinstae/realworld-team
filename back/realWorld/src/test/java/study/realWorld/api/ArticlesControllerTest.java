@@ -94,7 +94,7 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
         // when
         restTemplate.delete(slugUrl());
         // then
-        Optional<Articles> result = Optional.ofNullable(articlesRepository.findOneBySlug(createDto.getSlug()));
+        Optional<Articles> result = articlesRepository.findOneBySlug(createDto.getSlug());
         assertThat(result).isEmpty();
 
     }

@@ -22,4 +22,16 @@ public class ArticlesServiceTest extends ArticlesTestingUtil {
         assertThat(responseDto.getTitle()).isEqualTo(createDto.getTitle());
     }
 
+    @Test
+    public void deleteBySlugTest() throws Exception {
+        // given
+
+
+        // when
+
+        // then
+
+    }
+
+
 }
