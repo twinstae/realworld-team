@@ -1,5 +1,6 @@
 package study.realWorld;
 
+import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import study.realWorld.api.dto.ArticleCreateDto;
@@ -40,5 +41,10 @@ public class ArticlesTestingUtil {
 
     protected void createArticleInit() {
         articlesRepository.save(createDto.toEntity());
+    }
+
+    @AfterEach
+    protected void tearDown() {
+        articlesRepository.deleteAll();
     }
 }
