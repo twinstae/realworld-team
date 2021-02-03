@@ -31,6 +31,10 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
     }
 
 
+    private String slugUrl(){
+        return baseUrl() + "/" + articles.getSlug();
+    }
+
     @Test
     public void articleResponseDtoTest() {
         ArticleDto responseDto = ArticleDto
@@ -85,10 +89,10 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
     public void deleteArticleBySlugTest() throws Exception {
         // given
         createArticleInit();
-        String url = baseUrl() + "/" + createDto.getSlug();
+       // String url = baseUrl() + "/" + createDto.getSlug();
 
         // when
-        restTemplate.delete(articles.getSlug());
+        restTemplate.delete(slugUrl());
         // then
         Optional<Articles> result = Optional.ofNullable(articlesRepository.findOneBySlug(createDto.getSlug()));
         assertThat(result).isEmpty();
