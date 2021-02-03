@@ -10,12 +10,12 @@ import java.util.List;
 @Getter
 public class ArticleListDto {
     @JsonProperty("articles")
-    private final List<ArticleResponseDto> articles;
+    private final List<ArticleDto> articles;
 
     @JsonProperty("articlesCount")
     private final int articlesCount;
 
-    public ArticleListDto(List<ArticleResponseDto> articleDataList) {
+    public ArticleListDto(List<ArticleDto> articleDataList) {
         this.articles = articleDataList;
         this.articlesCount = articleDataList.size();
     }
