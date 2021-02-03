@@ -19,6 +19,7 @@ public class ArticlesTestingUtil {
     protected String title = "제목";
     protected String description = "개요";
     protected String body = "내용";
+    protected Articles articles;
 
     protected ArticleCreateDto createDto = ArticleCreateDto
             .builder()
@@ -41,6 +42,7 @@ public class ArticlesTestingUtil {
 
     protected void createArticleInit() {
         articlesRepository.save(createDto.toEntity());
+        articles = createDto.toEntity();
     }
 
     @AfterEach

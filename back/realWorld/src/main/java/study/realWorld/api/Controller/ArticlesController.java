@@ -2,10 +2,7 @@ package study.realWorld.api.Controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import study.realWorld.api.dto.ArticleListDto;
 import study.realWorld.api.dto.ArticleDto;
 import study.realWorld.api.dto.ArticleResponseDto;
@@ -50,4 +47,12 @@ public class ArticlesController {
         ArticleDto articleDto = articlesService.findBySlug(slug);
         return ResponseEntity.ok(new ArticleResponseDto(articleDto));
     }
+
+    @DeleteMapping("/{slug}")
+    public ResponseEntity<?> deleteArticleBySlug(@PathVariable String slug) {
+        articlesService.deleteBySlug(slug);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

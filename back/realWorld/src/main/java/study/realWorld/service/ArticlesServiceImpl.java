@@ -17,4 +17,10 @@ public class ArticlesServiceImpl implements ArticlesService {
 
         return ArticleDto.fromEntity(articles);
     }
+
+    @Override
+    public void deleteBySlug(String slug) {
+        Articles articles = articlesRepository.findOneBySlug(slug);
+        articlesRepository.delete(articles);
+    }
 }

@@ -1,5 +1,7 @@
 package study.realWorld.api;
 
+import com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer;
+import com.fasterxml.jackson.databind.util.StdDateFormat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -7,9 +9,13 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import study.realWorld.ArticlesTestingUtil;
+import study.realWorld.api.dto.ArticleCreateDto;
 import study.realWorld.api.dto.ArticleListDto;
 import study.realWorld.api.dto.ArticleDto;
 import study.realWorld.api.dto.ArticleResponseDto;
+import study.realWorld.entity.Articles;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,6 +29,7 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
     private String baseUrl(){
         return "http://localhost:" + port + "/api/articles";
     }
+
 
     @Test
     public void articleResponseDtoTest() {
@@ -73,4 +80,20 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
         ArticleResponseDto responseBody = responseEntity.getBody();
         assertArticlesResponseEqualToDto(responseBody.getArticle(), createDto);
     }
+
+    @Test
+    public void deleteArticleBySlugTest() throws Exception {
+        // given
+        createArticleInit();
+        String url = baseUrl() + "/" + createDto.getSlug();
+
+        // when
+        restTemplate.delete(articles.getSlug());
+        // then
+        Optional<Articles> result = Optional.ofNullable(articlesRepository.findOneBySlug(createDto.getSlug()));
+        assertThat(result).isEmpty();
+
+    }
+
+
 }
