@@ -126,12 +126,6 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
         assertDtoIsEqualTo(responseBody.getArticle(), createDto);
     }
 
-    private void assertDtoIsEqualTo(ArticleDto dto, ArticleCreateDto expected) {
-        assertThat(dto.getSlug()).isEqualTo(expected.getSlug());
-        assertThat(dto.getTitle()).isEqualTo(expected.getTitle());
-        assertThat(dto.getDescription()).isEqualTo(expected.getDescription());
-        assertThat(dto.getBody()).isEqualTo(expected.getBody());
-    }
 
 
 }

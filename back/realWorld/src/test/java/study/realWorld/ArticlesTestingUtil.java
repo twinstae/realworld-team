@@ -1,5 +1,6 @@
 package study.realWorld;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,6 +45,14 @@ public class ArticlesTestingUtil {
         articlesRepository.save(createDto.toEntity());
         articles = createDto.toEntity();
     }
+
+    protected void assertDtoIsEqualTo(ArticleDto dto, ArticleCreateDto expected) {
+        Assertions.assertThat(dto.getSlug()).isEqualTo(expected.getSlug());
+        Assertions.assertThat(dto.getTitle()).isEqualTo(expected.getTitle());
+        Assertions.assertThat(dto.getDescription()).isEqualTo(expected.getDescription());
+        Assertions.assertThat(dto.getBody()).isEqualTo(expected.getBody());
+    }
+
 
     @AfterEach
     protected void tearDown() {
