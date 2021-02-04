@@ -39,5 +39,15 @@ public class ArticlesServiceTest extends ArticlesTestingUtil {
         assertThat(result).isEmpty();
     }
 
+    @Test
+    public void saveTest() throws Exception {
+
+        ArticleDto articleDto = articlesService.save(createDto);
+
+
+        assertDtoIsEqualTo(articleDto,createDto);
+
+    }
+
 
 }

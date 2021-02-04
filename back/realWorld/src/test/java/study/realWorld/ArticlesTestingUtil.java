@@ -1,5 +1,6 @@
 package study.realWorld;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,16 +35,24 @@ public class ArticlesTestingUtil {
         assertThat(articles.getBody()).isEqualTo(testDto.getBody());
     }
 
-    protected void assertArticlesResponseEqualToDto(ArticleDto articles, ArticleCreateDto testDto) {
-        assertThat(articles.getTitle()).isEqualTo(testDto.getTitle());
-        assertThat(articles.getDescription()).isEqualTo(testDto.getDescription());
-        assertThat(articles.getBody()).isEqualTo(testDto.getBody());
+    protected void assertArticlesResponseEqualToDto(ArticleDto articleDto, ArticleCreateDto testDto) {
+        assertThat(articleDto.getTitle()).isEqualTo(testDto.getTitle());
+        assertThat(articleDto.getDescription()).isEqualTo(testDto.getDescription());
+        assertThat(articleDto.getBody()).isEqualTo(testDto.getBody());
     }
 
     protected void createArticleInit() {
         articlesRepository.save(createDto.toEntity());
         articles = createDto.toEntity();
     }
+
+    protected void assertDtoIsEqualTo(ArticleDto dto, ArticleCreateDto expected) {
+        Assertions.assertThat(dto.getSlug()).isEqualTo(expected.getSlug());
+        Assertions.assertThat(dto.getTitle()).isEqualTo(expected.getTitle());
+        Assertions.assertThat(dto.getDescription()).isEqualTo(expected.getDescription());
+        Assertions.assertThat(dto.getBody()).isEqualTo(expected.getBody());
+    }
+
 
     @AfterEach
     protected void tearDown() {
