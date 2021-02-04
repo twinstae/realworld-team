@@ -126,6 +126,4 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
         assertDtoIsEqualTo(responseBody.getArticle(), createDto);
     }
 
-
-
 }
