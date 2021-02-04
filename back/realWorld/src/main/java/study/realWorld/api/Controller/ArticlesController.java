@@ -69,16 +69,12 @@ public class ArticlesController {
 
     @PutMapping("/{slug}")
     public ResponseEntity<ArticleResponseDto> updateArticle(@PathVariable String slug,
-                                                            @RequestBody UpdateArticleDto updateArticleDto) {
+                                                            @RequestBody ArticleCreateDto updateArticleDto) {
         //slug로 먼저 해당 객체를 찾아와서 requestbody로 받은 데이터로 수정한다.
-        ArticleDto articleDto = articlesService.findBySlug(slug);
 
-        ArticleDto updatedArticleDto = articlesService.updateArticle(articleDto,updateArticleDto);
+        ArticleDto updatedArticleDto = articlesService.updateArticleBySlug(slug,updateArticleDto);
 
-        return new ResponseEntity<>(
-                new ArticleResponseDto(updatedArticleDto),
-                new HttpHeaders(),
-                HttpStatus.CREATED);
+        return ResponseEntity.ok(new ArticleResponseDto(updatedArticleDto));
     }
 
 }

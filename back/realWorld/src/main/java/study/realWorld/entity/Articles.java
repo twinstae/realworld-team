@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import study.realWorld.api.dto.ArticleCreateDto;
 
 import javax.persistence.*;
 
@@ -39,5 +40,20 @@ public class Articles {
         this.slug = slug;
         this.description = description;
         this.body = body;
+    }
+
+    public void update(ArticleCreateDto updateDto){
+        if (!"".equals(slug)){
+            this.slug = updateDto.getSlug();
+        }
+        if (!"".equals(title)) {
+            this.title = updateDto.getTitle();
+        }
+        if (!"".equals(description)) {
+            this.description = updateDto.getDescription();
+        }
+        if (!"".equals(body)) {
+            this.body = updateDto.getBody();
+        }
     }
 }
