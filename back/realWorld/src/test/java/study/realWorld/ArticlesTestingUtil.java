@@ -34,10 +34,10 @@ public class ArticlesTestingUtil {
         assertThat(articles.getBody()).isEqualTo(testDto.getBody());
     }
 
-    protected void assertArticlesResponseEqualToDto(ArticleDto articles, ArticleCreateDto testDto) {
-        assertThat(articles.getTitle()).isEqualTo(testDto.getTitle());
-        assertThat(articles.getDescription()).isEqualTo(testDto.getDescription());
-        assertThat(articles.getBody()).isEqualTo(testDto.getBody());
+    protected void assertArticlesResponseEqualToDto(ArticleDto articleDto, ArticleCreateDto testDto) {
+        assertThat(articleDto.getTitle()).isEqualTo(testDto.getTitle());
+        assertThat(articleDto.getDescription()).isEqualTo(testDto.getDescription());
+        assertThat(articleDto.getBody()).isEqualTo(testDto.getBody());
     }
 
     protected void createArticleInit() {

@@ -99,5 +99,39 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
 
     }
 
+//        {
+//        "article": {
+//        "title": "string",
+//                "description": "string",
+//                "body": "string",
+//
+//    }
+//    }
+
+    @Test
+    public void createArticleTest() throws Exception {
+
+        createArticleInit();
+
+        String url = baseUrl() + "/" + articles.getSlug();
+
+        ResponseEntity<ArticleResponseDto> responseEntity = restTemplate.getForEntity(url,ArticleResponseDto.class);
+
+
+        assertStatus(responseEntity, HttpStatus.OK);
+
+        ArticleResponseDto responseBody = responseEntity.getBody();
+        assert responseBody != null;
+        //assertThat(responseBody).isNotNull();
+        assertDtoIsEqualTo(responseBody.getArticle(), createDto);
+    }
+
+    private void assertDtoIsEqualTo(ArticleDto dto, ArticleCreateDto expected) {
+        assertThat(dto.getSlug()).isEqualTo(expected.getSlug());
+        assertThat(dto.getTitle()).isEqualTo(expected.getTitle());
+        assertThat(dto.getDescription()).isEqualTo(expected.getDescription());
+        assertThat(dto.getBody()).isEqualTo(expected.getBody());
+    }
+
 
 }
