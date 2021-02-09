@@ -18,7 +18,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-//@WebMvcTest(controllers = HelloController.class)
 class HelloControllerTest {
 
 
@@ -39,7 +38,6 @@ class HelloControllerTest {
 //        mockMvc.perform(get("/hello"))
 //                .andExpect(status().isOk())
 //                .andExpect(content().string("hello"));
-//
 //    }
 
     @Test
@@ -47,12 +45,13 @@ class HelloControllerTest {
 
         String baseUrl = "http://localhost:" + port + "/api/hello";
 
-        ResponseEntity<String> result = restTemplate.getForEntity(baseUrl,String.class);
+        ResponseEntity<String> result = restTemplate.getForEntity(baseUrl, String.class);
+
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         System.out.println("result = " + result);
         System.out.println("result.getBody() = " + result.getBody());
         System.out.println("result.getHeaders() = " + result.getHeaders());
-
 //
 //        Assertions.assertThat(result.getStatusCode())
 //                .isEqualTo(HttpStatus.OK);
