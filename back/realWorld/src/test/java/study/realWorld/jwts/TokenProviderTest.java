@@ -10,13 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import study.realWorld.jwt.TokenProvider;
 
 import java.security.Key;
 import java.security.Principal;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -38,9 +36,12 @@ public class TokenProviderTest {
         secret = base+base;
         long tokenValidityInSeconds = 60L * 60L * 24L;
         validity = new Date( (new Date()).getTime() + tokenValidityInSeconds);
+        initTokenProvider(tokenValidityInSeconds);
+    }
+
+    private void initTokenProvider(long tokenValidityInSeconds) {
         tokenProvider = new TokenProvider(secret, tokenValidityInSeconds);
         tokenProvider.afterPropertiesSet();
-        System.out.println(tokenProvider);
         assertThat(tokenProvider).isNotNull();
     }
 
@@ -49,22 +50,26 @@ public class TokenProviderTest {
     @DisplayName("만료된 JWT 토큰입니다. Test")
     @Test
     public void ExpiredJwtExceptionTokenTest() throws Exception {
-
-        String base = "s1e2c3r4e5t6s1e2c3r4e5t6s1e2c3r4e5t6s1e2c3r4e5t6s1e2c3r4e5t6s1e2c3r4e5t6";
-        secret = base+base;
         long tokenValidityInSeconds = 60L * 60L * 24L * -1;
-        validity = new Date( (new Date()).getTime() + tokenValidityInSeconds);
-        tokenProvider = new TokenProvider(secret, tokenValidityInSeconds);
-        tokenProvider.afterPropertiesSet();
+        initTokenProvider(tokenValidityInSeconds);
+
         Authentication authentication = createAuthentication();
 
         String token = createToken(secret,authentication);
 
-        Assertions.assertThrows(ExpiredJwtException.class, () -> {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-        });
+        Assertions.assertThrows(
+                ExpiredJwtException.class,
+                () -> {parseBody(token); });
 
         //assertThat("nothing").isEqualTo("error!");
+    }
+
+    private Claims parseBody(String token) {
+        return parseBuild().parseClaimsJws(token).getBody();
+    }
+
+    private JwtParser parseBuild() {
+        return Jwts.parserBuilder().setSigningKey(key).build();
     }
 
 
@@ -78,7 +83,7 @@ public class TokenProviderTest {
         key = Keys.hmacShaKeyFor(keyBytes);
 
         Assertions.assertThrows(MalformedJwtException.class, () -> {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws("errToken").getBody();
+            parseBody("errToken");
         });
     }
 
@@ -87,39 +92,13 @@ public class TokenProviderTest {
     @DisplayName("JWT 토큰이 잘못되었습니다.")
     @Test
     public void IllegalArgumentExceptionTest() throws Exception {
-
-        Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            Jwts.parserBuilder().setSigningKey(key).build();
-        });
+        Assertions.assertThrows(
+                IllegalArgumentException.class,
+                this::parseBuild);
     }
-
-
-    //UnsupportedJwtException – if the claimsJws argument does not represent an Claims JWS
-    @DisplayName("지원되지 않는 JWT 토큰입니다.")
-    @Test
-    public void UnsupportedJwtExceptionTest() throws Exception {
-        username = "user1";
-        Principal principal = new Principal() {
-            @Override
-            public String getName() {
-                return username;
-            }
-        };
-
-        //다음의 과정을 거쳐서 authentication을 만든다.
-        Authentication authentication = new TestingAuthenticationToken(principal, null, authorities);
-
-        String token = createToken(secret,authentication);
-
-        Assertions.assertThrows(UnsupportedJwtException.class, () -> {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-        });
-    }
-
 
     @Test
     public void createTokenTest () throws Exception {
-
         Authentication authentication = createAuthentication();
 
         String jwt = tokenProvider.createToken(authentication);
@@ -130,12 +109,9 @@ public class TokenProviderTest {
 
         assertThat(tokenProvider.validateToken(jwt)).isTrue();
 
-
         String token = createToken(secret,authentication);
 
-        System.out.println("token parsing = " + Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token));
-
-        assertThat(Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().containsValue("USER"));
+        assertThat(parseBody(token).containsValue("USER"));
         //assertThat("nothing").isEqualTo("error!");
     }
 
@@ -150,26 +126,19 @@ public class TokenProviderTest {
                 return username;
             }
         };
-
-        //다음의 과정을 거쳐서 authentication을 만든다.
-        Authentication authentication = new TestingAuthenticationToken(principal, null, authorities);
-        System.out.println("authentication = " + authentication);
-
-        return authentication;
+        return new TestingAuthenticationToken(principal, null, authorities);
     }
 
-    public String createToken(String secret,Authentication authentication) {
+    public String createToken(String secret, Authentication authentication) {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         key = Keys.hmacShaKeyFor(keyBytes);
 
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
                 .compact();
-
-        return token;
     }
 
 }
