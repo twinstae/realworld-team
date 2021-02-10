@@ -2,6 +2,7 @@ package study.realWorld.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.io.DecodingException;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,6 +92,8 @@ public class TokenProvider implements InitializingBean {
             logger.info("지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {
             logger.info("JWT 토큰이 잘못되었습니다.");
+        } catch (DecodingException e){
+            logger.info("JWT 토큰은 아스키 문자로만 이루어져야 합니다.");
         }
         return false;
     }

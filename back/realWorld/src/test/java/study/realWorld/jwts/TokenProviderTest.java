@@ -82,7 +82,13 @@ public class TokenProviderTest {
     @DisplayName("잘못된 토큰을 validate하면 False를 반환한다")
     @Test
     public void IllegalArgumentTest() throws Exception {
-        assertThat(tokenProvider.validateToken("글러먹은.토큰.signature")).isFalse();
+        assertThat(tokenProvider.validateToken("1234.1234.signature")).isFalse();
+    }
+
+    @DisplayName("한글이 포함된 토큰을 validate하면 False를 반환한다")
+    @Test
+    public void hangulJWTTest() throws Exception {
+        assertThat(tokenProvider.validateToken("error.에러.서명")).isFalse();
     }
 
     @Test
