@@ -1,8 +1,6 @@
 package study.realWorld.jwts;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.Assertions;
@@ -61,42 +59,34 @@ public class TokenProviderTest {
         String token = createToken(secret,authentication);
 
         Assertions.assertThrows(ExpiredJwtException.class, () -> {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().containsValue("USER");
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         });
+
+        //assertThat("nothing").isEqualTo("error!");
     }
 
 
-    //Authentication 만들기
-    public Authentication createAuthentication() {
-        username = "user1";
-        Principal principal = new Principal() {
-            @Override
-            public String getName() {
-                return username;
-            }
-        };
+    //parseClaimsJws에 제대로된 token 들어가지 않으면 MalformedJwtException이 발생한다.
+    @Test
+    public void MalformedJwtExceptionTest() throws Exception {
 
-        //다음의 과정을 거쳐서 authentication을 만든다.
-        Authentication authentication = new TestingAuthenticationToken(principal, null, authorities);
-        System.out.println("authentication = " + authentication);
-
-        return authentication;
-    }
-
-    public String createToken(String secret,Authentication authentication) {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         key = Keys.hmacShaKeyFor(keyBytes);
 
-
-        String token = Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, authorities)
-                .signWith(key, SignatureAlgorithm.HS512)
-                .setExpiration(validity)
-                .compact();
-
-        return token;
+        Assertions.assertThrows(MalformedJwtException.class, () -> {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws("errToken").getBody();
+        });
     }
+
+    //key를 제대로 생성해주지 않으면 IllegalArgumentException이 발생한다.
+    @Test
+    public void IllegalArgumentExceptionTest() throws Exception {
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            Jwts.parserBuilder().setSigningKey(key).build();
+        });
+    }
+
 
     @Test
     public void createTokenTest () throws Exception {
@@ -128,4 +118,38 @@ public class TokenProviderTest {
         assertThat(Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().containsValue("USER"));
         //assertThat("nothing").isEqualTo("error!");
     }
+
+
+
+    //Authentication 만들기
+    public Authentication createAuthentication() {
+        username = "user1";
+        Principal principal = new Principal() {
+            @Override
+            public String getName() {
+                return username;
+            }
+        };
+
+        //다음의 과정을 거쳐서 authentication을 만든다.
+        Authentication authentication = new TestingAuthenticationToken(principal, null, authorities);
+        System.out.println("authentication = " + authentication);
+
+        return authentication;
+    }
+
+    public String createToken(String secret,Authentication authentication) {
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        key = Keys.hmacShaKeyFor(keyBytes);
+
+        String token = Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim(AUTHORITIES_KEY, authorities)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .setExpiration(validity)
+                .compact();
+
+        return token;
+    }
+
 }
