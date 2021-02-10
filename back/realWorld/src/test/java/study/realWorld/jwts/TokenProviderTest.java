@@ -10,11 +10,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import study.realWorld.jwt.TokenProvider;
 
 import java.security.Key;
 import java.security.Principal;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -25,82 +29,65 @@ public class TokenProviderTest {
 
     String username;
     String secret;
-    String AUTHORITIES_KEY = "auth";
     String[] authorities = {"USER"};
-    Date validity;
-    Key key;
 
     @BeforeEach
     public void createTokenProvider () throws Exception {
         String base = "s1e2c3r4e5t6s1e2c3r4e5t6s1e2c3r4e5t6s1e2c3r4e5t6s1e2c3r4e5t6s1e2c3r4e5t6";
         secret = base+base;
         long tokenValidityInSeconds = 60L * 60L * 24L;
-        validity = new Date( (new Date()).getTime() + tokenValidityInSeconds);
-        initTokenProvider(tokenValidityInSeconds);
+        tokenProvider = initTokenProvider(tokenValidityInSeconds);
     }
 
-    private void initTokenProvider(long tokenValidityInSeconds) {
-        tokenProvider = new TokenProvider(secret, tokenValidityInSeconds);
-        tokenProvider.afterPropertiesSet();
-        assertThat(tokenProvider).isNotNull();
+    private TokenProvider initTokenProvider(long tokenValidityInSeconds) {
+        TokenProvider tokenProviderObj = new TokenProvider(secret, tokenValidityInSeconds);
+        tokenProviderObj.afterPropertiesSet();
+        assertThat(tokenProviderObj).isNotNull();
+        return tokenProviderObj;
+    }
+
+    @DisplayName("정상적으로 발급된 토큰을 validate 했을 때 True를 반환한다.")
+    @Test
+    public void validTokenTest() {
+        String token = tokenProvider.createToken(createAuthentication());
+        assertThat(tokenProvider.validateToken(token)).isTrue();
     }
 
     //ExpiredJwtException – if the specified JWT is a Claims JWT and the Claims has an
     // expiration time before the time this method is invoked.
-    @DisplayName("만료된 JWT 토큰입니다. Test")
+    @DisplayName("만료된 JWT 토큰을 validate하면 False를 반환한다.")
     @Test
-    public void ExpiredJwtExceptionTokenTest() throws Exception {
+    public void ExpiredJwtTokenTest() throws Exception {
         long tokenValidityInSeconds = 60L * 60L * 24L * -1;
-        initTokenProvider(tokenValidityInSeconds);
+        TokenProvider provider2 = initTokenProvider(tokenValidityInSeconds);
 
         Authentication authentication = createAuthentication();
+        String token = provider2.createToken(authentication);
 
-        String token = createToken(secret,authentication);
-
-        Assertions.assertThrows(
-                ExpiredJwtException.class,
-                () -> {parseBody(token); });
+        assertThat(tokenProvider.validateToken(token)).isFalse();
 
         //assertThat("nothing").isEqualTo("error!");
     }
 
-    private Claims parseBody(String token) {
-        return parseBuild().parseClaimsJws(token).getBody();
-    }
-
-    private JwtParser parseBuild() {
-        return Jwts.parserBuilder().setSigningKey(key).build();
-    }
-
-
     //parseClaimsJws에 제대로된 token 들어가지 않으면 MalformedJwtException이 발생한다.
     //MalformedJwtException – if the claimsJws string is not a valid JWS
-    @DisplayName("잘못된 JWT 서명입니다.")
+    @DisplayName("서명만 잘못된 토큰을 validate하면 False를 반환한다.")
     @Test
-    public void MalformedJwtExceptionTest() throws Exception {
-
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
-        key = Keys.hmacShaKeyFor(keyBytes);
-
-        Assertions.assertThrows(MalformedJwtException.class, () -> {
-            parseBody("errToken");
-        });
+    public void invalidSignatureTest() throws Exception {
+        String invalidSignature = "U99Hi4lZH0FmWxh_uKJa5rxzObEdgCVKgLEea02QYlYPGWBNSSTu3b3Us3e1HiNLsYccMkjuudv7fiiHIA95G8";
+        String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMSIsImF1dGgiOiJVU0VSIiwiZXhwIjoxNjEzMDIyOTg4fQ."+invalidSignature;
+        assertThat(tokenProvider.validateToken(token)).isFalse();
     }
 
-    //key를 제대로 생성해주지 않으면 IllegalArgumentException이 발생한다.
-    //IllegalArgumentException – if the claimsJws string is null or empty or only whitespace
-    @DisplayName("JWT 토큰이 잘못되었습니다.")
+    @DisplayName("잘못된 토큰을 validate하면 False를 반환한다")
     @Test
-    public void IllegalArgumentExceptionTest() throws Exception {
-        Assertions.assertThrows(
-                IllegalArgumentException.class,
-                this::parseBuild);
+    public void IllegalArgumentTest() throws Exception {
+        assertThat(tokenProvider.validateToken("글러먹은.토큰.signature")).isFalse();
     }
 
     @Test
     public void createTokenTest () throws Exception {
         Authentication authentication = createAuthentication();
-
         String jwt = tokenProvider.createToken(authentication);
         System.out.println("jwt = " + jwt);
 
@@ -109,9 +96,15 @@ public class TokenProviderTest {
 
         assertThat(tokenProvider.validateToken(jwt)).isTrue();
 
-        String token = createToken(secret,authentication);
+        Authentication auth = tokenProvider.getAuthentication(jwt);
+        // auth (Principal, credential, authorities, )
 
-        assertThat(parseBody(token).containsValue("USER"));
+        assertThat(
+                auth.getAuthorities().stream() // authorities = 객체 {authority : "USER" }
+                        .map(GrantedAuthority::getAuthority) // authority-> authority.getAuthority()
+                        // ["USER", "ADMIN"]
+                        .anyMatch(s->s.equals("USER")))
+                .isTrue();
         //assertThat("nothing").isEqualTo("error!");
     }
 
@@ -128,17 +121,4 @@ public class TokenProviderTest {
         };
         return new TestingAuthenticationToken(principal, null, authorities);
     }
-
-    public String createToken(String secret, Authentication authentication) {
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
-        key = Keys.hmacShaKeyFor(keyBytes);
-
-        return Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, authorities)
-                .signWith(key, SignatureAlgorithm.HS512)
-                .setExpiration(validity)
-                .compact();
-    }
-
 }
