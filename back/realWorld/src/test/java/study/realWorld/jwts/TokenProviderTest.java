@@ -44,6 +44,8 @@ public class TokenProviderTest {
         assertThat(tokenProvider).isNotNull();
     }
 
+    //ExpiredJwtException – if the specified JWT is a Claims JWT and the Claims has an
+    // expiration time before the time this method is invoked.
     @DisplayName("만료된 JWT 토큰입니다. Test")
     @Test
     public void ExpiredJwtExceptionTokenTest() throws Exception {
@@ -67,6 +69,8 @@ public class TokenProviderTest {
 
 
     //parseClaimsJws에 제대로된 token 들어가지 않으면 MalformedJwtException이 발생한다.
+    //MalformedJwtException – if the claimsJws string is not a valid JWS
+    @DisplayName("잘못된 JWT 서명입니다.")
     @Test
     public void MalformedJwtExceptionTest() throws Exception {
 
@@ -79,11 +83,36 @@ public class TokenProviderTest {
     }
 
     //key를 제대로 생성해주지 않으면 IllegalArgumentException이 발생한다.
+    //IllegalArgumentException – if the claimsJws string is null or empty or only whitespace
+    @DisplayName("JWT 토큰이 잘못되었습니다.")
     @Test
     public void IllegalArgumentExceptionTest() throws Exception {
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Jwts.parserBuilder().setSigningKey(key).build();
+        });
+    }
+
+
+    //UnsupportedJwtException – if the claimsJws argument does not represent an Claims JWS
+    @DisplayName("지원되지 않는 JWT 토큰입니다.")
+    @Test
+    public void UnsupportedJwtExceptionTest() throws Exception {
+        username = "user1";
+        Principal principal = new Principal() {
+            @Override
+            public String getName() {
+                return username;
+            }
+        };
+
+        //다음의 과정을 거쳐서 authentication을 만든다.
+        Authentication authentication = new TestingAuthenticationToken(principal, null, authorities);
+
+        String token = createToken(secret,authentication);
+
+        Assertions.assertThrows(UnsupportedJwtException.class, () -> {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         });
     }
 
@@ -102,16 +131,7 @@ public class TokenProviderTest {
         assertThat(tokenProvider.validateToken(jwt)).isTrue();
 
 
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
-        Key key = Keys.hmacShaKeyFor(keyBytes);
-
-
-        String token = Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, authorities)
-                .signWith(key, SignatureAlgorithm.HS512)
-                .setExpiration(validity)
-                .compact();
+        String token = createToken(secret,authentication);
 
         System.out.println("token parsing = " + Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token));
 
