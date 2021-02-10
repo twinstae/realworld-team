@@ -46,12 +46,10 @@ public class JwtFilter extends GenericFilterBean {
         filterChain.doFilter(servletRequest,servletResponse);
     }
 
-    //필터링을 하기 위해서는 토큰 정보가 필요한데 그래서 이 함수를 만들었음.
-    //Request Header에서 토큰 정보를 꺼내옴.
     private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-        if(StringUtils.hasText(bearerToken)&& bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+        String rawToken = request.getHeader(AUTHORIZATION_HEADER);
+        if(StringUtils.hasText(rawToken) && rawToken.startsWith("Token ")) {
+            return rawToken.substring("Token ".length());
         }
         return null;
     }
