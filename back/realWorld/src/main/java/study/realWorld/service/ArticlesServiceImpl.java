@@ -9,11 +9,23 @@ import study.realWorld.entity.Articles;
 import study.realWorld.repository.ArticlesRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class ArticlesServiceImpl implements ArticlesService {
     private final ArticlesRepository articlesRepository;
+
+    @Override
+    public List<ArticleDto> getPage(){
+        List<Articles> articlesList = articlesRepository.findAll();
+
+        return articlesList.stream()
+                .map(ArticleDto::fromEntity)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public ArticleDto findBySlug(String slug) {
