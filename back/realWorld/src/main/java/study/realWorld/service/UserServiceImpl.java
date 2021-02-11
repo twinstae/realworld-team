@@ -1,6 +1,7 @@
 package study.realWorld.service;
 
 import org.springframework.stereotype.Service;
+import study.realWorld.api.dto.userDtos.UserSignUpDto;
 import study.realWorld.entity.User;
 import study.realWorld.repository.UserRepository;
 
@@ -12,6 +13,15 @@ public class UserServiceImpl implements UserService {
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Override
+    public boolean save(UserSignUpDto userSignUpDto) {
+        if(userRepository.findByEmail(userSignUpDto.getEmail()).isEmpty()) {
+            userRepository.save(userSignUpDto.toEntity());
+            return true;
+        }
+        return false;
     }
 
     @Override

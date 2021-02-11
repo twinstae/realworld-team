@@ -1,4 +1,4 @@
-package study.realWorld.api.dto;
+package study.realWorld.api.dto.articleDtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

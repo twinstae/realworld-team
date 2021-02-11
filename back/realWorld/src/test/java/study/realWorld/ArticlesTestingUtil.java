@@ -4,9 +4,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import study.realWorld.api.dto.ArticleCreateDto;
-import study.realWorld.api.dto.ArticleDto;
-import study.realWorld.api.dto.ArticleResponseDto;
+import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
+import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.entity.Articles;
 import study.realWorld.repository.ArticlesRepository;
 

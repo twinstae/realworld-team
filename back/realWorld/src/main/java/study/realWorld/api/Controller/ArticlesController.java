@@ -5,10 +5,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import study.realWorld.api.dto.*;
+import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
+import study.realWorld.api.dto.articleDtos.ArticleDto;
+import study.realWorld.api.dto.articleDtos.ArticleListDto;
+import study.realWorld.api.dto.articleDtos.ArticleResponseDto;
 import study.realWorld.service.ArticlesService;
 
-import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.List;
 

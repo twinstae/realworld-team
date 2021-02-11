@@ -3,7 +3,7 @@ package study.realWorld.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import study.realWorld.ArticlesTestingUtil;
-import study.realWorld.api.dto.ArticleDto;
+import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.entity.Articles;
 
 import java.util.Optional;

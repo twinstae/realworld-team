@@ -1,4 +1,4 @@
-package study.realWorld.api.dto;
+package study.realWorld.api.dto.articleDtos;
 
 import lombok.Builder;
 import lombok.Getter;

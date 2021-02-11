@@ -30,6 +30,14 @@ public class User {
     @Column(length = 100)
     private String password;
 
+
+    @Builder
+    public User(String userName, String email, String password) {
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+    }
+
     // activated;
     @Column
     private boolean activated;

@@ -2,8 +2,8 @@ package study.realWorld.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import study.realWorld.api.dto.ArticleCreateDto;
-import study.realWorld.api.dto.ArticleDto;
+import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
+import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.exception.ResourceNotFoundException;
 import study.realWorld.entity.Articles;
 import study.realWorld.repository.ArticlesRepository;

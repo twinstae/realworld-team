@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import study.realWorld.api.dto.ArticleCreateDto;
+import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 
 import javax.persistence.*;
 

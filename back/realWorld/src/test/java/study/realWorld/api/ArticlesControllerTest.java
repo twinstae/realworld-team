@@ -1,7 +1,5 @@
 package study.realWorld.api;
 
-import com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer;
-import com.fasterxml.jackson.databind.util.StdDateFormat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -9,10 +7,9 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import study.realWorld.ArticlesTestingUtil;
-import study.realWorld.api.dto.ArticleCreateDto;
-import study.realWorld.api.dto.ArticleListDto;
-import study.realWorld.api.dto.ArticleDto;
-import study.realWorld.api.dto.ArticleResponseDto;
+import study.realWorld.api.dto.articleDtos.ArticleListDto;
+import study.realWorld.api.dto.articleDtos.ArticleDto;
+import study.realWorld.api.dto.articleDtos.ArticleResponseDto;
 import study.realWorld.entity.Articles;
 
 import java.util.Optional;
