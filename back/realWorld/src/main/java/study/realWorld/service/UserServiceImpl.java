@@ -25,7 +25,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.save(userSignUpDto.toEntity(passwordEncoder));
         return UserDto
                 .builder()
-                .username(user.getUserName())
                 .email(user.getEmail())
                 .build();
     }

@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import study.realWorld.api.dto.userDtos.UserDto;
-import study.realWorld.api.dto.userDtos.UserResponseDto;
-import study.realWorld.api.dto.userDtos.UserSignInDto;
-import study.realWorld.api.dto.userDtos.UserSignUpDto;
+import study.realWorld.api.dto.userDtos.*;
 import study.realWorld.jwt.TokenProvider;
 import study.realWorld.service.UserService;
 
@@ -49,14 +46,18 @@ public class UserController {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(userSignInDto.getEmail(), userSignInDto.getPassword());
 
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        Authentication authentication = authenticationManagerBuilder.getObject()
+                .authenticate(authenticationToken);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String jwt = tokenProvider.createToken(authentication);
 
+        UserWithTokenDto userWithTokenDto = UserWithTokenDto
+                .builder()
+                .e
+                .token(jwt)
+                .build();
         return ResponseEntity.ok(userWithTokenDto);
     }
 }
-
-// rest

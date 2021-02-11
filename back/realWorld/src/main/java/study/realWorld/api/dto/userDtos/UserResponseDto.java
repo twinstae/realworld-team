@@ -8,6 +8,6 @@ import study.realWorld.api.dto.articleDtos.ArticleDto;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class UserResponseDto {
+public class UserResponseDto{
     private UserDto user;
 }
