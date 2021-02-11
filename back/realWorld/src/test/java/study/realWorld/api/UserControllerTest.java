@@ -77,11 +77,7 @@ public class UserControllerTest {
                 .build();
 
         // restTemplate으로 요청을 보내고
-        ResponseEntity<TokenResponseDto> responseEntity = restTemplate.postForEntity(
-                baseUrl()+"/signin",
-                userSignInDto,
-                TokenResponseDto.class
-        );
+        ResponseEntity<TokenResponseDto> responseEntity = postLoginRequest(userSignInDto);
 
         // status는 OK이다
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -94,5 +90,51 @@ public class UserControllerTest {
 
         assertThat(userDto.getEmail()).isEqualTo(userSignInDto.getEmail());
         assertThat(userDto.getToken()).isNotEmpty();
+    }
+
+    private ResponseEntity<TokenResponseDto> postLoginRequest(UserSignInDto userSignInDto) {
+        return restTemplate.postForEntity(
+                baseUrl() + "/signin",
+                userSignInDto,
+                TokenResponseDto.class
+        );
+    }
+
+    @DisplayName("잘못된 비밀번호로 로그인 요청을 보내면 status는 UNAUTHORIZED이다.")
+    @Test
+    public void signInWithInvalidPasswordTest() {
+        signUpTest();
+
+        // 비밀번호가 잘못된 로그인 dto를 만든다
+        UserSignInDto userSignInDto = UserSignInDto
+                .builder()
+                .email("test@naver.com")
+                .password("1nval1dP6sswor2")
+                .build();
+
+        // restTemplate으로 요청을 보내고
+        ResponseEntity<TokenResponseDto> responseEntity = postLoginRequest(userSignInDto);
+
+        // status는 UNAUTHORIZED
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @DisplayName("잘못된 이메일로 로그인 요청을 보내면 status는 UNAUTHORIZED이다.")
+    @Test
+    public void signInWithInvalidEmailTest() {
+        signUpTest();
+
+        // 비밀번호가 잘못된 로그인 dto를 만든다
+        UserSignInDto userSignInDto = UserSignInDto
+                .builder()
+                .email("rabbit@naver.com")
+                .password("1nval1dP6sswor2")
+                .build();
+
+        // restTemplate으로 요청을 보내고
+        ResponseEntity<TokenResponseDto> responseEntity = postLoginRequest(userSignInDto);
+
+        // status는 UNAUTHORIZED
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 }
