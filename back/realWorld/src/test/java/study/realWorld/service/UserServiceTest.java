@@ -31,7 +31,7 @@ public class UserServiceTest {
         userRepository.deleteAll();
     }
 
-    @DisplayName("userSipnUpDto를 저장하면, repository에 같은 email을 가진 user가 존재한다")
+    @DisplayName("userSipnUpDto로 가입하면,repository에 같은 email을 가진 user가 존재한다")
     @Test
     public void userSaveTest(){
         userService.signUp(userSignUpDto);
@@ -39,7 +39,7 @@ public class UserServiceTest {
         assertThat(userRepository.findByEmail(userSignUpDto.getEmail())).isNotEmpty();
     }
 
-    @DisplayName("이미 존재하는 이메일의 user를 저장하면 RuntimeException을 던진다")
+    @DisplayName("이미 존재하는 이메일로 가입하려 하면, RuntimeException을 던진다")
     @Test
     public void userSaveWithAlreadyExistEmailTest(){
         userService.signUp(userSignUpDto);
