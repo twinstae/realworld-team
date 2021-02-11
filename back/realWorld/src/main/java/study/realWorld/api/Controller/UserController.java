@@ -1,6 +1,5 @@
 package study.realWorld.api.Controller;
 
-import jdk.nashorn.internal.ir.LiteralNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,7 +27,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserResponseDto> signUp(@RequestBody UserSignUpDto userSignUpDto){
-        UserDto userDto = userService.save(userSignUpDto);
+        UserDto userDto = userService.signUp(userSignUpDto);
 
         return createdResponseWithDto(userDto);
     }

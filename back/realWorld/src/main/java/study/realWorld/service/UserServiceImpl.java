@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto save(UserSignUpDto userSignUpDto) {
+    public UserDto signUp(UserSignUpDto userSignUpDto) {
         checkUserAlreadyExist(userSignUpDto);
 
         User user = userRepository.save(userSignUpDto.toEntity(passwordEncoder));

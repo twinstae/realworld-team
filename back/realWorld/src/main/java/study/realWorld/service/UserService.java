@@ -7,5 +7,5 @@ import study.realWorld.api.dto.userDtos.UserSignUpDto;
 import study.realWorld.entity.User;
 
 public interface UserService {
-    UserDto save(UserSignUpDto userSignUpDto);
+    UserDto signUp(UserSignUpDto userSignUpDto);
 }
