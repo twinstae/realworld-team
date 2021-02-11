@@ -28,6 +28,13 @@ public class ArticlesTestingUtil {
             .body(body)
             .build();
 
+    protected ArticleCreateDto updateDto = ArticleCreateDto
+            .builder()
+            .title("타이틀")
+            .description("디스크립션")
+            .body("바디")
+            .build();
+
     protected void assertArticlesEqualToDto(Articles articles, ArticleCreateDto testDto) {
         assertThat(articles.getTitle()).isEqualTo(testDto.getTitle());
         assertThat(articles.getDescription()).isEqualTo(testDto.getDescription());
@@ -41,8 +48,8 @@ public class ArticlesTestingUtil {
     }
 
     protected void createArticleInit() {
-        articlesRepository.save(createDto.toEntity());
         articles = createDto.toEntity();
+        articlesRepository.save(articles);
     }
 
     protected void assertDtoIsEqualTo(ArticleDto dto, ArticleCreateDto expected) {

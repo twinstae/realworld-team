@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import study.realWorld.ArticlesTestingUtil;
+import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleListDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.dto.articleDtos.ArticleResponseDto;
@@ -47,6 +47,7 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
     @Test
     public void getArticleListTest() {
         createArticleInit();
+        articlesRepository.save(updateDto.toEntity()); // 2번째 article 생성
 
         ResponseEntity<ArticleListDto> responseEntity = restTemplate.getForEntity(
                 baseUrl(), ArticleListDto.class
@@ -55,6 +56,7 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
         assertStatus(responseEntity, HttpStatus.OK);
 
         ArticleListDto responseBody = responseEntity.getBody();
+        assert responseBody != null;
         assertThat(responseBody.getArticlesCount()).isEqualTo(2);
 
         ArticleDto first = responseBody.getArticles().get(0);
@@ -69,31 +71,35 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
     public void getArticleBySlugTest(){
         createArticleInit();
 
-        String url = baseUrl() + "/" + createDto.getSlug();
-
-        System.out.println(url);
         ResponseEntity<ArticleResponseDto> responseEntity = restTemplate.getForEntity(
-                url, ArticleResponseDto.class
+                slugUrl(),
+                ArticleResponseDto.class
         );
 
         assertStatus(responseEntity, HttpStatus.OK);
+        assertResponseBodyIsEqualToDto(responseEntity, createDto);
+    }
 
+    private void assertResponseBodyIsEqualToDto(
+            ResponseEntity<ArticleResponseDto> responseEntity,
+            ArticleCreateDto dto
+    ) {
         ArticleResponseDto responseBody = responseEntity.getBody();
-        assertArticlesResponseEqualToDto(responseBody.getArticle(), createDto);
+        assert responseBody != null;
+        assertArticlesResponseEqualToDto(responseBody.getArticle(), dto);
     }
 
     @Test
     public void deleteArticleBySlugTest() throws Exception {
         // given
         createArticleInit();
-       // String url = baseUrl() + "/" + createDto.getSlug();
 
         // when
         restTemplate.delete(slugUrl());
+
         // then
         Optional<Articles> result = articlesRepository.findOneBySlug(createDto.getSlug());
         assertThat(result).isEmpty();
-
     }
 
 //        {
@@ -107,20 +113,25 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
 
     @Test
     public void createArticleTest() throws Exception {
+        ResponseEntity<ArticleResponseDto> responseEntity = restTemplate.postForEntity(
+                baseUrl(), createDto, ArticleResponseDto.class
+        );
 
-        createArticleInit();
-
-        String url = baseUrl() + "/" + articles.getSlug();
-
-        ResponseEntity<ArticleResponseDto> responseEntity = restTemplate.getForEntity(url,ArticleResponseDto.class);
-
-
-        assertStatus(responseEntity, HttpStatus.OK);
-
-        ArticleResponseDto responseBody = responseEntity.getBody();
-        assert responseBody != null;
-        //assertThat(responseBody).isNotNull();
-        assertDtoIsEqualTo(responseBody.getArticle(), createDto);
+        assertStatus(responseEntity, HttpStatus.CREATED);
+        assertResponseBodyIsEqualToDto(responseEntity, createDto);
     }
 
+    @Test
+    public void updateArticleTest() throws Exception {
+        createArticleInit();
+        HttpEntity<ArticleCreateDto> requestUpdate = new HttpEntity<>(
+                updateDto, new HttpHeaders()
+        );
+        ResponseEntity<ArticleResponseDto> responseEntity = restTemplate.exchange(
+                slugUrl(), HttpMethod.PUT, requestUpdate, ArticleResponseDto.class
+        );
+
+        assertStatus(responseEntity, HttpStatus.OK);
+        assertResponseBodyIsEqualToDto(responseEntity, updateDto);
+    }
 }
