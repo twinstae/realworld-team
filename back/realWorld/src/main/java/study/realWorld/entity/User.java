@@ -10,7 +10,6 @@ import java.util.Set;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 public class User {
 
@@ -30,12 +29,13 @@ public class User {
     @Column(length = 100)
     private String password;
 
-
     @Builder
-    public User(String userName, String email, String password) {
+    public User(String userName, String email, String password, Set<Authority> authorities) {
         this.userName = userName;
         this.email = email;
         this.password = password;
+        this.activated = true;
+        this.authorities = authorities;
     }
 
     // activated;

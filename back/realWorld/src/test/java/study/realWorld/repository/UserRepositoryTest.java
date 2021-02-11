@@ -40,8 +40,7 @@ class UserRepositoryTest {
                 .userName("user1")
                 .email(email)
                 .password("123")
-                .activated(true)
-                .authorities((Collections.singleton(authority)))
+                .authorities(Collections.singleton(authority))
                 .build();
 
         userRepository.save(user);
