@@ -7,11 +7,5 @@ import study.realWorld.api.dto.userDtos.UserSignUpDto;
 import study.realWorld.entity.User;
 
 public interface UserService {
-
     UserDto save(UserSignUpDto userSignUpDto);
-
-    void join(User user);
-
-    User findUser(Long userId);
-
 }

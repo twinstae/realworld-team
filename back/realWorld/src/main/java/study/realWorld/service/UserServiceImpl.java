@@ -31,21 +31,9 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkUserAlreadyExist(UserSignUpDto userSignUpDto) {
-        if (userRepository.findByEmail(userSignUpDto.getEmail()).orElse(null) != null) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
-        }
-    }
-
-    @Override
-    public void join(User user) {
-
-//        if(userRepository.findBy){
-//
-//        }
-    }
-
-    @Override
-    public User findUser(Long userId) {
-        return null;
+        userRepository.findByEmail(userSignUpDto.getEmail())
+                .ifPresent((user)->{
+                    throw new RuntimeException(user.getEmail() + "은 가입되어 있는 이메일입니다.");
+                });
     }
 }
