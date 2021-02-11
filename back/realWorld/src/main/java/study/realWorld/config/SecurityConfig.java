@@ -2,6 +2,7 @@ package study.realWorld.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,6 +18,7 @@ import study.realWorld.jwt.JwtSecurityConfig;
 import study.realWorld.jwt.TokenProvider;
 
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     private final TokenProvider tokenProvider;
@@ -73,8 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                     .and()
                     .authorizeRequests()
                     .antMatchers("/api/hello").permitAll()
-                    .antMatchers("/api/authenticate").permitAll()
-                    .antMatchers("/api/signup").permitAll()
+                    .antMatchers("/api/users").permitAll()
 
                     .anyRequest().authenticated()
 
