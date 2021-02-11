@@ -9,10 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserWithTokenDto extends UserDto{
-
+public class UserWithTokenDto{
+    private String email;
     private String token;
-
-
-
 }

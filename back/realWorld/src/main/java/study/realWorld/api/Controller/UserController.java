@@ -41,8 +41,8 @@ public class UserController {
         );
     }
 
-    @PostMapping
-    public ResponseEntity<UserResponseDto> signIn(@RequestBody UserSignInDto userSignInDto){
+    @PostMapping("/signin")
+    public ResponseEntity<TokenResponseDto> signIn(@RequestBody UserSignInDto userSignInDto){
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(userSignInDto.getEmail(), userSignInDto.getPassword());
 
@@ -55,9 +55,9 @@ public class UserController {
 
         UserWithTokenDto userWithTokenDto = UserWithTokenDto
                 .builder()
-                .e
+                .email(authentication.getName())
                 .token(jwt)
                 .build();
-        return ResponseEntity.ok(userWithTokenDto);
+        return ResponseEntity.ok(new TokenResponseDto(userWithTokenDto));
     }
 }
