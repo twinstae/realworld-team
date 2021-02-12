@@ -33,21 +33,22 @@ public class ArticlesServiceTest extends ArticlesTestingUtil {
         // when
         articlesService.deleteBySlug(articles.getSlug());
 
-        Optional<Articles> result = articlesRepository.findOneBySlug(articles.getSlug());
-
         // then
+        Optional<Articles> result = articlesRepository.findOneBySlug(articles.getSlug());
         assertThat(result).isEmpty();
     }
 
     @Test
     public void saveTest() throws Exception {
-
         ArticleDto articleDto = articlesService.save(createDto);
-
-
         assertDtoIsEqualTo(articleDto,createDto);
-
     }
 
+    @Test
+    public void updateArticleBySlug(){
+        articlesService.save(createDto);
+        ArticleDto updatedArticleDto = articlesService.updateArticleBySlug(createDto.getSlug(), updateDto);
 
+        assertDtoIsEqualTo(updatedArticleDto, updateDto);
+    }
 }

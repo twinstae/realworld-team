@@ -33,21 +33,21 @@ public class UserServiceTest {
 
     @DisplayName("userSipnUpDto로 가입하면,repository에 같은 email을 가진 user가 존재한다")
     @Test
-    public void userSaveTest(){
+    public void userSignUpTest(){
         userService.signUp(userSignUpDto);
 
         assertThat(userRepository.findByEmail(userSignUpDto.getEmail())).isNotEmpty();
     }
 
-    @DisplayName("이미 존재하는 이메일로 가입하려 하면, RuntimeException을 던진다")
+    @DisplayName("이미 가입한 이메일로 다시 가입하려 하면, RuntimeException을 던진다")
     @Test
-    public void userSaveWithAlreadyExistEmailTest(){
-        userService.signUp(userSignUpDto);
+    public void userSignUpWithAlreadyExistEmailTest(){
+        userService.signUp(userSignUpDto); // 이미 가입
 
         Assertions.assertThrows(
                 RuntimeException.class,
                 () -> {
-            userService.signUp(userSignUpDto);
+            userService.signUp(userSignUpDto); // 다시 가입
         });
     }
 
