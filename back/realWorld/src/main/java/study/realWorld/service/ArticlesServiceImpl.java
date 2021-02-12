@@ -29,33 +29,33 @@ public class ArticlesServiceImpl implements ArticlesService {
 
     @Override
     public ArticleDto findBySlug(String slug) {
-        Articles articles = articlesRepository.findOneBySlug(slug).orElseThrow(ResourceNotFoundException::new);
-
+        Articles articles = getArticleBySlugOr404(slug);
         return ArticleDto.fromEntity(articles);
     }
 
     @Override
+    @Transactional
     public void deleteBySlug(String slug) {
-        Articles articles = articlesRepository.findOneBySlug(slug).orElseThrow(ResourceNotFoundException::new);
+        Articles articles = getArticleBySlugOr404(slug);
         articlesRepository.delete(articles);
     }
 
     @Transactional
+    @Override
     public ArticleDto save(ArticleCreateDto articleCreateDto){
         Articles articles = articlesRepository.save(articleCreateDto.toEntity());
         return ArticleDto.fromEntity(articles);
     }
 
     @Transactional
+    @Override
     public ArticleDto updateArticleBySlug(String slug,ArticleCreateDto updateArticleDto) {
-
         Articles articles = getArticleBySlugOr404(slug);
         articles.update(updateArticleDto);
-
         return ArticleDto.fromEntity(articles);
     }
 
-    protected Articles getArticleBySlugOr404(String slug) {
+    private Articles getArticleBySlugOr404(String slug) {
         return articlesRepository.findOneBySlug(slug)
                 .orElseThrow(ResourceNotFoundException::new);
     }
