@@ -11,7 +11,6 @@ import study.realWorld.api.dto.articleDtos.ArticleListDto;
 import study.realWorld.api.dto.articleDtos.ArticleResponseDto;
 import study.realWorld.service.ArticlesService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -28,39 +27,40 @@ public class ArticlesController {
         return ResponseEntity.ok(new ArticleListDto(articleDtoList));
     }
 
+    @PostMapping
+    public ResponseEntity<ArticleResponseDto> createArticle(
+            @RequestBody ArticleCreateDto articleCreateDto
+    ){
+        ArticleDto articleDto = articlesService.save(articleCreateDto);
+
+        return new ResponseEntity<>(
+                new ArticleResponseDto(articleDto),
+                HttpStatus.CREATED);
+    }
+
     @GetMapping("/{slug}")
-    public ResponseEntity<ArticleResponseDto> getArticleBySlug(@PathVariable String slug){
+    public ResponseEntity<ArticleResponseDto> getArticleBySlug(
+            @PathVariable String slug
+    ){
         ArticleDto articleDto = articlesService.findBySlug(slug);
         return ResponseEntity.ok(new ArticleResponseDto(articleDto));
     }
 
     @DeleteMapping("/{slug}")
-    public ResponseEntity<?> deleteArticleBySlug(@PathVariable String slug) {
+    public ResponseEntity<?> deleteArticleBySlug(
+            @PathVariable String slug
+    ) {
         articlesService.deleteBySlug(slug);
         return ResponseEntity.noContent().build();
     }
 
-
-    @PostMapping
-    public ResponseEntity<ArticleResponseDto> createArticle(
-            @RequestBody ArticleCreateDto articleCreateDto
-            ){
-        ArticleDto articleDto = articlesService.save(articleCreateDto);
-
-        return new ResponseEntity<>(
-                new ArticleResponseDto(articleDto),
-                new HttpHeaders(),
-                HttpStatus.CREATED);
-    }
-
     @PutMapping("/{slug}")
-    public ResponseEntity<ArticleResponseDto> updateArticle(@PathVariable String slug,
-                                                            @RequestBody ArticleCreateDto updateArticleDto) {
-        //slug로 먼저 해당 객체를 찾아와서 requestbody로 받은 데이터로 수정한다.
-
-        ArticleDto updatedArticleDto = articlesService.updateArticleBySlug(slug,updateArticleDto);
+    public ResponseEntity<ArticleResponseDto> updateArticle(
+            @PathVariable String slug,
+            @RequestBody ArticleCreateDto updateArticleDto
+    ) {
+        ArticleDto updatedArticleDto = articlesService.updateArticleBySlug(slug, updateArticleDto);
 
         return ResponseEntity.ok(new ArticleResponseDto(updatedArticleDto));
     }
-
 }

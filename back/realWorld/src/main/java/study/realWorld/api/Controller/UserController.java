@@ -35,7 +35,6 @@ public class UserController {
     private ResponseEntity<UserResponseDto> createdResponseWithDto(UserDto userDto) {
         return new ResponseEntity<>(
                 new UserResponseDto(userDto),
-                new HttpHeaders(),
                 HttpStatus.CREATED
         );
     }
