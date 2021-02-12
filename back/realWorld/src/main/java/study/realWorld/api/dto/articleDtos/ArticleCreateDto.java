@@ -3,9 +3,11 @@ package study.realWorld.api.dto.articleDtos;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import study.realWorld.entity.Articles;
 
 @Getter
+@ToString
 @NoArgsConstructor
 public class ArticleCreateDto {
     private String slug;
