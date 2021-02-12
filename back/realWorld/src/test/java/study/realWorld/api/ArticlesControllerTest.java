@@ -1,5 +1,6 @@
 package study.realWorld.api;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -27,9 +28,12 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
         return "http://localhost:" + port + "/api/articles";
     }
 
-
     private String slugUrl(){
         return baseUrl() + "/" + articles.getSlug();
+    }
+
+    private String wrongSlugUrl() {
+        return baseUrl() + "/잘못된슬러그";
     }
 
     @Test
@@ -44,6 +48,7 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
         assertArticlesResponseEqualToDto(responseDto, createDto);
     }
 
+    @DisplayName("/api/articles에 get 요청을 보내면 status는 ok이고 모든 articleList를 받는다.")
     @Test
     public void getArticleListTest() {
         createArticleInit();
@@ -67,6 +72,7 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
         assertThat(responseEntity.getStatusCode()).isEqualTo(expectedStatus);
     }
 
+    @DisplayName("/api/articles/{slug}로 get 요청을 보내면 status는 ok이고 slug에 해당하는 article을 받는다")
     @Test
     public void getArticleBySlugTest(){
         createArticleInit();
@@ -78,6 +84,19 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
 
         assertStatus(responseEntity, HttpStatus.OK);
         assertResponseBodyIsEqualToDto(responseEntity, createDto);
+    }
+
+    @DisplayName("/api/articles/{잘못된슬러그}로 get 요청을 보내면 status는 Not found 이다.")
+    @Test
+    public void getArticleByWrongSlugTest(){
+        createArticleInit();
+
+        ResponseEntity<ArticleResponseDto> responseEntity = restTemplate.getForEntity(
+                wrongSlugUrl(),
+                ArticleResponseDto.class
+        );
+
+        assertStatus(responseEntity, HttpStatus.NOT_FOUND);
     }
 
     private void assertResponseBodyIsEqualToDto(
@@ -101,7 +120,6 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
         Optional<Articles> result = articlesRepository.findOneBySlug(createDto.getSlug());
         assertThat(result).isEmpty();
     }
-
 //        {
 //        "article": {
 //        "title": "string",
@@ -124,6 +142,7 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
     @Test
     public void updateArticleTest() throws Exception {
         createArticleInit();
+
         HttpEntity<ArticleCreateDto> requestUpdate = new HttpEntity<>(
                 updateDto, new HttpHeaders()
         );
