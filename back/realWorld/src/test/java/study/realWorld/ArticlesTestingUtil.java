@@ -16,19 +16,19 @@ public class ArticlesTestingUtil {
     @Autowired
     protected ArticlesRepository articlesRepository;
 
-    protected String title = "제목";
-    protected String description = "개요";
-    protected String body = "내용";
+    protected final String title = "제목";
+    protected final String description = "개요";
+    protected final String body = "내용";
     protected Articles articles;
 
-    protected ArticleCreateDto createDto = ArticleCreateDto
+    protected final ArticleCreateDto createDto = ArticleCreateDto
             .builder()
             .title(title)
             .description(description)
             .body(body)
             .build();
 
-    protected ArticleCreateDto updateDto = ArticleCreateDto
+    protected final ArticleCreateDto updateDto = ArticleCreateDto
             .builder()
             .title("타이틀")
             .description("디스크립션")
@@ -58,7 +58,6 @@ public class ArticlesTestingUtil {
         Assertions.assertThat(dto.getDescription()).isEqualTo(expected.getDescription());
         Assertions.assertThat(dto.getBody()).isEqualTo(expected.getBody());
     }
-
 
     @AfterEach
     protected void tearDown() {
