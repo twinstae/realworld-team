@@ -2,7 +2,7 @@ package study.realWorld.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import study.realWorld.ArticlesTestingUtil;
+import study.realWorld.TestingUtil;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.entity.Articles;
 
@@ -11,14 +11,14 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
-public class ArticlesServiceTest extends ArticlesTestingUtil {
+public class ArticlesServiceTest extends TestingUtil {
 
     @Autowired
     ArticlesService articlesService;
 
     @Test
     public void findBySlug() throws Exception {
-        createArticleInit();
+        createUserAndArticleInit();
 
         ArticleDto responseDto = articlesService.findBySlug(createDto.getSlug());
 
@@ -28,13 +28,13 @@ public class ArticlesServiceTest extends ArticlesTestingUtil {
     @Test
     public void deleteBySlugTest() throws Exception {
         // given
-        createArticleInit();
+        createUserAndArticleInit();
 
         // when
-        articlesService.deleteBySlug(articles.getSlug());
+        articlesService.deleteBySlug(createDto.getSlug());
 
         // then
-        Optional<Articles> result = articlesRepository.findOneBySlug(articles.getSlug());
+        Optional<Articles> result = articlesRepository.findOneBySlug(createDto.getSlug());
         assertThat(result).isEmpty();
     }
 
