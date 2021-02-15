@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
-import study.realWorld.ArticlesTestingUtil;
+import study.realWorld.TestingUtil;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleListDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
@@ -17,7 +17,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ArticlesControllerTest extends ArticlesTestingUtil {
+public class ArticlesControllerTest extends TestingUtil {
     @LocalServerPort
     private int port;
 
@@ -29,7 +29,7 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
     }
 
     private String slugUrl(){
-        return baseUrl() + "/" + articles.getSlug();
+        return baseUrl() + "/" + createDto.getSlug();
     }
 
     private String wrongSlugUrl() {
@@ -51,8 +51,8 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
     @DisplayName("/api/articles에 get 요청을 보내면 status는 ok이고 모든 articleList를 받는다.")
     @Test
     public void getArticleListTest() {
-        createArticleInit();
-        articlesRepository.save(updateDto.toEntity()); // 2번째 article 생성
+        createUserAndArticleInit();
+        articlesRepository.save(updateDto.toEntity(user)); // 2번째 article 생성
 
         ResponseEntity<ArticleListDto> responseEntity = restTemplate.getForEntity(
                 baseUrl(), ArticleListDto.class
@@ -75,7 +75,7 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
     @DisplayName("/api/articles/{slug}로 get 요청을 보내면 status는 ok이고 slug에 해당하는 article을 받는다")
     @Test
     public void getArticleBySlugTest(){
-        createArticleInit();
+        createUserAndArticleInit();
 
         ResponseEntity<ArticleResponseDto> responseEntity = restTemplate.getForEntity(
                 slugUrl(),
@@ -89,7 +89,7 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
     @DisplayName("/api/articles/{잘못된슬러그}로 get 요청을 보내면 status는 Not found 이다.")
     @Test
     public void getArticleByWrongSlugTest(){
-        createArticleInit();
+        createUserAndArticleInit();
 
         ResponseEntity<ArticleResponseDto> responseEntity = restTemplate.getForEntity(
                 wrongSlugUrl(),
@@ -111,7 +111,7 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
     @Test
     public void deleteArticleBySlugTest() throws Exception {
         // given
-        createArticleInit();
+        createUserAndArticleInit();
 
         // when
         restTemplate.delete(slugUrl());
@@ -131,8 +131,10 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
 
     @Test
     public void createArticleTest() throws Exception {
+        createUserInit();
+        HttpEntity<ArticleCreateDto> entity = new HttpEntity<>(createDto, getHttpHeadersWithToken());
         ResponseEntity<ArticleResponseDto> responseEntity = restTemplate.postForEntity(
-                baseUrl(), createDto, ArticleResponseDto.class
+                baseUrl(), entity, ArticleResponseDto.class
         );
 
         assertStatus(responseEntity, HttpStatus.CREATED);
@@ -141,7 +143,7 @@ public class ArticlesControllerTest extends ArticlesTestingUtil {
 
     @Test
     public void updateArticleTest() throws Exception {
-        createArticleInit();
+        createUserAndArticleInit();
 
         HttpEntity<ArticleCreateDto> requestUpdate = new HttpEntity<>(
                 updateDto, new HttpHeaders()
