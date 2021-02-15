@@ -6,10 +6,12 @@ import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.exception.ResourceNotFoundException;
 import study.realWorld.entity.Articles;
+import study.realWorld.entity.User;
 import study.realWorld.repository.ArticlesRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class ArticlesServiceImpl implements ArticlesService {
     private final ArticlesRepository articlesRepository;
+    private final UserService userService;
 
     @Override
     public List<ArticleDto> getPage(){
@@ -43,8 +46,13 @@ public class ArticlesServiceImpl implements ArticlesService {
     @Transactional
     @Override
     public ArticleDto save(ArticleCreateDto articleCreateDto){
-        Articles articles = articlesRepository.save(articleCreateDto.toEntity());
-        return ArticleDto.fromEntity(articles);
+        Optional<User> user = userService.getMyUserWithAuthorities();
+        if(user.isPresent()) {
+            Articles articles = articlesRepository.save(articleCreateDto.toEntity(user));
+            return ArticleDto.fromEntity(articles);
+        } else {
+
+        }
     }
 
     @Transactional

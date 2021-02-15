@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import study.realWorld.entity.Articles;
+import study.realWorld.entity.User;
 
 @Getter
 @ToString
@@ -14,6 +15,7 @@ public class ArticleCreateDto {
     private String title;
     private String description;
     private String body;
+    private User user;
 
     @Builder
     public ArticleCreateDto(String title, String description, String body) {
@@ -28,13 +30,14 @@ public class ArticleCreateDto {
     }
 
 
-    public Articles toEntity(){
+    public Articles toEntity(User user){
         return Articles
                 .builder()
                 .slug(this.slug)
                 .title(this.title)
                 .description(this.description)
                 .body(this.body)
+                .user(this.user)
                 .build();
     }
 }
