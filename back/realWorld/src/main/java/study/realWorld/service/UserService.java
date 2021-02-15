@@ -6,6 +6,10 @@ import study.realWorld.api.dto.userDtos.UserDto;
 import study.realWorld.api.dto.userDtos.UserSignUpDto;
 import study.realWorld.entity.User;
 
+import java.util.Optional;
+
 public interface UserService {
     UserDto signUp(UserSignUpDto userSignUpDto);
+
+    Optional<User> getMyUserWithAuthorities();
 }
