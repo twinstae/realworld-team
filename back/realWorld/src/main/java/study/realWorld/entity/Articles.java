@@ -34,6 +34,10 @@ public class Articles {
     @Column(columnDefinition = "TEXT")
     private String body;
 
+    @ManyToOne
+    @JoinColumn(name = "USER_ID") //외래키 얘가 주인
+    private User user;
+
     @Builder
     public Articles(String title, String slug, String description, String body) {
         this.title = title;

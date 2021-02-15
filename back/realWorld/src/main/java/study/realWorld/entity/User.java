@@ -5,6 +5,8 @@ import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -28,6 +30,9 @@ public class User {
 
     @Column(length = 100)
     private String password;
+
+    @OneToMany(mappedBy = "articles")
+    private List<Articles> articlesList = new ArrayList<>();
 
     @Builder
     public User(String userName, String email, String password, Set<Authority> authorities) {
