@@ -29,10 +29,7 @@ class UserRepositoryTest {
 
     @BeforeEach
     public void init() throws Exception {
-        Authority authority = Authority.builder()
-                .authorityName("ROLE_USER")
-                .build();
-
+        Authority authority = new Authority("ROLE_USER");
         authorityRepository.save(authority);
 
         User user = User
