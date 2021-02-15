@@ -22,13 +22,10 @@ import study.realWorld.service.UserService;
 @RequestMapping(path = "/api/users")
 public class UserController {
     private final UserService userService;
-    private final TokenProvider tokenProvider;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @PostMapping
     public ResponseEntity<UserResponseDto> signUp(@RequestBody UserSignUpDto userSignUpDto){
         UserDto userDto = userService.signUp(userSignUpDto);
-
         return createdResponseWithDto(userDto);
     }
 
@@ -41,21 +38,7 @@ public class UserController {
 
     @PostMapping("/signin")
     public ResponseEntity<TokenResponseDto> signIn(@RequestBody UserSignInDto userSignInDto){
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(userSignInDto.getEmail(), userSignInDto.getPassword());
-
-        Authentication authentication = authenticationManagerBuilder.getObject()
-                .authenticate(authenticationToken);
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String jwt = tokenProvider.createToken(authentication);
-
-        UserWithTokenDto userWithTokenDto = UserWithTokenDto
-                .builder()
-                .email(authentication.getName())
-                .token(jwt)
-                .build();
+        UserWithTokenDto userWithTokenDto = userService.signIn(userSignInDto);
         return ResponseEntity.ok(new TokenResponseDto(userWithTokenDto));
     }
 }
