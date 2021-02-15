@@ -17,22 +17,21 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "USER_ID")
     private Long id;
 
     @Column(length = 50, unique = true)
     private String userName;
 
-    //null불가능, Unique하게..
     @NotNull
-    @Column(name="user_email",unique = true)
+    @Column(unique = true)
     private String email;
 
     @Column(length = 100)
     private String password;
 
-    @OneToMany(mappedBy = "articles")
-    private List<Articles> articlesList = new ArrayList<>();
+    @OneToMany(mappedBy = "author")
+    private final List<Articles> articlesList = new ArrayList<>();
 
     @Builder
     public User(String userName, String email, String password, Set<Authority> authorities) {
@@ -41,6 +40,11 @@ public class User {
         this.password = password;
         this.activated = true;
         this.authorities = authorities;
+    }
+
+    public void addArticleList(Articles articles){
+        articlesList.add(articles);
+        articles.setAuthor(this);
     }
 
     // activated;

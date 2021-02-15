@@ -35,16 +35,15 @@ public class Articles {
     private String body;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID") //외래키 얘가 주인
-    private User user;
+    @JoinColumn(name = "AUTHOR_ID") //외래키 얘가 주인
+    private User author;
 
     @Builder
-    public Articles(String title, String slug, String description, String body, User user) {
+    public Articles(String title, String slug, String description, String body) {
         this.title = title;
         this.slug = slug;
         this.description = description;
         this.body = body;
-        this.user = user;
     }
 
     public void update(ArticleCreateDto updateDto){
@@ -60,5 +59,9 @@ public class Articles {
         if (!"".equals(body)) {
             this.body = updateDto.getBody();
         }
+    }
+
+    public void setAuthor(User author){
+        this.author = author;
     }
 }
