@@ -1,38 +1,66 @@
 package study.realWorld.service;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.realWorld.api.dto.userDtos.UserDto;
+import study.realWorld.api.dto.userDtos.UserSignInDto;
 import study.realWorld.api.dto.userDtos.UserSignUpDto;
+import study.realWorld.api.dto.userDtos.UserWithTokenDto;
+import study.realWorld.entity.Authority;
 import study.realWorld.entity.User;
+import study.realWorld.jwt.TokenProvider;
+import study.realWorld.repository.AuthorityRepository;
 import study.realWorld.repository.UserRepository;
 import study.realWorld.util.SecurityUtil;
 
-import java.util.Optional;
+import java.util.Collections;
+import java.util.Set;
 
+@RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
-
+    private final AuthorityRepository authorityRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TokenProvider tokenProvider;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
+    @Override
+    public UserWithTokenDto signIn(UserSignInDto userSignInDto){
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(userSignInDto.getEmail(), userSignInDto.getPassword());
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+        Authentication authentication = authenticationManagerBuilder.getObject()
+                .authenticate(authenticationToken);
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String jwt = tokenProvider.createToken(authentication);
+
+        return UserWithTokenDto
+                .builder()
+                .email(authentication.getName())
+                .token(jwt)
+                .build();
     }
 
     @Override
     public UserDto signUp(UserSignUpDto userSignUpDto) {
         checkUserAlreadyExist(userSignUpDto);
+        User user = userRepository.save(userSignUpDto.toEntity(passwordEncoder, getUserAuthorities()));
+        return UserDto.fromUser(user);
+    }
 
-        User user = userRepository.save(userSignUpDto.toEntity(passwordEncoder));
-        return UserDto
-                .builder()
-                .username(user.getUserName())
-                .email(user.getEmail())
-                .build();
+    private Set<Authority> getUserAuthorities(){
+        Authority userAuthority = authorityRepository.findByAuthorityName("ROLE_USER")
+                .orElseThrow(RuntimeException::new);
+        return Collections.singleton(userAuthority);
     }
 
     private void checkUserAlreadyExist(UserSignUpDto userSignUpDto) {
@@ -42,6 +70,14 @@ public class UserServiceImpl implements UserService {
                 });
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public User getUserWithAuthorities(String email) {
+        return userRepository.findOneWithAuthoritiesByEmail(email)
+                .orElseThrow(RuntimeException::new);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public User getMyUserWithAuthorities() {
         return SecurityUtil.getCurrentUsername()
