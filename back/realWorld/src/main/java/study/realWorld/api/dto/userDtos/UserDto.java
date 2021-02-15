@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import study.realWorld.entity.User;
 
 @Getter
 @NoArgsConstructor
@@ -12,4 +13,12 @@ import lombok.NoArgsConstructor;
 public class UserDto {
     private String username;
     private String email;
+
+    public static UserDto fromUser(User user){
+        return UserDto
+                .builder()
+                .username(user.getUserName())
+                .email(user.getEmail())
+                .build();
+    }
 }
