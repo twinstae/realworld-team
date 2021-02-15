@@ -29,13 +29,14 @@ public class ArticleCreateDto {
     }
 
     public Articles toEntity(User user){
-        return Articles
+        Articles articles = Articles
                 .builder()
                 .slug(this.slug)
                 .title(this.title)
                 .description(this.description)
                 .body(this.body)
-                .user(user)
                 .build();
+        user.addArticleList(articles);
+        return articles;
     }
 }
