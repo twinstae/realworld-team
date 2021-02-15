@@ -1,6 +1,7 @@
 package study.realWorld.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
@@ -46,13 +47,9 @@ public class ArticlesServiceImpl implements ArticlesService {
     @Transactional
     @Override
     public ArticleDto save(ArticleCreateDto articleCreateDto){
-        Optional<User> user = userService.getMyUserWithAuthorities();
-        if(user.isPresent()) {
-            Articles articles = articlesRepository.save(articleCreateDto.toEntity(user));
-            return ArticleDto.fromEntity(articles);
-        } else {
-
-        }
+        User user = userService.getMyUserWithAuthorities();
+        Articles articles = articlesRepository.save(articleCreateDto.toEntity(user));
+        return ArticleDto.fromEntity(articles);
     }
 
     @Transactional

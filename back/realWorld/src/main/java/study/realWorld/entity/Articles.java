@@ -39,11 +39,12 @@ public class Articles {
     private User user;
 
     @Builder
-    public Articles(String title, String slug, String description, String body) {
+    public Articles(String title, String slug, String description, String body, User user) {
         this.title = title;
         this.slug = slug;
         this.description = description;
         this.body = body;
+        this.user = user;
     }
 
     public void update(ArticleCreateDto updateDto){

@@ -15,7 +15,6 @@ public class ArticleCreateDto {
     private String title;
     private String description;
     private String body;
-    private User user;
 
     @Builder
     public ArticleCreateDto(String title, String description, String body) {
@@ -29,7 +28,6 @@ public class ArticleCreateDto {
         return title.toLowerCase().replaceAll("[\\&|[\\uFE30-\\uFFA0]|\\’|\\”|\\s?,.]+", "-");
     }
 
-
     public Articles toEntity(User user){
         return Articles
                 .builder()
@@ -37,7 +35,7 @@ public class ArticleCreateDto {
                 .title(this.title)
                 .description(this.description)
                 .body(this.body)
-                .user(this.user)
+                .user(user)
                 .build();
     }
 }
