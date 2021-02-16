@@ -158,4 +158,16 @@ public class ArticlesControllerTest extends TestingUtil {
         assertStatus(responseEntity, HttpStatus.OK);
         assertResponseBodyIsEqualToDto(responseEntity, updateDto);
     }
+
+    @DisplayName("다른 유저는 다른 유저의 Article을 수정할 수 없다.")
+    @Test
+    public void AnotherUserCannotUpdateArticle() throws Exception {
+
+        createUserAndArticleInit();
+        anOtherUserInit();
+
+
+
+        assertDtoIsEqualTo(updatedArticleDto, updateDto);
+    }
 }

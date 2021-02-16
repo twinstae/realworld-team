@@ -1,5 +1,6 @@
 package study.realWorld.service;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import study.realWorld.TestingUtil;
@@ -52,5 +53,8 @@ public class ArticlesServiceTest extends TestingUtil {
 
         assertDtoIsEqualTo(updatedArticleDto, updateDto);
     }
+
+
+
 
 }

@@ -49,10 +49,23 @@ public class TestingUtil {
             .password("t1e2s3t4")
             .build();
 
+    protected final UserSignUpDto userSignUpDto2 = UserSignUpDto
+            .builder()
+            .username("홍길동글")
+            .email("test2@naver.com")
+            .password("t1e2s3t45")
+            .build();
+
     protected final UserSignInDto userSignInDto = UserSignInDto
             .builder()
             .email("test@naver.com")
             .password("t1e2s3t4")
+            .build();
+
+    protected final UserSignInDto userSignInDto2 = UserSignInDto
+            .builder()
+            .email("test2@naver.com")
+            .password("t1e2s3t45")
             .build();
 
     protected final ArticleCreateDto createDto = ArticleCreateDto
@@ -90,12 +103,22 @@ public class TestingUtil {
         UserWithTokenDto userWithTokenDto = userService.signIn(userSignInDto);
         token = userWithTokenDto.getToken();
         user = userService.getUserWithAuthorities(userSignUpDto.getEmail());
-
     }
 
     protected void createUserAndArticleInit(){
         createUserInit();
         articlesRepository.save(createDto.toEntity(user));
+    }
+
+    protected void anOtherUserInit() {
+        Authority authority = new Authority("USER"); //권한 생성
+        authorityRepository.save(authority); // 권한 저장
+
+        userService.signUp(userSignUpDto2);
+
+        UserWithTokenDto userWithTokenDto = userService.signIn(userSignInDto2);
+        token = userWithTokenDto.getToken();
+        user = userService.getUserWithAuthorities(userSignUpDto2.getEmail());
     }
 
     // todo: init을 해서 token이 있을 때만 호출 가능하게 만들자!
@@ -114,6 +137,7 @@ public class TestingUtil {
         Assertions.assertThat(dto.getDescription()).isEqualTo(expected.getDescription());
         Assertions.assertThat(dto.getBody()).isEqualTo(expected.getBody());
     }
+
 
     @AfterEach
     protected void tearDown() {
