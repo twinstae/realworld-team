@@ -49,6 +49,7 @@ public class ArticlesController {
     }
 
     @DeleteMapping("/{slug}")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<?> deleteArticleBySlug(
             @PathVariable String slug
     ) {
@@ -57,6 +58,7 @@ public class ArticlesController {
     }
 
     @PutMapping("/{slug}")
+    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<ArticleResponseDto> updateArticle(
             @PathVariable String slug,
             @RequestBody ArticleCreateDto updateArticleDto
@@ -66,3 +68,4 @@ public class ArticlesController {
         return ResponseEntity.ok(new ArticleResponseDto(updatedArticleDto));
     }
 }
+
