@@ -17,10 +17,7 @@ import study.realWorld.entity.User;
 import study.realWorld.repository.ArticlesRepository;
 import study.realWorld.repository.AuthorityRepository;
 import study.realWorld.repository.UserRepository;
-import study.realWorld.service.ArticlesService;
 import study.realWorld.service.UserService;
-
-import javax.persistence.EntityManager;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -41,6 +38,7 @@ public class TestingUtil {
     protected final String body = "내용";
     protected User user;
     protected String token;
+    protected String token2;
 
     protected final UserSignUpDto userSignUpDto = UserSignUpDto
             .builder()
@@ -94,37 +92,38 @@ public class TestingUtil {
         assertThat(articleDto.getBody()).isEqualTo(testDto.getBody());
     }
 
-    protected void createUserInit() {
-        Authority authority = new Authority("USER"); //권한 생성
+    private void authorityInit() {
+        Authority authority = new Authority("ROLE_USER"); //권한 생성
         authorityRepository.save(authority); // 권한 저장
+    }
+
+    protected void createUserInit() {
+        authorityInit();
 
         userService.signUp(userSignUpDto);
+        token = getToken(userSignInDto);
 
-        UserWithTokenDto userWithTokenDto = userService.signIn(userSignInDto);
-        token = userWithTokenDto.getToken();
         user = userService.getUserWithAuthorities(userSignUpDto.getEmail());
+        System.out.println(user.getAuthorities());
     }
+
+    private String getToken(UserSignInDto signInDto) {
+        UserWithTokenDto userWithTokenDto = userService.signIn(signInDto);
+        return userWithTokenDto.getToken();
+    }
+
+    protected void anotherUserInit(){
+        userService.signUp(userSignUpDto2);
+        token2 = getToken(userSignInDto2);
+    };
 
     protected void createUserAndArticleInit(){
         createUserInit();
         articlesRepository.save(createDto.toEntity(user));
     }
 
-    protected void anOtherUserInit() {
-        Authority authority = new Authority("USER"); //권한 생성
-        authorityRepository.save(authority); // 권한 저장
-
-        userService.signUp(userSignUpDto2);
-
-        UserWithTokenDto userWithTokenDto = userService.signIn(userSignInDto2);
-        token = userWithTokenDto.getToken();
-        user = userService.getUserWithAuthorities(userSignUpDto2.getEmail());
-    }
-
     // todo: init을 해서 token이 있을 때만 호출 가능하게 만들자!
-    protected HttpHeaders getHttpHeadersWithToken() {
-        assertThat(token).isNotEmpty();
-
+    protected HttpHeaders getHttpHeadersWithToken(String token) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Token "+token);
@@ -143,6 +142,7 @@ public class TestingUtil {
     protected void tearDown() {
         articlesRepository.deleteAll();
         userRepository.deleteAll();
+        authorityRepository.deleteAll();
         user = null;
         token = null;
     }
