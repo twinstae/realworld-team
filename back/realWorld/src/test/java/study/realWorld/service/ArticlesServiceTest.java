@@ -30,22 +30,33 @@ public class ArticlesServiceTest extends TestingUtil {
     public void deleteBySlugTest() throws Exception {
         // given
         createUserAndArticleInit();
+        assertThat(getCreatedArticle()).isPresent();
 
         // when
         articlesService.deleteBySlug(createDto.getSlug());
 
         // then
-        Optional<Articles> result = articlesRepository.findOneBySlug(createDto.getSlug());
+        Optional<Articles> result = getCreatedArticle();
         assertThat(result).isEmpty();
     }
 
+    @DisplayName("createDto를 저장하면 DB에 저장하고, 똑같은 내용의 Dto를 돌려준다.")
     @Test
     public void saveTest() throws Exception {
         createUserInit();
+        assertThat(getCreatedArticle()).isEmpty();
+
         ArticleDto articleDto = articlesService.save(createDto);
-        assertDtoIsEqualTo(articleDto,createDto);
+
+        assertDtoIsEqualTo(articleDto, createDto);
+        assertThat(getCreatedArticle()).isPresent();
     }
 
+    private Optional<Articles> getCreatedArticle() {
+        return articlesRepository.findOneBySlug(createDto.getSlug());
+    }
+
+    @DisplayName("createDto를 저장하면 DB에 저장하고, 똑같은 내용의 Dto를 돌려준다.")
     @Test
     public void updateArticleBySlug(){
         createUserAndArticleInit();

@@ -11,10 +11,10 @@ import study.realWorld.entity.User;
 @ToString
 @NoArgsConstructor
 public class ArticleCreateDto {
-    private  String slug;
-    private  String title;
-    private  String description;
-    private  String body;
+    private String slug;
+    private String title;
+    private String description;
+    private String body;
 
     @Builder
     public ArticleCreateDto(String title, String description, String body) {
