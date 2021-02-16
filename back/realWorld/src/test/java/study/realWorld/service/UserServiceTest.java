@@ -29,7 +29,6 @@ public class UserServiceTest extends TestingUtil {
         userService.signUp(userSignUpDto);
         Optional<User> user = userRepository.findOneWithAuthoritiesByEmail(userSignUpDto.getEmail());
         assertThat(user).isNotEmpty();
-        assertThat(user.get().getAuthorities()).isNotNull();
     }
 
     @DisplayName("이미 가입한 이메일로 다시 가입하려 하면, RuntimeException을 던진다")

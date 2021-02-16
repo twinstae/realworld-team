@@ -36,7 +36,6 @@ public class TestingUtil {
     protected final String title = "제목";
     protected final String description = "개요";
     protected final String body = "내용";
-    protected User user;
     protected String token;
     protected String token2;
 
@@ -102,9 +101,6 @@ public class TestingUtil {
 
         userService.signUp(userSignUpDto);
         token = getToken(userSignInDto);
-
-        user = userService.getUserWithAuthorities(userSignUpDto.getEmail());
-        System.out.println(user.getAuthorities());
     }
 
     private String getToken(UserSignInDto signInDto) {
@@ -119,7 +115,11 @@ public class TestingUtil {
 
     protected void createUserAndArticleInit(){
         createUserInit();
-        articlesRepository.save(createDto.toEntity(user));
+        articlesRepository.save(createDto.toEntity(getUser()));
+    }
+
+    protected User getUser() {
+        return userService.getUserWithAuthoritiesAndArticleList(userSignUpDto.getEmail());
     }
 
     // todo: init을 해서 token이 있을 때만 호출 가능하게 만들자!
@@ -143,7 +143,6 @@ public class TestingUtil {
         articlesRepository.deleteAll();
         userRepository.deleteAll();
         authorityRepository.deleteAll();
-        user = null;
         token = null;
     }
 }

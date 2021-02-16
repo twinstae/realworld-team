@@ -29,7 +29,7 @@ public class ArticleCreateDto {
     }
 
     public Articles toEntity(User user){
-        return Articles
+        Articles article = Articles
                 .builder()
                 .slug(this.slug)
                 .title(this.title)
@@ -37,5 +37,7 @@ public class ArticleCreateDto {
                 .body(this.body)
                 .author(user)
                 .build();
+        user.getArticlesList().add(article);
+        return article;
     }
 }

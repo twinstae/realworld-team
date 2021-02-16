@@ -52,7 +52,7 @@ public class ArticlesControllerTest extends TestingUtil {
     @Test
     public void getArticleListTest() {
         createUserAndArticleInit();
-        articlesRepository.save(updateDto.toEntity(user)); // 2번째 article 생성
+        articlesRepository.save(updateDto.toEntity(getUser())); // 2번째 article 생성
 
         ResponseEntity<ArticleListDto> responseEntity = restTemplate.getForEntity(
                 baseUrl(), ArticleListDto.class
