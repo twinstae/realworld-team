@@ -92,7 +92,7 @@ public class TestingUtil {
         assertThat(articleDto.getBody()).isEqualTo(testDto.getBody());
     }
 
-    private void authorityInit() {
+    protected void authorityInit() {
         Authority authority = new Authority("ROLE_USER"); //권한 생성
         authorityRepository.save(authority); // 권한 저장
     }
