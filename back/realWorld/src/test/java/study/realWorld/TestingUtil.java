@@ -20,6 +20,8 @@ import study.realWorld.repository.UserRepository;
 import study.realWorld.service.ArticlesService;
 import study.realWorld.service.UserService;
 
+import javax.persistence.EntityManager;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -80,14 +82,15 @@ public class TestingUtil {
     }
 
     protected void createUserInit() {
-        Authority authority = new Authority("ROLE_USER");
-        authorityRepository.save(authority);
+        Authority authority = new Authority("ROLE_USER"); //권한 생성
+        authorityRepository.save(authority); // 권한 저장
 
         userService.signUp(userSignUpDto);
 
         UserWithTokenDto userWithTokenDto = userService.signIn(userSignInDto);
         token = userWithTokenDto.getToken();
         user = userService.getUserWithAuthorities(userSignUpDto.getEmail());
+
     }
 
     protected void createUserAndArticleInit(){

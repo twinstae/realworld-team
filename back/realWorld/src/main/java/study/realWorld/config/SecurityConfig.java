@@ -79,6 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                     .antMatchers("/api/users/signin").permitAll()
                     .antMatchers("/api/users/signup").permitAll()
                     .antMatchers("/api/articles").permitAll()
+                    .antMatchers("/api/articles/{slug}").permitAll()
                     // .antMatchers("/api/articles").permitAll() 테스트를 위한 임시 허가
                     // .antMatchers("/api/articles/제목").permitAll() 테스트를 위한 임시 허가
 
