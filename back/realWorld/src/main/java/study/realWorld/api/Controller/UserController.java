@@ -24,20 +24,17 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserResponseDto> signUp(@RequestBody UserSignUpDto userSignUpDto){
+    public ResponseEntity<UserResponseDto> signUp(
+            @RequestBody UserSignUpDto userSignUpDto){
         UserDto userDto = userService.signUp(userSignUpDto);
-        return createdResponseWithDto(userDto);
-    }
-
-    private ResponseEntity<UserResponseDto> createdResponseWithDto(UserDto userDto) {
         return new ResponseEntity<>(
                 new UserResponseDto(userDto),
-                HttpStatus.CREATED
-        );
+                HttpStatus.CREATED);
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<TokenResponseDto> signIn(@RequestBody UserSignInDto userSignInDto){
+    public ResponseEntity<TokenResponseDto> signIn(
+            @RequestBody UserSignInDto userSignInDto){
         UserWithTokenDto userWithTokenDto = userService.signIn(userSignInDto);
         return ResponseEntity.ok(new TokenResponseDto(userWithTokenDto));
     }
