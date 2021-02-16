@@ -10,14 +10,11 @@ import java.util.List;
 
 @ToString
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 public class ArticleListDto {
-    @JsonProperty("articles")
-    private List<ArticleDto> articles;
+    private final List<ArticleDto> articles;
 
-    @JsonProperty("articlesCount")
-    private int articlesCount;
+    private final int articlesCount;
 
     public ArticleListDto(List<ArticleDto> articleDataList) {
         this.articles = articleDataList;
