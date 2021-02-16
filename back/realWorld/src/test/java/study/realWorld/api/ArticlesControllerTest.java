@@ -117,7 +117,7 @@ public class ArticlesControllerTest extends TestingUtil {
         restTemplate.delete(slugUrl());
 
         // then
-        Optional<Articles> result = articlesRepository.findOneBySlug(createDto.getSlug());
+        Optional<Articles> result = articlesRepository.findOneBySlug(slugUrl());
         assertThat(result).isEmpty();
     }
 //        {
