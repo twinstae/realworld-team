@@ -12,6 +12,7 @@ import java.util.Set;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Entity
 public class User {
 
@@ -31,7 +32,7 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "author")
-    private List<Articles> articlesList = new ArrayList<>();
+    private final List<Articles> articlesList = new ArrayList<>();
 
     @Builder
     public User(String userName, String email, String password, Set<Authority> authorities) {
