@@ -80,13 +80,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public User getUserWithAuthoritiesAndArticleList(String email) {
-        return userRepository.findOneWithAuthoritiesAndArticleListByEmail(email)
-                .orElseThrow(RuntimeException::new);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public User getMyUserWithAuthorities() {
         return SecurityUtil.getCurrentUsername()
                 .flatMap(userRepository::findOneWithAuthoritiesByEmail)

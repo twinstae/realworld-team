@@ -17,6 +17,7 @@ import study.realWorld.entity.User;
 import study.realWorld.repository.ArticlesRepository;
 import study.realWorld.repository.AuthorityRepository;
 import study.realWorld.repository.UserRepository;
+import study.realWorld.service.ArticlesService;
 import study.realWorld.service.UserService;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -26,6 +27,8 @@ public class TestingUtil {
 
     @Autowired
     protected ArticlesRepository articlesRepository;
+    @Autowired
+    protected ArticlesService articlesService;
     @Autowired
     protected UserService userService;
     @Autowired
@@ -115,11 +118,7 @@ public class TestingUtil {
 
     protected void createUserAndArticleInit(){
         createUserInit();
-        articlesRepository.save(createDto.toEntity(getUser()));
-    }
-
-    protected User getUser() {
-        return userService.getUserWithAuthoritiesAndArticleList(userSignUpDto.getEmail());
+        articlesService.save(createDto);
     }
 
     // todo: init을 해서 token이 있을 때만 호출 가능하게 만들자!

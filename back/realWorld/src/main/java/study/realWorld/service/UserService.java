@@ -21,5 +21,4 @@ public interface UserService {
 
     User getMyUserWithAuthorities();
     User getUserWithAuthorities(String email);
-    User getUserWithAuthoritiesAndArticleList(String email);
 }
