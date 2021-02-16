@@ -17,6 +17,7 @@ public class ArticlesServiceTest extends TestingUtil {
     @Autowired
     ArticlesService articlesService;
 
+    @DisplayName("findBySlug함수에 slug를 넘기면 ArticleDto를 리턴한다")
     @Test
     public void findBySlug() throws Exception {
         createUserAndArticleInit();
@@ -26,6 +27,7 @@ public class ArticlesServiceTest extends TestingUtil {
         assertThat(responseDto.getTitle()).isEqualTo(createDto.getTitle());
     }
 
+    @DisplayName("deleteBySlug에 slug를 넘기면 article이 삭제되어 존재하지 않는다.")
     @Test
     public void deleteBySlugTest() throws Exception {
         // given
