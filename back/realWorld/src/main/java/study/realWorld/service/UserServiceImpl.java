@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private Set<Authority> getUserAuthorities(){
-        Authority userAuthority = authorityRepository.findByAuthorityName("ROLE_USER")
+        Authority userAuthority = authorityRepository.findByAuthorityName("USER")
                 .orElseThrow(RuntimeException::new);
         return Collections.singleton(userAuthority);
     }

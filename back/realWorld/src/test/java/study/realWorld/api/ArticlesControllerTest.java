@@ -145,8 +145,11 @@ public class ArticlesControllerTest extends TestingUtil {
     public void updateArticleTest() throws Exception {
         createUserAndArticleInit();
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBasicAuth(userSignInDto.getEmail(),userSignInDto.getPassword());
+
         HttpEntity<ArticleCreateDto> requestUpdate = new HttpEntity<>(
-                updateDto, new HttpHeaders()
+                updateDto, headers
         );
         ResponseEntity<ArticleResponseDto> responseEntity = restTemplate.exchange(
                 slugUrl(), HttpMethod.PUT, requestUpdate, ArticleResponseDto.class

@@ -82,7 +82,7 @@ public class TestingUtil {
     }
 
     protected void createUserInit() {
-        Authority authority = new Authority("ROLE_USER"); //권한 생성
+        Authority authority = new Authority("USER"); //권한 생성
         authorityRepository.save(authority); // 권한 저장
 
         userService.signUp(userSignUpDto);
