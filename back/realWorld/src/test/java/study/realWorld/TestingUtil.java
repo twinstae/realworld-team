@@ -143,5 +143,7 @@ public class TestingUtil {
     protected void tearDown() {
         articlesRepository.deleteAll();
         userRepository.deleteAll();
+        user = null;
+        token = null;
     }
 }
