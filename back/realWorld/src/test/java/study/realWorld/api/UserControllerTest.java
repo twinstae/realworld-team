@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.dto.userDtos.*;
+import study.realWorld.entity.Authority;
+import study.realWorld.repository.AuthorityRepository;
 import study.realWorld.repository.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,7 +28,8 @@ public class UserControllerTest {
 
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private AuthorityRepository authorityRepository;
     @AfterEach
     protected void tearDown() {
         userRepository.deleteAll();
@@ -39,6 +42,9 @@ public class UserControllerTest {
     @DisplayName("회원가입을 요청을 보내면 status는 Created이고 가입된 user를 반환한다.")
     @Test
     public void signUpTest() {
+        Authority authority = new Authority("ROLE_USER"); //권한 생성
+        authorityRepository.save(authority); // 권한 저장
+
         // 회원가입 dto를 만든다
         UserSignUpDto userSignUpDto = UserSignUpDto
                 .builder()

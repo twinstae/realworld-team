@@ -72,6 +72,11 @@ public class ArticlesControllerTest extends TestingUtil {
         assertThat(responseEntity.getStatusCode()).isEqualTo(expectedStatus);
     }
 
+    @Test
+    public void createUserAndArticleInitTest(){
+        createUserAndArticleInit();
+    }
+
     @DisplayName("/api/articles/{slug}로 get 요청을 보내면 status는 ok이고 slug에 해당하는 article을 받는다")
     @Test
     public void getArticleBySlugTest(){
@@ -132,7 +137,7 @@ public class ArticlesControllerTest extends TestingUtil {
     @Test
     public void createArticleTest() throws Exception {
         createUserInit();
-        HttpEntity<ArticleCreateDto> entity = new HttpEntity<>(createDto, getHttpHeadersWithToken());
+        HttpEntity<ArticleCreateDto> entity = new HttpEntity<>(createDto, getHttpHeadersWithToken(token));
         ResponseEntity<ArticleResponseDto> responseEntity = restTemplate.postForEntity(
                 baseUrl(), entity, ArticleResponseDto.class
         );
@@ -145,29 +150,30 @@ public class ArticlesControllerTest extends TestingUtil {
     public void updateArticleTest() throws Exception {
         createUserAndArticleInit();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBasicAuth(userSignInDto.getEmail(),userSignInDto.getPassword());
-
-        HttpEntity<ArticleCreateDto> requestUpdate = new HttpEntity<>(
-                updateDto, headers
-        );
-        ResponseEntity<ArticleResponseDto> responseEntity = restTemplate.exchange(
-                slugUrl(), HttpMethod.PUT, requestUpdate, ArticleResponseDto.class
-        );
+        ResponseEntity<ArticleResponseDto> responseEntity = updateRequestWithToken(token);
 
         assertStatus(responseEntity, HttpStatus.OK);
         assertResponseBodyIsEqualToDto(responseEntity, updateDto);
     }
 
+    private ResponseEntity<ArticleResponseDto> updateRequestWithToken(String token) {
+        HttpEntity<ArticleCreateDto> requestUpdate = new HttpEntity<>(
+                updateDto, getHttpHeadersWithToken(token)
+        );
+        return restTemplate.exchange(
+                slugUrl(), HttpMethod.PUT, requestUpdate, ArticleResponseDto.class
+        );
+    }
+
     @DisplayName("다른 유저는 다른 유저의 Article을 수정할 수 없다.")
     @Test
     public void AnotherUserCannotUpdateArticle() throws Exception {
-
         createUserAndArticleInit();
-        anOtherUserInit();
+        anotherUserInit();
 
+        ResponseEntity<ArticleResponseDto> responseEntity = updateRequestWithToken(token2);
 
-
-        assertDtoIsEqualTo(updatedArticleDto, updateDto);
+        assertStatus(responseEntity, HttpStatus.UNAUTHORIZED);
     }
+
 }
