@@ -1,16 +1,14 @@
 package study.realWorld.entity;
 
 import com.sun.istack.NotNull;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 
 import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 @Entity
 public class Articles {
 
@@ -34,12 +32,12 @@ public class Articles {
     @Column(columnDefinition = "TEXT")
     private String body;
 
-    @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name = "USER_ID") //외래키 얘가 주인
+    @ManyToOne
+    @JoinColumn(name = "AUTHOR_ID") //외래키 얘가 주인
     private User author;
 
     @Builder
-    public Articles(String title, String slug, String description, String body,User author) {
+    public Articles(String title, String slug, String description, String body, User author) {
         this.title = title;
         this.slug = slug;
         this.description = description;
@@ -60,9 +58,5 @@ public class Articles {
         if (!"".equals(body)) {
             this.body = updateDto.getBody();
         }
-    }
-
-    public void setAuthor(User author){
-        this.author = author;
     }
 }
