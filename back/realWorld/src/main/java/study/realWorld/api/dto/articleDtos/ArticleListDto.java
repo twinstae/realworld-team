@@ -10,11 +10,12 @@ import java.util.List;
 
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 public class ArticleListDto {
-    private final List<ArticleDto> articles;
+    private List<ArticleDto> articles;
 
-    private final int articlesCount;
+    private int articlesCount;
 
     public ArticleListDto(List<ArticleDto> articleDataList) {
         this.articles = articleDataList;

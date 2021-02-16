@@ -6,12 +6,13 @@ import study.realWorld.entity.Articles;
 @Getter
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class ArticleDto {
-    private final String slug;
-    private final String title;
-    private final String description;
-    private final String body;
+    private String slug;
+    private String title;
+    private String description;
+    private String body;
 
     public static ArticleDto fromEntity(Articles articles) {
 
