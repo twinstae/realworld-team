@@ -40,6 +40,7 @@ public class ArticlesServiceTest extends TestingUtil {
 
     @Test
     public void saveTest() throws Exception {
+        createUserInit();
         ArticleDto articleDto = articlesService.save(createDto);
         assertDtoIsEqualTo(articleDto,createDto);
     }
