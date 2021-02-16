@@ -57,8 +57,9 @@ public class UserServiceImpl implements UserService {
         return UserDto.fromUser(user);
     }
 
-    private Set<Authority> getUserAuthorities(){
-        Authority userAuthority = authorityRepository.findByAuthorityName("USER")
+    @Transactional(readOnly = true)
+    public Set<Authority> getUserAuthorities(){
+        Authority userAuthority = authorityRepository.findByAuthorityName("ROLE_USER")
                 .orElseThrow(RuntimeException::new);
         return Collections.singleton(userAuthority);
     }

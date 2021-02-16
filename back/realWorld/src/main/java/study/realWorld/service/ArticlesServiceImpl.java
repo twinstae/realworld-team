@@ -1,10 +1,12 @@
 package study.realWorld.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
+import study.realWorld.api.exception.NoAuthorizationException;
 import study.realWorld.api.exception.ResourceNotFoundException;
 import study.realWorld.entity.Articles;
 import study.realWorld.entity.User;
@@ -47,17 +49,26 @@ public class ArticlesServiceImpl implements ArticlesService {
     @Transactional
     @Override
     public ArticleDto save(ArticleCreateDto articleCreateDto){
-        User user = userService.getMyUserWithAuthorities();
-        Articles articles = articlesRepository.save(articleCreateDto.toEntity(user));
+        User currentUser = userService.getMyUserWithAuthorities();
+        Articles articles = articlesRepository.save(articleCreateDto.toEntity(currentUser));
         return ArticleDto.fromEntity(articles);
     }
 
     @Transactional
     @Override
-    public ArticleDto updateArticleBySlug(String slug,ArticleCreateDto updateArticleDto) {
+    public ArticleDto updateArticleBySlug(String slug, ArticleCreateDto updateArticleDto) {
         Articles articles = getArticleBySlugOr404(slug);
+        checkCurrentUserIsTheAuthor(articles);
+
         articles.update(updateArticleDto);
         return ArticleDto.fromEntity(articles);
+    }
+
+    private void checkCurrentUserIsTheAuthor(Articles articles) {
+        User currentUser = userService.getMyUserWithAuthorities();
+        if (! articles.getAuthor().equals(currentUser)){
+            throw new NoAuthorizationException();
+        }
     }
 
     private Articles getArticleBySlugOr404(String slug) {
