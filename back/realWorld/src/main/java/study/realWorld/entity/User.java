@@ -31,7 +31,7 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "author")
-    private final List<Articles> articlesList = new ArrayList<>();
+    private List<Articles> articlesList = new ArrayList<>();
 
     @Builder
     public User(String userName, String email, String password, Set<Authority> authorities) {
@@ -40,11 +40,6 @@ public class User {
         this.password = password;
         this.activated = true;
         this.authorities = authorities;
-    }
-
-    public void addArticleList(Articles articles){
-        articlesList.add(articles);
-        articles.setAuthor(this);
     }
 
     // activated;

@@ -34,16 +34,17 @@ public class Articles {
     @Column(columnDefinition = "TEXT")
     private String body;
 
-    @ManyToOne
-    @JoinColumn(name = "AUTHOR_ID") //외래키 얘가 주인
+    @ManyToOne(fetch= FetchType.LAZY)
+    @JoinColumn(name = "USER_ID") //외래키 얘가 주인
     private User author;
 
     @Builder
-    public Articles(String title, String slug, String description, String body) {
+    public Articles(String title, String slug, String description, String body,User author) {
         this.title = title;
         this.slug = slug;
         this.description = description;
         this.body = body;
+        this.author = author;
     }
 
     public void update(ArticleCreateDto updateDto){

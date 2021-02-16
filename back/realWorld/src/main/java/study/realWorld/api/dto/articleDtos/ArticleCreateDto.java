@@ -35,8 +35,9 @@ public class ArticleCreateDto {
                 .title(this.title)
                 .description(this.description)
                 .body(this.body)
+                .author(user)
                 .build();
-        user.addArticleList(articles);
+//        user.addArticleList(articles);
         return articles;
     }
 }

@@ -46,9 +46,10 @@ public class ArticlesServiceTest extends TestingUtil {
 
     @Test
     public void updateArticleBySlug(){
-        articlesService.save(createDto);
+        createUserAndArticleInit();
         ArticleDto updatedArticleDto = articlesService.updateArticleBySlug(createDto.getSlug(), updateDto);
 
         assertDtoIsEqualTo(updatedArticleDto, updateDto);
     }
+
 }
