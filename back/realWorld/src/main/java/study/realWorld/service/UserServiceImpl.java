@@ -74,10 +74,10 @@ public class UserServiceImpl implements UserService {
                     throw new RuntimeException(user.getEmail() + "은 가입되어 있는 이메일입니다.");
                 });
     }
-
+    
     @Override
     @Transactional(readOnly = true)
-    public User getUserWithAuthorities(String email) {
+    public User getUserWithAuthoritiesByEmail(String email) {
         return userRepository.findOneWithAuthoritiesByEmail(email)
                 .orElseThrow(RuntimeException::new);
     }
