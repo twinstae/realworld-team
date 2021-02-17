@@ -1,8 +1,6 @@
 package study.realWorld.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
@@ -14,8 +12,6 @@ import study.realWorld.repository.ArticlesRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -44,6 +40,7 @@ public class ArticlesServiceImpl implements ArticlesService {
     public void deleteBySlug(String slug) {
         Articles articles = getArticleBySlugOr404(slug);
         checkCurrentUserIsTheAuthor(articles);
+
         articlesRepository.delete(articles);
     }
 
