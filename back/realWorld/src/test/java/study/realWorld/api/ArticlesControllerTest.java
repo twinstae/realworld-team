@@ -126,7 +126,7 @@ public class ArticlesControllerTest extends TestingUtil {
         // then
         assertStatus(responseEntity, HttpStatus.NO_CONTENT);
 
-        Optional<Articles> result = articlesRepository.findOneBySlug(slugUrl());
+        Optional<Articles> result = articlesRepository.findOneWithAuthorBySlug(slugUrl());
         assertThat(result).isEmpty();
     }
 

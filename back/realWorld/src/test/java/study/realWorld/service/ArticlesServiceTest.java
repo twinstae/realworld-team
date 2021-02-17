@@ -55,7 +55,7 @@ public class ArticlesServiceTest extends TestingUtil {
     }
 
     private Optional<Articles> getCreatedArticle() {
-        return articlesRepository.findOneBySlug(createDto.getSlug());
+        return articlesRepository.findOneWithAuthorBySlug(createDto.getSlug());
     }
 
     @DisplayName("createDto를 저장하면 DB에 저장하고, 똑같은 내용의 Dto를 돌려준다.")

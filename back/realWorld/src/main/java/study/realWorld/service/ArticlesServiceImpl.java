@@ -10,7 +10,7 @@ import study.realWorld.entity.Articles;
 import study.realWorld.entity.User;
 import study.realWorld.repository.ArticlesRepository;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +21,7 @@ public class ArticlesServiceImpl implements ArticlesService {
     private final UserService userService;
 
     @Override
+    @Transactional(readOnly = true)
     public List<ArticleDto> getPage(){
         List<Articles> articlesList = articlesRepository.findAll();
 
@@ -30,6 +31,7 @@ public class ArticlesServiceImpl implements ArticlesService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ArticleDto findBySlug(String slug) {
         Articles articles = getArticleBySlugOr404(slug);
         return ArticleDto.fromEntity(articles);
@@ -70,7 +72,7 @@ public class ArticlesServiceImpl implements ArticlesService {
     }
 
     private Articles getArticleBySlugOr404(String slug) {
-        return articlesRepository.findOneBySlug(slug)
+        return articlesRepository.findOneWithAuthorBySlug(slug)
                 .orElseThrow(ResourceNotFoundException::new);
     }
 }
