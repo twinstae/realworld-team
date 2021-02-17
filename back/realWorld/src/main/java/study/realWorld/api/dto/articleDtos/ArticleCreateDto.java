@@ -1,11 +1,14 @@
-package study.realWorld.api.dto;
+package study.realWorld.api.dto.articleDtos;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import study.realWorld.entity.Articles;
+import study.realWorld.entity.User;
 
 @Getter
+@ToString
 @NoArgsConstructor
 public class ArticleCreateDto {
     private String slug;
@@ -25,14 +28,16 @@ public class ArticleCreateDto {
         return title.toLowerCase().replaceAll("[\\&|[\\uFE30-\\uFFA0]|\\’|\\”|\\s?,.]+", "-");
     }
 
-
-    public Articles toEntity(){
-        return Articles
+    public Articles toEntity(User user){
+        Articles article = Articles
                 .builder()
                 .slug(this.slug)
                 .title(this.title)
                 .description(this.description)
                 .body(this.body)
+                .author(user)
                 .build();
+        user.getArticlesList().add(article);
+        return article;
     }
 }

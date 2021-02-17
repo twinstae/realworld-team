@@ -1,16 +1,14 @@
 package study.realWorld.entity;
 
 import com.sun.istack.NotNull;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import study.realWorld.api.dto.ArticleCreateDto;
+import lombok.*;
+import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 
 import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 @Entity
 public class Articles {
 
@@ -34,12 +32,17 @@ public class Articles {
     @Column(columnDefinition = "TEXT")
     private String body;
 
+    @ManyToOne
+    @JoinColumn(name = "AUTHOR_ID") //외래키 얘가 주인
+    private User author;
+
     @Builder
-    public Articles(String title, String slug, String description, String body) {
+    public Articles(String title, String slug, String description, String body, User author) {
         this.title = title;
         this.slug = slug;
         this.description = description;
         this.body = body;
+        this.author = author;
     }
 
     public void update(ArticleCreateDto updateDto){

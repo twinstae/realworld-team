@@ -1,22 +1,19 @@
 package study.realWorld.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@Entity
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
+@Entity
 public class Authority {
 
     @Id
-    @Column(name="authority_name", length=50)
+    @Column(name="authority_name", length=50, unique = true)
     private String authorityName;
 }

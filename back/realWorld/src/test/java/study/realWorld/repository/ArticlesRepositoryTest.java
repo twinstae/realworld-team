@@ -1,16 +1,16 @@
 package study.realWorld.repository;
 
 import org.junit.jupiter.api.Test;
-import study.realWorld.ArticlesTestingUtil;
+import study.realWorld.TestingUtil;
 import study.realWorld.api.exception.ResourceNotFoundException;
 import study.realWorld.entity.Articles;
 
 
-class ArticlesRepositoryTest extends ArticlesTestingUtil {
+class ArticlesRepositoryTest extends TestingUtil {
 
     @Test
     public void findOneBySlugTest() throws Exception {
-        createArticleInit();
+        createUserAndArticleInit();
 
         Articles articles = articlesRepository.findOneBySlug(createDto.getSlug()).orElseThrow(ResourceNotFoundException::new);
         assertArticlesEqualToDto(articles, createDto);

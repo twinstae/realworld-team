@@ -29,10 +29,7 @@ class UserRepositoryTest {
 
     @BeforeEach
     public void init() throws Exception {
-        Authority authority = Authority.builder()
-                .authorityName("ROLE_USER")
-                .build();
-
+        Authority authority = new Authority("ROLE_USER");
         authorityRepository.save(authority);
 
         User user = User
@@ -40,8 +37,7 @@ class UserRepositoryTest {
                 .userName("user1")
                 .email(email)
                 .password("123")
-                .activated(true)
-                .authorities((Collections.singleton(authority)))
+                .authorities(Collections.singleton(authority))
                 .build();
 
         userRepository.save(user);

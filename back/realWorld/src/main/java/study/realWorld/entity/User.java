@@ -5,30 +5,43 @@ import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@ToString
 @Entity
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "USER_ID")
     private Long id;
 
     @Column(length = 50, unique = true)
     private String userName;
 
-    //null불가능, Unique하게..
     @NotNull
-    @Column(name="user_email",unique = true)
+    @Column(unique = true)
     private String email;
 
     @Column(length = 100)
     private String password;
+
+    @OneToMany(mappedBy = "author")
+    private final List<Articles> articlesList = new ArrayList<>();
+
+    @Builder
+    public User(String userName, String email, String password, Set<Authority> authorities) {
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+        this.activated = true;
+        this.authorities = authorities;
+    }
 
     // activated;
     @Column
