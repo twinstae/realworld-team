@@ -43,6 +43,7 @@ public class ArticlesServiceImpl implements ArticlesService {
     @Transactional
     public void deleteBySlug(String slug) {
         Articles articles = getArticleBySlugOr404(slug);
+        checkCurrentUserIsTheAuthor(articles);
         articlesRepository.delete(articles);
     }
 
