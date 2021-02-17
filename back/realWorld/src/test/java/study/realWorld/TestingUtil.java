@@ -93,25 +93,13 @@ public class TestingUtil {
         assertThat(articleDto.getBody()).isEqualTo(testDto.getBody());
     }
 
-    protected void authorityInitRoleUser() {
-        Authority authority = new Authority("ROLE_USER"); //권한 생성
-        authorityRepository.save(authority); // 권한 저장
-    }
-
-    protected void authorityInitRoleAdmin() {
-        Authority authority = new Authority("ROLE_ADMIN"); //권한 생성
-        authorityRepository.save(authority); // 권한 저장
+    protected void authorityInit() {
+        authorityRepository.save(new Authority("ROLE_USER"));
+        authorityRepository.save(new Authority("ROLE_ADMIN"));
     }
 
     protected void createUserInit() {
-        authorityInitRoleUser();
-
-        userService.signUp(userSignUpDto);
-        token = getToken(userSignInDto);
-    }
-
-    protected void createAdminInit() {
-        authorityInitRoleAdmin();
+        authorityInit();
 
         userService.signUp(userSignUpDto);
         token = getToken(userSignInDto);
