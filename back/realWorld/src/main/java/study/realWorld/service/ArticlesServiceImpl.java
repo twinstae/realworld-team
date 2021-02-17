@@ -49,7 +49,7 @@ public class ArticlesServiceImpl implements ArticlesService {
     @Transactional
     @Override
     public ArticleDto save(ArticleCreateDto articleCreateDto){
-        User currentUser = userService.getMyUserWithAuthorities();
+        User currentUser = userService.getMyUser();
         Articles articles = articlesRepository.save(articleCreateDto.toEntity(currentUser));
         return ArticleDto.fromEntity(articles);
     }
@@ -65,7 +65,7 @@ public class ArticlesServiceImpl implements ArticlesService {
     }
 
     private void checkCurrentUserIsTheAuthor(Articles articles) {
-        User currentUser = userService.getMyUserWithAuthorities();
+        User currentUser = userService.getMyUser();
         if (! articles.getAuthor().equals(currentUser)){
             throw new NoAuthorizationException();
         }

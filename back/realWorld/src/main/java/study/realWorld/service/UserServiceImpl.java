@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkUserAlreadyExist(UserSignUpDto userSignUpDto) {
-        userRepository.findByEmail(userSignUpDto.getEmail())
+        userRepository.findOneByEmail(userSignUpDto.getEmail())
                 .ifPresent((user)->{
                     throw new RuntimeException(user.getEmail() + "은 가입되어 있는 이메일입니다.");
                 });
@@ -79,6 +79,14 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public User getUserWithAuthoritiesByEmail(String email) {
         return userRepository.findOneWithAuthoritiesByEmail(email)
+                .orElseThrow(RuntimeException::new);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public User getMyUser() {
+        return SecurityUtil.getCurrentUsername()
+                .flatMap(userRepository::findOneByEmail)
                 .orElseThrow(RuntimeException::new);
     }
 
