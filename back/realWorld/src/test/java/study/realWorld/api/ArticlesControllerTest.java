@@ -13,7 +13,6 @@ import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.dto.articleDtos.ArticleResponseDto;
 import study.realWorld.entity.Articles;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
