@@ -125,14 +125,7 @@ public class ArticlesControllerTest extends TestingUtil {
         Optional<Articles> result = articlesRepository.findOneBySlug(slugUrl());
         assertThat(result).isEmpty();
     }
-//        {
-//        "article": {
-//        "title": "string",
-//                "description": "string",
-//                "body": "string",
-//
-//    }
-//    }
+
 
     @Test
     public void createArticleTest() throws Exception {
@@ -165,7 +158,7 @@ public class ArticlesControllerTest extends TestingUtil {
         );
     }
 
-    @DisplayName("다른 유저는 다른 유저의 Article을 수정할 수 없다.")
+    @DisplayName("한 유저는 다른 유저의 Article을 수정할 수 없다.")
     @Test
     public void AnotherUserCannotUpdateArticle() throws Exception {
         createUserAndArticleInit();
@@ -174,6 +167,26 @@ public class ArticlesControllerTest extends TestingUtil {
         ResponseEntity<ArticleResponseDto> responseEntity = updateRequestWithToken(token2);
 
         assertStatus(responseEntity, HttpStatus.UNAUTHORIZED);
+    }
+
+    @DisplayName("한 유저는 다른 유저의 Article을 삭제할 수 없다.")
+    @Test
+    public void AnotherUserCannotDeleteArticle() throws Exception {
+        createUserAndArticleInit();
+        anotherUserInit();
+
+        ResponseEntity<ArticleResponseDto> responseEntity = deleteRequestWithToken(token2);
+
+        assertStatus(responseEntity, HttpStatus.NO_CONTENT);
+    }
+
+    private ResponseEntity<ArticleResponseDto> deleteRequestWithToken(String token) {
+        HttpEntity<ArticleCreateDto> requestUpdate = new HttpEntity<>(
+                null, getHttpHeadersWithToken(token)
+        );
+        return restTemplate.exchange(
+                slugUrl(), HttpMethod.DELETE, requestUpdate, ArticleResponseDto.class
+        );
     }
 
 }
