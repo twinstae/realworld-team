@@ -13,6 +13,8 @@ import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.dto.articleDtos.ArticleResponseDto;
 import study.realWorld.entity.Articles;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -119,9 +121,11 @@ public class ArticlesControllerTest extends TestingUtil {
         createUserAndArticleInit();
 
         // when
-        restTemplate.delete(slugUrl());
+        ResponseEntity<?> responseEntity = deleteRequestWithToken(token);
 
         // then
+        assertStatus(responseEntity, HttpStatus.NO_CONTENT);
+
         Optional<Articles> result = articlesRepository.findOneBySlug(slugUrl());
         assertThat(result).isEmpty();
     }
@@ -175,30 +179,18 @@ public class ArticlesControllerTest extends TestingUtil {
         createUserAndArticleInit();
         anotherUserInit();
 
-        ResponseEntity<String> responseEntity = deleteRequestWithToken(token2);
+        ResponseEntity<?> responseEntity = deleteRequestWithToken(token2);
 
         assertStatus(responseEntity, HttpStatus.UNAUTHORIZED);
     }
 
-    @DisplayName("한 유저는 다른 유저의 Article을 삭제할 수 없다.")
-    @Test
-    public void AdminCanDeleteUserArticle() throws Exception {
-        createUserAndArticleInit();
-        createAdminInit();
-
-        ResponseEntity<?> responseEntity = deleteRequestWithToken(token2);
-
-        assertStatus(responseEntity, HttpStatus.NO_CONTENT);
-    }
-
-
-    private ResponseEntity<String> deleteRequestWithToken(String token) {
-        HttpEntity<ArticleCreateDto> requestUpdate = new HttpEntity<>(
+    private ResponseEntity<Map> deleteRequestWithToken(String token) {
+        HttpEntity<?> requestUpdate = new HttpEntity<>(
             null, getHttpHeadersWithToken(token)
     );
 
         return restTemplate.exchange(
-                slugUrl(), HttpMethod.DELETE, requestUpdate, String.class
+                slugUrl(), HttpMethod.DELETE, requestUpdate, Map.class
         );
     }
 }
