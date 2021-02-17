@@ -60,8 +60,12 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public Set<Authority> getUserAuthorities(){
         Authority userAuthority = authorityRepository.findByAuthorityName("ROLE_USER")
-                .orElseThrow(RuntimeException::new);
+                .orElseGet(this::initAndGetUserAuthority);
         return Collections.singleton(userAuthority);
+    }
+
+    public Authority initAndGetUserAuthority(){
+        return authorityRepository.save(new Authority("ROLE_USER"));
     }
 
     private void checkUserAlreadyExist(UserSignUpDto userSignUpDto) {
