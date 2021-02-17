@@ -31,7 +31,7 @@ public class ArticleCreateDto {
     public Articles toEntity(User user){
         Articles article = Articles
                 .builder()
-                .slug(this.slug)
+                .slug(toSlug(this.title))
                 .title(this.title)
                 .description(this.description)
                 .body(this.body)
