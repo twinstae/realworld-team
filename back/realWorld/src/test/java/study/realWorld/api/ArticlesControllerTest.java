@@ -54,6 +54,7 @@ public class ArticlesControllerTest extends TestingUtil {
     public void getArticleListTest() {
         createUserAndArticleInit();
         articlesService.save(updateDto); // 2번째 article 생성
+        System.out.println("\n2번째 article 생성 끝\n");
 
         ResponseEntity<ArticleListDto> responseEntity = restTemplate.getForEntity(
                 baseUrl(), ArticleListDto.class

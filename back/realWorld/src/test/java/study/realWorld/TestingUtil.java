@@ -94,15 +94,18 @@ public class TestingUtil {
     }
 
     protected void authorityInit() {
+        System.out.println("\n테스트 authority 생성 시작\n");
         authorityRepository.save(new Authority("ROLE_USER"));
         authorityRepository.save(new Authority("ROLE_ADMIN"));
+        System.out.println("\n테스트 authority 생성 끝\n");
     }
 
     protected void createUserInit() {
         authorityInit();
-
+        System.out.println("\n테스트 user 생성 시작\n");
         userService.signUp(userSignUpDto);
         token = getToken(userSignInDto);
+        System.out.println("\n테스트 user 생성 끝\n");
     }
 
     private String getToken(UserSignInDto signInDto) {
@@ -111,13 +114,17 @@ public class TestingUtil {
     }
 
     protected void anotherUserInit(){
+        System.out.println("\n테스트 user2 생성 시작\n");
         userService.signUp(userSignUpDto2);
         token2 = getToken(userSignInDto2);
+        System.out.println("\n테스트 user2 생성 끝\n");
     };
 
     protected void createUserAndArticleInit(){
         createUserInit();
+        System.out.println("\n테스트 Article 생성 시작\n");
         articlesService.save(createDto);
+        System.out.println("\n테스트 Article 생성 끝\n");
     }
 
     // todo: init을 해서 token이 있을 때만 호출 가능하게 만들자!
@@ -138,6 +145,7 @@ public class TestingUtil {
 
     @AfterEach
     protected void tearDown() {
+        System.out.println("\n테스트 데이터 정리\n");
         articlesRepository.deleteAll();
         userRepository.deleteAll();
         authorityRepository.deleteAll();
