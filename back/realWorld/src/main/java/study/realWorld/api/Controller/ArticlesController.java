@@ -1,7 +1,7 @@
-package study.realWorld.api.Controller;
+package study.realWorld.api.controller;
 
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +14,7 @@ import study.realWorld.service.ArticlesService;
 
 import java.util.List;
 
+@Api(tags = {"1.Articles"})
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/api/articles")
