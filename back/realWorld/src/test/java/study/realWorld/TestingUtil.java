@@ -13,7 +13,6 @@ import study.realWorld.api.dto.userDtos.UserSignUpDto;
 import study.realWorld.api.dto.userDtos.UserWithTokenDto;
 import study.realWorld.entity.Articles;
 import study.realWorld.entity.Authority;
-import study.realWorld.entity.User;
 import study.realWorld.repository.ArticlesRepository;
 import study.realWorld.repository.AuthorityRepository;
 import study.realWorld.repository.UserRepository;
@@ -94,13 +93,25 @@ public class TestingUtil {
         assertThat(articleDto.getBody()).isEqualTo(testDto.getBody());
     }
 
-    protected void authorityInit() {
+    protected void authorityInitRoleUser() {
         Authority authority = new Authority("ROLE_USER"); //권한 생성
         authorityRepository.save(authority); // 권한 저장
     }
 
+    protected void authorityInitRoleAdmin() {
+        Authority authority = new Authority("ROLE_ADMIN"); //권한 생성
+        authorityRepository.save(authority); // 권한 저장
+    }
+
     protected void createUserInit() {
-        authorityInit();
+        authorityInitRoleUser();
+
+        userService.signUp(userSignUpDto);
+        token = getToken(userSignInDto);
+    }
+
+    protected void createAdminInit() {
+        authorityInitRoleAdmin();
 
         userService.signUp(userSignUpDto);
         token = getToken(userSignInDto);
