@@ -24,8 +24,7 @@ public class ArticlesServiceImpl implements ArticlesService {
     @Override
     @Transactional(readOnly = true)
     public ArticleListDto getPage(){
-        List<Articles> articlesList = articlesRepository.findAll();
-        List<ArticleDto> articleDtoList = articlesList.stream()
+        List<ArticleDto> articleDtoList = articlesRepository.findAll().stream()
                 .map(ArticleDto::fromEntity)
                 .collect(Collectors.toList());
         long articlesCount = articlesRepository.count();
