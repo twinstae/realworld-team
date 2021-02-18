@@ -10,7 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 @Entity
-public class Articles {
+public class Articles extends DateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
