@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
+import study.realWorld.api.dto.profilesDtos.ProfileDto;
 import study.realWorld.api.dto.userDtos.UserSignInDto;
 import study.realWorld.api.dto.userDtos.UserSignUpDto;
 import study.realWorld.api.dto.userDtos.UserWithTokenDto;
@@ -79,6 +80,12 @@ public class TestingUtil {
             .title("타이틀")
             .description("디스크립션")
             .body("바디")
+            .build();
+
+    protected final ProfileDto profileDto = ProfileDto
+            .builder()
+            .image("asd")
+            .username("sh")
             .build();
 
     protected void assertArticlesEqualToDto(Articles articles, ArticleCreateDto testDto) {

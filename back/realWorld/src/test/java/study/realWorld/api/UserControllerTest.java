@@ -65,6 +65,7 @@ public class UserControllerTest {
 
         // user 정보가 올바르게 들어가 있다.
         UserResponseDto responseBody = responseEntity.getBody();
+        assert responseBody != null;
         UserDto userDto = responseBody.getUser();
 
         assertThat(userDto.getEmail()).isEqualTo(userSignUpDto.getEmail());
