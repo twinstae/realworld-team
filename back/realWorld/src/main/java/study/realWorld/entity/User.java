@@ -34,6 +34,9 @@ public class User {
     @OneToMany(mappedBy = "author")
     private final List<Articles> articlesList = new ArrayList<>();
 
+    @OneToOne(mappedBy = "user")
+    private Profile profile;
+
     @Builder
     public User(String userName, String email, String password, Set<Authority> authorities) {
         this.userName = userName;
