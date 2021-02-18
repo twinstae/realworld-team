@@ -1,6 +1,7 @@
 package study.realWorld.api.dto.articleDtos;
 
 import lombok.*;
+import study.realWorld.api.dto.userDtos.UserDto;
 import study.realWorld.entity.Articles;
 
 @Getter
@@ -13,6 +14,7 @@ public class ArticleDto {
     private String title;
     private String description;
     private String body;
+    private UserDto author;
 
     public static ArticleDto fromEntity(Articles articles) {
 
@@ -22,6 +24,7 @@ public class ArticleDto {
                 .title(articles.getTitle())
                 .description(articles.getDescription())
                 .body(articles.getBody())
+                .author(UserDto.fromUser(articles.getAuthor()))
                 .build();
     }
 

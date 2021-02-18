@@ -113,6 +113,7 @@ public class ArticlesControllerTest extends TestingUtil {
         ArticleResponseDto responseBody = responseEntity.getBody();
         assert responseBody != null;
         assertArticlesResponseEqualToDto(responseBody.getArticle(), dto);
+        System.out.println(responseEntity.getBody());
     }
 
     @Test
