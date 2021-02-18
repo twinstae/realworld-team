@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
+import study.realWorld.api.dto.articleDtos.ArticleListDto;
 import study.realWorld.api.exception.NoAuthorizationException;
 import study.realWorld.api.exception.ResourceNotFoundException;
 import study.realWorld.entity.Articles;
@@ -22,12 +23,17 @@ public class ArticlesServiceImpl implements ArticlesService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ArticleDto> getPage(){
+    public ArticleListDto getPage(){
         List<Articles> articlesList = articlesRepository.findAll();
-
-        return articlesList.stream()
+        List<ArticleDto> articleDtoList = articlesList.stream()
                 .map(ArticleDto::fromEntity)
                 .collect(Collectors.toList());
+        long articlesCount = articlesRepository.count();
+
+        return ArticleListDto.builder()
+                .articles(articleDtoList)
+                .articlesCount(articlesCount)
+                .build();
     }
 
     @Override

@@ -24,9 +24,8 @@ public class ArticlesController {
 
     @GetMapping
     public ResponseEntity<ArticleListDto> getArticles(){
-        List<ArticleDto> articleDtoList = articlesService.getPage();
-
-        return ResponseEntity.ok(new ArticleListDto(articleDtoList));
+        ArticleListDto articleListDto = articlesService.getPage();
+        return ResponseEntity.ok(articleListDto);
     }
 
     @PostMapping
