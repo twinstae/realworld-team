@@ -4,6 +4,8 @@ import lombok.*;
 import study.realWorld.api.dto.userDtos.UserDto;
 import study.realWorld.entity.Articles;
 
+import java.time.LocalDateTime;
+
 @Getter
 @ToString
 @AllArgsConstructor
@@ -15,6 +17,8 @@ public class ArticleDto {
     private String description;
     private String body;
     private UserDto author;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public static ArticleDto fromEntity(Articles articles) {
 
@@ -25,6 +29,8 @@ public class ArticleDto {
                 .description(articles.getDescription())
                 .body(articles.getBody())
                 .author(UserDto.fromUser(articles.getAuthor()))
+                .createdAt(articles.getCreatedAt())
+                .updatedAt(articles.getUpdatedAt())
                 .build();
     }
 

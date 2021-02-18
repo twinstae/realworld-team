@@ -4,8 +4,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.annotation.LastModifiedDate;
 import study.realWorld.entity.Articles;
 import study.realWorld.entity.User;
+
+import java.time.LocalDateTime;
 
 @Getter
 @ToString
@@ -15,6 +18,8 @@ public class ArticleCreateDto {
     private String title;
     private String description;
     private String body;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @Builder
     public ArticleCreateDto(String title, String description, String body) {
