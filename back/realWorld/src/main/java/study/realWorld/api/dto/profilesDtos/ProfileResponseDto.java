@@ -6,5 +6,5 @@ import lombok.*;
 @RequiredArgsConstructor
 public class ProfileResponseDto {
 
-    private ProfileDto profileDto;
+    private ProfileDto profile;
 }
