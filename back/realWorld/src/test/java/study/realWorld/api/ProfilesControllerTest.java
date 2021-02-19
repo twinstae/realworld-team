@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import study.realWorld.TestingUtil;
@@ -14,6 +16,8 @@ import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.dto.articleDtos.ArticleResponseDto;
 import study.realWorld.api.dto.profilesDtos.ProfileResponseDto;
 import study.realWorld.service.ProfilesService;
+
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,18 +50,10 @@ public class ProfilesControllerTest  extends TestingUtil {
                 ProfileResponseDto.class
         );
 
+
+
         assertThat(responseEntity.getStatusCode()).isEqualTo( HttpStatus.OK);
-//        assertResponseBodyIsEqualToDto(responseEntity, createDto);
-//
-//        ProfileResponseDto responseBody = responseEntity.getBody();
-//        assert responseBody != null;
-//        assertArticlesResponseEqualToDto(responseBody.getArticle(), dto);
-//
-//
-//        protected void assertArticlesResponseEqualToDto(ArticleDto articleDto, ArticleCreateDto testDto) {
-//            AssertionsForClassTypes.assertThat(articleDto.getTitle()).isEqualTo(testDto.getTitle());
-//            AssertionsForClassTypes.assertThat(articleDto.getDescription()).isEqualTo(testDto.getDescription());
-//            AssertionsForClassTypes.assertThat(articleDto.getBody()).isEqualTo(testDto.getBody());
     }
+
 
 }
