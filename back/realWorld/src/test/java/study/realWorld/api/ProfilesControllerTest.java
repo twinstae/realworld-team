@@ -45,12 +45,13 @@ public class ProfilesControllerTest  extends TestingUtil {
     public void findProfileByUsername() throws Exception {
         createUserInit();
 
-        ResponseEntity<ProfileResponseDto> responseEntity = restTemplate.getForEntity(
+        HttpEntity<?> entity = new HttpEntity<>(null, getHttpHeadersWithToken(token));
+        ResponseEntity<ProfileResponseDto> responseEntity = restTemplate.exchange(
                 fullProfileUrl(),
+                HttpMethod.GET,
+                entity,
                 ProfileResponseDto.class
         );
-
-
 
         assertThat(responseEntity.getStatusCode()).isEqualTo( HttpStatus.OK);
     }
