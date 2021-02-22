@@ -46,7 +46,7 @@ public class ProfileEntityTest extends TestingUtil {
     }
 
 
-    // isFollow 테스트
+    // isFollow 테스트 이미 위에서 했는데 어떻게 확인..?
     @Test
     public void isFollowTest() throws Exception {
         // given
