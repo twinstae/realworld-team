@@ -25,4 +25,16 @@ public class ProfileServiceTest extends TestingUtil {
         assertThat(responseDto.getUsername()).isEqualTo(userSignUpDto2.getUsername());
         assertThat(responseDto.isFollowing()).isFalse();
     }
+
+    @Test
+    public void addFollowByUsernameTest() throws Exception {
+        createUserInit();
+        anotherUserInit();
+
+        ProfileDto responseDto = profilesService.addFollowByUsername(userSignUpDto2.getUsername());
+        assertThat(responseDto.getUsername()).isEqualTo(userSignUpDto2.getUsername());
+        assertThat(responseDto.isFollowing()).isTrue();
+
+    }
+
 }

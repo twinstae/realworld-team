@@ -30,8 +30,20 @@ public class ProfileServiceImpl implements ProfilesService{
     }
 
     @Transactional
-    private Profile getProfileByUserNameOr404(String username){
+    Profile getProfileByUserNameOr404(String username){
         return profilesRepository.findOneByUsername(username).orElseThrow(ResourceNotFoundException::new);
+    }
+
+    @Override
+    @Transactional
+    public ProfileDto addFollowByUsername(String username) {
+        String myUserName = userService.getMyUser().getUserName();
+        Profile currentUserProfile = getProfileByUserNameOr404(myUserName);
+        Profile targetUserProfile = getProfileByUserNameOr404(username);
+        currentUserProfile.follow(targetUserProfile);
+        boolean isFollowed = targetUserProfile.isFollow(currentUserProfile);
+
+        return ProfileDto.fromEntity(targetUserProfile, isFollowed);
     }
     
     // follow
