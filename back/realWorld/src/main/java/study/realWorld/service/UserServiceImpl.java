@@ -8,14 +8,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.realWorld.api.dto.profilesDtos.ProfileCreateDto;
 import study.realWorld.api.dto.userDtos.UserDto;
 import study.realWorld.api.dto.userDtos.UserSignInDto;
 import study.realWorld.api.dto.userDtos.UserSignUpDto;
 import study.realWorld.api.dto.userDtos.UserWithTokenDto;
 import study.realWorld.entity.Authority;
+import study.realWorld.entity.Profile;
 import study.realWorld.entity.User;
 import study.realWorld.jwt.TokenProvider;
 import study.realWorld.repository.AuthorityRepository;
+import study.realWorld.repository.ProfilesRepository;
 import study.realWorld.repository.UserRepository;
 import study.realWorld.util.SecurityUtil;
 
@@ -27,6 +30,7 @@ import java.util.Set;
 public class UserServiceImpl implements UserService {
     private final AuthorityRepository authorityRepository;
     private final UserRepository userRepository;
+    private final ProfilesRepository profileRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -54,6 +58,7 @@ public class UserServiceImpl implements UserService {
     public UserDto signUp(UserSignUpDto userSignUpDto) {
         checkUserAlreadyExist(userSignUpDto);
         User user = userRepository.save(userSignUpDto.toEntity(passwordEncoder, getUserAuthorities()));
+        profileRepository.save(ProfileCreateDto.toEntity(user));
         return UserDto.fromUser(user);
     }
 

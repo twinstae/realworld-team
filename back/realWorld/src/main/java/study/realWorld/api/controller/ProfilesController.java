@@ -24,7 +24,7 @@ public class ProfilesController {
 
     private final ProfilesService profilesService;
 
-    //@PreAuthorize("hasAnyRole('USER')")
+    @PreAuthorize("hasAnyRole('USER')")
     @GetMapping("/{username}")
     public ResponseEntity<ProfileResponseDto> getProfileByUsername(
             @PathVariable String username

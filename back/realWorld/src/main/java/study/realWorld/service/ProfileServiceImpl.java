@@ -3,12 +3,8 @@ package study.realWorld.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
-import study.realWorld.api.dto.articleDtos.ArticleDto;
-import study.realWorld.api.dto.profilesDtos.ProfileCreateDto;
 import study.realWorld.api.dto.profilesDtos.ProfileDto;
 import study.realWorld.api.exception.ResourceNotFoundException;
-import study.realWorld.entity.Articles;
 import study.realWorld.entity.Profile;
 import study.realWorld.entity.User;
 import study.realWorld.repository.ProfilesRepository;
@@ -24,10 +20,11 @@ public class ProfileServiceImpl implements ProfilesService{
     @Transactional(readOnly = true)
     public ProfileDto findByUsername(String username) {
         User currentUser =  userService.getMyUser(); //현재 접속한 user
-        Profile currentUserProfile =profilesRepository.findProfilesByUsername(currentUser.getUserName())
+
+        Profile currentUserProfile = profilesRepository.findOneByUsername(currentUser.getUserName())
                 .orElseThrow(ResourceNotFoundException::new);
 
-        Profile targetUserProfile = profilesRepository.findProfilesByUsername(username).orElseThrow(RuntimeException::new);
+        Profile targetUserProfile = profilesRepository.findOneByUsername(username).orElseThrow(RuntimeException::new);
         boolean isFollowed = targetUserProfile.checkFollow(currentUserProfile);
         return ProfileDto.fromEntity(targetUserProfile,isFollowed);
     }

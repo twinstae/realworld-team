@@ -9,9 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface ProfilesRepository extends JpaRepository<Profile,Long> {
-
-    Optional<ProfileDto> findProfileDtoByUsername(String username);
-
-    Optional<Profile> findProfilesByUsername(String username);
-
+    Optional<Profile> findOneByUsername(String username);
 }

@@ -24,14 +24,12 @@ public class ProfileCreateDto {
         this.following = follow;
     }
 
-    public Profile toEntity(User user){
-        Profile profile = Profile
+    static public Profile toEntity(User user){
+        return Profile
                 .builder()
-                .image(this.image)
                 .user(user)
                 .username(user.getUserName())
                 .build();
-        return profile;
     }
 
 }
