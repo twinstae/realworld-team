@@ -14,6 +14,7 @@ import study.realWorld.util.SecurityUtil;
 @Service
 public class ProfileServiceImpl implements ProfilesService{
 
+    // followRepository
     private final ProfilesRepository profilesRepository;
     private final UserService userService;
 
@@ -32,6 +33,12 @@ public class ProfileServiceImpl implements ProfilesService{
     private Profile getProfileByUserNameOr404(String username){
         return profilesRepository.findOneByUsername(username).orElseThrow(ResourceNotFoundException::new);
     }
+    
+    // follow
+    // unfollow
+    // followees list 내가 팔로우한 사람 목록
+    // followers list 나를 팔로우하는 사람 목록
+    // followees, followers count
 
 //    @Transactional
 //    @Override

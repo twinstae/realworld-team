@@ -11,9 +11,10 @@ public class ProfileEntityTest extends TestingUtil {
     @Transactional
     @DisplayName("한 profile이 다른 프로파일을 follow하면 isFollow는 true이다")
     @Test
-    public void userSignUpTest(){
+    public void followTest(){
         createUserInit();
         anotherUserInit();
+
         Profile profile1 = profileRepository.findOneByUsername(userSignUpDto.getUsername())
                 .orElseThrow(RuntimeException::new);
         Profile profile2 = profileRepository.findOneByUsername(userSignUpDto2.getUsername())
@@ -24,4 +25,7 @@ public class ProfileEntityTest extends TestingUtil {
         assertThat(profile1.isFollow(profile2)).isTrue();
     }
 
+    // unfollow 테스트
+
+    // isFollow 테스트
 }
