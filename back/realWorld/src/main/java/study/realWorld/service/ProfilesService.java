@@ -11,7 +11,9 @@ public interface ProfilesService {
     ProfileDto findByUsername(String username);
 
     @Transactional
-    ProfileDto addFollowByUsername(String username);
+    ProfileDto followByUsername(String username);
+
+    ProfileDto unFollowByUsername(String username);
 
     // ProfileDto save(ProfileCreateDto profileCreateDto);
 }

@@ -34,9 +34,8 @@ public class ProfileServiceImpl implements ProfilesService{
         return profilesRepository.findOneByUsername(username).orElseThrow(ResourceNotFoundException::new);
     }
 
-    @Override
     @Transactional
-    public ProfileDto addFollowByUsername(String username) {
+    public ProfileDto followByUsername(String username) {
         String myUserName = userService.getMyUser().getUserName();
         Profile currentUserProfile = getProfileByUserNameOr404(myUserName);
         Profile targetUserProfile = getProfileByUserNameOr404(username);
@@ -45,9 +44,17 @@ public class ProfileServiceImpl implements ProfilesService{
 
         return ProfileDto.fromEntity(targetUserProfile, isFollowed);
     }
-    
-    // follow
-    // unfollow
+
+    public ProfileDto unFollowByUsername(String username) {
+        String myUserName = userService.getMyUser().getUserName();
+        Profile currentUserProfile = getProfileByUserNameOr404(myUserName);
+        Profile targetUserProfile = getProfileByUserNameOr404(username);
+        currentUserProfile.unfollow(targetUserProfile);
+        boolean isFollowed = targetUserProfile.isFollow(currentUserProfile);
+
+        return ProfileDto.fromEntity(targetUserProfile, isFollowed);
+    }
+
     // followees list 내가 팔로우한 사람 목록
     // followers list 나를 팔로우하는 사람 목록
     // followees, followers count

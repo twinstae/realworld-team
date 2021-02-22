@@ -3,6 +3,7 @@ package study.realWorld.service;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import study.realWorld.TestingUtil;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.dto.profilesDtos.ProfileDto;
@@ -27,14 +28,28 @@ public class ProfileServiceTest extends TestingUtil {
     }
 
     @Test
-    public void addFollowByUsernameTest() throws Exception {
+    public void followByUsernameTest() throws Exception {
         createUserInit();
         anotherUserInit();
 
-        ProfileDto responseDto = profilesService.addFollowByUsername(userSignUpDto2.getUsername());
+        ProfileDto responseDto = profilesService.followByUsername(userSignUpDto2.getUsername());
+        assertThat(responseDto.getUsername()).isEqualTo(userSignUpDto2.getUsername());
+        assertThat(responseDto.isFollowing()).isTrue();
+    }
+
+    @Transactional
+    @Test
+    public void unFollowByUsernameTest() throws Exception {
+        createUserInit();
+        anotherUserInit();
+
+        ProfileDto responseDto = profilesService.followByUsername(userSignUpDto2.getUsername());
         assertThat(responseDto.getUsername()).isEqualTo(userSignUpDto2.getUsername());
         assertThat(responseDto.isFollowing()).isTrue();
 
+        responseDto = profilesService.unFollowByUsername(userSignUpDto2.getUsername());
+        assertThat(responseDto.getUsername()).isEqualTo(userSignUpDto2.getUsername());
+        assertThat(responseDto.isFollowing()).isFalse();
     }
 
 }
