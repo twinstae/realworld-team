@@ -20,6 +20,7 @@ public interface UserService {
 
     Set<Authority> getUserAuthorities();
 
+    String getMyUserName();
     User getMyUser();
     User getMyUserWithAuthorities();
     User getUserWithAuthoritiesByEmail(String email);

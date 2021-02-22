@@ -38,12 +38,13 @@ public class ProfilesControllerTest  extends TestingUtil {
     }
 
     private String fullProfileUrl(){
-        return profileUrl() + "/" + profileDto.getUsername();
+        return profileUrl() + "/" + userSignUpDto2.getUsername();
     }
 
     @Test
     public void findProfileByUsername() throws Exception {
         createUserInit();
+        anotherUserInit();
 
         HttpEntity<?> entity = new HttpEntity<>(null, getHttpHeadersWithToken(token));
         ResponseEntity<ProfileResponseDto> responseEntity = restTemplate.exchange(
@@ -53,8 +54,6 @@ public class ProfilesControllerTest  extends TestingUtil {
                 ProfileResponseDto.class
         );
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo( HttpStatus.OK);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
-
-
 }

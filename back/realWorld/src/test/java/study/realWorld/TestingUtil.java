@@ -85,12 +85,6 @@ public class TestingUtil {
             .body("바디")
             .build();
 
-    protected final ProfileDto profileDto = ProfileDto
-            .builder()
-            .image("asd")
-            .username("sh")
-            .build();
-
     protected void assertArticlesEqualToDto(Articles articles, ArticleCreateDto testDto) {
         assertThat(articles.getTitle()).isEqualTo(testDto.getTitle());
         assertThat(articles.getDescription()).isEqualTo(testDto.getDescription());

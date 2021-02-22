@@ -8,6 +8,7 @@ import study.realWorld.api.exception.ResourceNotFoundException;
 import study.realWorld.entity.Profile;
 import study.realWorld.entity.User;
 import study.realWorld.repository.ProfilesRepository;
+import study.realWorld.util.SecurityUtil;
 
 @RequiredArgsConstructor
 @Service
@@ -19,16 +20,17 @@ public class ProfileServiceImpl implements ProfilesService{
     @Override
     @Transactional(readOnly = true)
     public ProfileDto findByUsername(String username) {
-        User currentUser =  userService.getMyUser(); //현재 접속한 user
-
-        Profile currentUserProfile = profilesRepository.findOneByUsername(currentUser.getUserName())
-                .orElseThrow(ResourceNotFoundException::new);
-
-        Profile targetUserProfile = profilesRepository.findOneByUsername(username).orElseThrow(RuntimeException::new);
+        Profile currentUserProfile = getProfileByUserNameOr404(userService.getMyUserName());
+        Profile targetUserProfile = getProfileByUserNameOr404(username);
         boolean isFollowed = targetUserProfile.isFollow(currentUserProfile);
-        return ProfileDto.fromEntity(targetUserProfile,isFollowed);
+
+        return ProfileDto.fromEntity(targetUserProfile, isFollowed);
     }
 
+    @Transactional
+    private Profile getProfileByUserNameOr404(String username){
+        return profilesRepository.findOneByUsername(username).orElseThrow(ResourceNotFoundException::new);
+    }
 
 //    @Transactional
 //    @Override

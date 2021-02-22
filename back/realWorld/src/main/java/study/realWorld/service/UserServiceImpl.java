@@ -88,6 +88,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String getMyUserName(){
+        return SecurityUtil.getCurrentUsername()
+                .orElseThrow(RuntimeException::new);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public User getMyUser() {
         return SecurityUtil.getCurrentUsername()
