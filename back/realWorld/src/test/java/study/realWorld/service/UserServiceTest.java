@@ -12,7 +12,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest
 public class UserServiceTest extends TestingUtil {
 
     @DisplayName("userSipnUpDto로 가입하면,repository에 같은 email을 가진 user가 존재한다")

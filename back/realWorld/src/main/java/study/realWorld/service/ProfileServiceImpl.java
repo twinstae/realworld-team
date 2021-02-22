@@ -25,7 +25,7 @@ public class ProfileServiceImpl implements ProfilesService{
                 .orElseThrow(ResourceNotFoundException::new);
 
         Profile targetUserProfile = profilesRepository.findOneByUsername(username).orElseThrow(RuntimeException::new);
-        boolean isFollowed = targetUserProfile.checkFollow(currentUserProfile);
+        boolean isFollowed = targetUserProfile.isFollow(currentUserProfile);
         return ProfileDto.fromEntity(targetUserProfile,isFollowed);
     }
 
