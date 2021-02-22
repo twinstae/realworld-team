@@ -4,8 +4,8 @@ package study.realWorld.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -36,7 +36,7 @@ public class Profile {
         this.user = user;
     }
 
-    @OneToMany(mappedBy = "fromProfile")
+    @OneToMany(mappedBy = "fromProfile") //나를 팔로우한..
     private List<Follow> followeeRelations = new ArrayList<>();
 
     public List<Profile> getFollowees(){
@@ -45,7 +45,7 @@ public class Profile {
                 .collect(Collectors.toList());
     }
 
-    @OneToMany(mappedBy = "toProfile")
+    @OneToMany(mappedBy = "toProfile")// 내가 팔로우 한..
     private final List<Follow> followerRelations = new ArrayList<>();
 
     public List<Profile> getFollowers(){
@@ -53,6 +53,7 @@ public class Profile {
                 .map(Follow::getFromProfile)
                 .collect(Collectors.toList());
     }
+
 
     public void follow(Profile toProfile){
         Follow follow = Follow.builder()

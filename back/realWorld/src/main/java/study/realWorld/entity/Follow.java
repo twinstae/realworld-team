@@ -1,13 +1,12 @@
 package study.realWorld.entity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
+
 import javax.persistence.*;
 
 @Data
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Follow {
     @Id
