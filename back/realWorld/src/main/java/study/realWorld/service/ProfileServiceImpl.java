@@ -20,7 +20,8 @@ public class ProfileServiceImpl implements ProfilesService{
     @Override
     @Transactional(readOnly = true)
     public ProfileDto findByUsername(String username) {
-        Profile currentUserProfile = getProfileByUserNameOr404(userService.getMyUserName());
+        String myUserName = userService.getMyUser().getUserName();
+        Profile currentUserProfile = getProfileByUserNameOr404(myUserName);
         Profile targetUserProfile = getProfileByUserNameOr404(username);
         boolean isFollowed = targetUserProfile.isFollow(currentUserProfile);
 

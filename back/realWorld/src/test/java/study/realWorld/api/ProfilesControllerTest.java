@@ -47,6 +47,7 @@ public class ProfilesControllerTest  extends TestingUtil {
         anotherUserInit();
 
         HttpEntity<?> entity = new HttpEntity<>(null, getHttpHeadersWithToken(token));
+
         ResponseEntity<ProfileResponseDto> responseEntity = restTemplate.exchange(
                 fullProfileUrl(),
                 HttpMethod.GET,

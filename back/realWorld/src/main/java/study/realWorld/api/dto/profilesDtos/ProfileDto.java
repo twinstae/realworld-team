@@ -20,9 +20,7 @@ public class ProfileDto {
     private String image;
     private boolean following;
 
-
     public static ProfileDto fromEntity(Profile profile,Boolean isFollowed) {
-
         return ProfileDto
                 .builder()
                 .username(profile.getUsername())
