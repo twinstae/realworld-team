@@ -1,40 +1,16 @@
 package study.realWorld.api;
 
-import org.aspectj.lang.annotation.After;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import study.realWorld.api.dto.articleDtos.ArticleDto;
+import study.realWorld.TestingUtil;
 import study.realWorld.api.dto.userDtos.*;
 import study.realWorld.entity.Authority;
-import study.realWorld.repository.AuthorityRepository;
-import study.realWorld.repository.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserControllerTest {
-    @LocalServerPort
-    private int port;
-
-    @Autowired
-    private TestRestTemplate restTemplate;
-
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private AuthorityRepository authorityRepository;
-    @AfterEach
-    protected void tearDown() {
-        userRepository.deleteAll();
-    }
-
+public class UserControllerTest extends TestingUtil {
     private String baseUrl(){
         return "http://localhost:" + port + "/api/users";
     }
@@ -74,15 +50,7 @@ public class UserControllerTest {
     @DisplayName("올바른 로그인 요청을 보내면 status는 OK이고 로그인된 user를 jwt 토큰과 함께 반환한다.")
     @Test
     public void signInTest() {
-        signUpTest();
-
-        // 로그인 dto를 만든다
-        UserSignInDto userSignInDto = UserSignInDto
-                .builder()
-                .email("test@naver.com")
-                .password("t1e2s3t4")
-                .build();
-
+        createUserInit();
         // restTemplate으로 요청을 보내고
         ResponseEntity<TokenResponseDto> responseEntity = postLoginRequest(userSignInDto);
 
@@ -110,17 +78,17 @@ public class UserControllerTest {
     @DisplayName("잘못된 비밀번호로 로그인 요청을 보내면 status는 UNAUTHORIZED이다.")
     @Test
     public void signInWithInvalidPasswordTest() {
-        signUpTest();
+        createUserInit();
 
         // 비밀번호가 잘못된 로그인 dto를 만든다
-        UserSignInDto userSignInDto = UserSignInDto
+        UserSignInDto wrongUserSignInDto = UserSignInDto
                 .builder()
                 .email("test@naver.com")
                 .password("1nval1dP6sswor2")
                 .build();
 
         // restTemplate으로 요청을 보내고
-        ResponseEntity<TokenResponseDto> responseEntity = postLoginRequest(userSignInDto);
+        ResponseEntity<TokenResponseDto> responseEntity = postLoginRequest(wrongUserSignInDto);
 
         // status는 UNAUTHORIZED
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
@@ -129,17 +97,17 @@ public class UserControllerTest {
     @DisplayName("잘못된 이메일로 로그인 요청을 보내면 status는 UNAUTHORIZED이다.")
     @Test
     public void signInWithInvalidEmailTest() {
-        signUpTest();
+        createUserInit();
 
         // 비밀번호가 잘못된 로그인 dto를 만든다
-        UserSignInDto userSignInDto = UserSignInDto
+        UserSignInDto wrongUserSignInDto = UserSignInDto
                 .builder()
                 .email("rabbit@naver.com")
                 .password("1nval1dP6sswor2")
                 .build();
 
         // restTemplate으로 요청을 보내고
-        ResponseEntity<TokenResponseDto> responseEntity = postLoginRequest(userSignInDto);
+        ResponseEntity<TokenResponseDto> responseEntity = postLoginRequest(wrongUserSignInDto);
 
         // status는 UNAUTHORIZED
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);

@@ -4,6 +4,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
@@ -25,6 +27,10 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TestingUtil {
+    @LocalServerPort
+    protected int port;
+    @Autowired
+    protected TestRestTemplate restTemplate;
 
     @Autowired
     protected ArticlesRepository articlesRepository;
@@ -145,7 +151,6 @@ public class TestingUtil {
         Assertions.assertThat(dto.getDescription()).isEqualTo(expected.getDescription());
         Assertions.assertThat(dto.getBody()).isEqualTo(expected.getBody());
     }
-
 
     @AfterEach
     protected void tearDown() {

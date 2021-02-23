@@ -14,7 +14,7 @@ public class ProfileEntityTest extends TestingUtil {
     Profile profile2;
 
     @BeforeEach
-    public void setUp(){
+    private void setUp(){
         createUserInit();
         anotherUserInit();
 
@@ -44,17 +44,4 @@ public class ProfileEntityTest extends TestingUtil {
 
         assertThat(profile1.isFollow(profile2)).isFalse();
     }
-
-
-    // isFollow 테스트 이미 위에서 했는데 어떻게 확인..?
-    @Test
-    public void isFollowTest() throws Exception {
-        // given
-
-        // when
-
-        // then
-
-    }
-
 }
