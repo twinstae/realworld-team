@@ -35,15 +35,17 @@ public class ProfileServiceTest extends TestingUtil {
     @Test
     public void followByUsernameTest() throws Exception {
         ProfileDto responseDto = profilesService.followByUsername(userSignUpDto2.getUsername());
+
         assertThat(responseDto.getUsername()).isEqualTo(userSignUpDto2.getUsername());
         assertThat(responseDto.isFollowing()).isTrue();
     }
 
     @Test
     public void unFollowByUsernameTest() throws Exception {
-        profilesService.followByUsername(userSignUpDto2.getUsername());
+        followByUsernameTest();
 
         ProfileDto responseDto = profilesService.unFollowByUsername(userSignUpDto2.getUsername());
+
         assertThat(responseDto.getUsername()).isEqualTo(userSignUpDto2.getUsername());
         assertThat(responseDto.isFollowing()).isFalse();
     }
@@ -58,7 +60,6 @@ public class ProfileServiceTest extends TestingUtil {
     }
 
     private void assertUserNameInResult(ProfileListDto result, String username) {
-        System.out.println(result.getProfileList());
         assertThat(result.getProfileList().stream()
                 .anyMatch(profileDto -> profileDto.getUsername().equals(username)))
                 .isTrue();
@@ -69,6 +70,7 @@ public class ProfileServiceTest extends TestingUtil {
         followByUsernameTest();
 
         ProfileListDto result = profilesService.findProfilesFollowersByUsername(userSignUpDto2.getUsername());
+
         assertUserNameInResult(result, userSignUpDto.getUsername());
     }
 }

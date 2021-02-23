@@ -10,6 +10,7 @@ import study.realWorld.entity.Profile;
 import study.realWorld.repository.ProfilesRepository;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -18,15 +19,14 @@ public class ProfileServiceImpl implements ProfilesService{
     private final ProfilesRepository profilesRepository;
     private final UserService userService;
 
-    @Override
-    @Transactional(readOnly = true)
-    public ProfileDto findByUsername(String username) {
+    private ProfileDto context(String username, BiConsumer<Profile, Profile> strategy){
         String myUserName = userService.getMyUserName();
         Profile currentUserProfile = getProfileByUserNameOr404(myUserName);
         Profile targetUserProfile = getProfileByUserNameOr404(username);
 
-        boolean isFollowed = currentUserProfile.isFollow(targetUserProfile);
+        strategy.accept(currentUserProfile, targetUserProfile);
 
+        boolean isFollowed = currentUserProfile.isFollow(targetUserProfile);
         return ProfileDto.fromEntity(targetUserProfile, isFollowed);
     }
 
@@ -34,27 +34,20 @@ public class ProfileServiceImpl implements ProfilesService{
         return profilesRepository.findOneByUsername(username).orElseThrow(ResourceNotFoundException::new);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public ProfileDto findByUsername(String username) {
+        return context(username, (a, b)->{});
+    }
+
     @Transactional
     public ProfileDto followByUsername(String username) {
-        String myUserName = userService.getMyUserName();
-
-        Profile currentUserProfile = getProfileByUserNameOr404(myUserName);
-        Profile targetUserProfile = getProfileByUserNameOr404(username);
-
-        currentUserProfile.follow(targetUserProfile);
-
-        return ProfileDto.fromEntity(targetUserProfile, true);
+        return context(username, Profile::follow);
     }
 
     @Transactional
     public ProfileDto unFollowByUsername(String username) {
-        String myUserName =  userService.getMyUserName();
-        Profile currentUserProfile = getProfileByUserNameOr404(myUserName);
-        Profile targetUserProfile = getProfileByUserNameOr404(username);
-
-        currentUserProfile.unfollow(targetUserProfile);
-
-        return ProfileDto.fromEntity(targetUserProfile, false);
+        return context(username, Profile::unfollow);
     }
 
     @Override
