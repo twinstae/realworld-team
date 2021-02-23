@@ -58,6 +58,7 @@ public class ProfileServiceTest extends TestingUtil {
     }
 
     private void assertUserNameInResult(ProfileListDto result, String username) {
+        System.out.println("서비스가 반환한 리스트는...");
         System.out.println(result.getProfileList());
         assertThat(result.getProfileList().stream()
                 .anyMatch(profileDto -> profileDto.getUsername().equals(username)))

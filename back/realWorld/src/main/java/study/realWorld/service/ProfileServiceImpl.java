@@ -59,26 +59,17 @@ public class ProfileServiceImpl implements ProfilesService{
     }
 
     @Override
-    @Transactional
-    public void unfollowAllProfile(){
-        profilesRepository.findAll()
-                .forEach(profile -> {
-                    profile.getFollowees().forEach(profile::unfollow);
-                });
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public ProfileListDto findProfilesFolloweesByUsername(String username){
         Profile targetUserProfile = getProfileByUserNameOr404(username);
 
         System.out.println("in the 서비스");
-        System.out.println(targetUserProfile.getFollowees());
+        System.out.println(targetUserProfile.getFollowings());
 
         return ProfileListDto
                 .builder()
-                .profileList(targetUserProfile.getFollowees())
-                .profileCount(targetUserProfile.getFollowees().size())
+                .profileList(targetUserProfile.getFollowings())
+                .profileCount(targetUserProfile.getFollowings().size())
                 .build();
     }
 

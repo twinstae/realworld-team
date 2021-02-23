@@ -36,54 +36,30 @@ public class Profile {
         this.user = user;
     }
 
-    @OneToMany(mappedBy = "fromProfile", cascade = CascadeType.REMOVE) //나를 팔로우한..
-    private List<Follow> followeeRelations = new ArrayList<>();
+    @ManyToMany(mappedBy = "followers")
+    private List<Profile> followings = new ArrayList<>();
 
-    public List<Profile> getFollowees(){
-        return this.followeeRelations.stream()
-                .map(Follow::getToProfile)
-                .collect(Collectors.toList());
-    }
-
-    @OneToMany(mappedBy = "toProfile", cascade = CascadeType.REMOVE)// 내가 팔로우 한..
-    private final List<Follow> followerRelations = new ArrayList<>();
-
-    public List<Profile> getFollowers(){
-        return this.followerRelations.stream()
-                .map(Follow::getFromProfile)
-                .collect(Collectors.toList());
-    }
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "FOLLOW",
+            joinColumns = @JoinColumn(name = "FROM_ID"),
+            inverseJoinColumns = @JoinColumn(name = "TO_ID"))
+    private final List<Profile> followers = new ArrayList<>();
 
     public void follow(Profile toProfile){
         if (this.equals(toProfile)){
             throw new RuntimeException("자신을 follow할 수는 없습니다");
         }
 
-        Follow follow = Follow.builder()
-                .fromProfile(this)
-                .toProfile(toProfile)
-                .build();
-
-        this.followeeRelations.add(follow);
-
-        List<Follow> newFollowerRelations = toProfile.getFollowerRelations();
-        newFollowerRelations.add(follow);
-        toProfile.setFolloweeRelations(newFollowerRelations);
+        toProfile.followers.add(this);
+        this.followings.add(toProfile);
     }
 
     public void unfollow(Profile toProfile){
-        this.followeeRelations = this.followeeRelations.stream()
-                .filter(follow-> !follow.getToProfile().equals(toProfile))
-                .collect(Collectors.toList());
-
-        toProfile.setFolloweeRelations(
-                toProfile.getFolloweeRelations().stream()
-                .filter(follow-> !follow.getFromProfile().equals(this))
-                .collect(Collectors.toList()));
+        toProfile.followers.remove(this);
+        this.followings.remove(toProfile);
     }
 
     public boolean isFollow(Profile toProfile){
-        return this.followeeRelations.stream()
-                .anyMatch(follow-> follow.getToProfile().equals(toProfile));
+        return this.followings.contains(toProfile);
     }
 }
