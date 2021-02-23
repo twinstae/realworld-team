@@ -2,17 +2,12 @@ package study.realWorld.api.controller;
 
 
 import io.swagger.annotations.Api;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
-import study.realWorld.api.dto.articleDtos.ArticleDto;
-import study.realWorld.api.dto.articleDtos.ArticleResponseDto;
-import study.realWorld.api.dto.profilesDtos.ProfileCreateDto;
 import study.realWorld.api.dto.profilesDtos.ProfileDto;
+import study.realWorld.api.dto.profilesDtos.ProfileListDto;
 import study.realWorld.api.dto.profilesDtos.ProfileResponseDto;
 import study.realWorld.service.ProfilesService;
 
@@ -31,6 +26,24 @@ public class ProfilesController {
     ){
         ProfileDto profileDto = profilesService.findByUsername(username);
         return ResponseEntity.ok(new ProfileResponseDto(profileDto));
+    }
+
+    @PreAuthorize("hasAnyRole('USER')")
+    @GetMapping("/{username}/followers")
+    public ResponseEntity<ProfileListDto> getFollowersByUsername(
+            @PathVariable String username
+    ){
+        ProfileListDto followersDto = profilesService.findByFollowsByUsername(username);
+        return ResponseEntity.ok(followersDto);
+    }
+
+    @PreAuthorize("hasAnyRole('USER')")
+    @GetMapping("/{username}/followees")
+    public ResponseEntity<ProfileListDto> getFolloweeByUsername(
+            @PathVariable String username
+    ){
+        ProfileListDto followeesDto = profilesService.findByFollowsByUsername(username);
+        return ResponseEntity.ok(followeesDto);
     }
 
 //    @PostMapping("/{username}/follow")
