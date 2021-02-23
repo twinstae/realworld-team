@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import study.realWorld.TestingUtil;
-import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.dto.profilesDtos.ProfileDto;
+import study.realWorld.api.dto.profilesDtos.ProfileListDto;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -38,7 +38,6 @@ public class ProfileServiceTest extends TestingUtil {
         assertThat(responseDto.isFollowing()).isTrue();
     }
 
-    @Transactional
     @Test
     public void unFollowByUsernameTest() throws Exception {
         followByUsernameTest();
@@ -48,4 +47,28 @@ public class ProfileServiceTest extends TestingUtil {
         assertThat(responseDto.isFollowing()).isFalse();
     }
 
+    @Test
+    public void findProfilesFolloweesByUsernameTest() throws Exception {
+        followByUsernameTest();
+
+        ProfileListDto result = profilesService.findProfilesFolloweesByUsername(userSignUpDto.getUsername());
+
+        assertUserNameInResult(result, userSignUpDto2.getUsername());
+    }
+
+    private void assertUserNameInResult(ProfileListDto result, String username) {
+        System.out.println(result.getProfileList());
+        assertThat(result.getProfileList().stream()
+                .anyMatch(profileDto -> profileDto.getUsername().equals(username)))
+                .isTrue();
+    }
+
+    @Transactional
+    @Test
+    public void findProfilesFollowersByUsernameTest() throws Exception {
+        followByUsernameTest();
+
+        ProfileListDto result = profilesService.findProfilesFollowersByUsername(userSignUpDto2.getUsername());
+        assertUserNameInResult(result, userSignUpDto.getUsername());
+    }
 }

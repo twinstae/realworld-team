@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -62,12 +63,21 @@ public class Profile {
                 .build();
 
         this.followeeRelations.add(follow);
+
+        List<Follow> newFolloweeRelations = toProfile.getFolloweeRelations();
+        newFolloweeRelations.add(follow);
+        toProfile.setFolloweeRelations(newFolloweeRelations);
     }
 
     public void unfollow(Profile toProfile){
         this.followeeRelations = this.followeeRelations.stream()
                 .filter(follow-> !follow.getToProfile().equals(toProfile))
                 .collect(Collectors.toList());
+
+        toProfile.setFolloweeRelations(
+                toProfile.getFolloweeRelations().stream()
+                .filter(follow-> !follow.getFromProfile().equals(this))
+                .collect(Collectors.toList()));
     }
 
     public boolean isFollow(Profile toProfile){

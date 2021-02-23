@@ -33,7 +33,7 @@ public class ProfilesController {
     public ResponseEntity<ProfileListDto> getFollowersByUsername(
             @PathVariable String username
     ){
-        ProfileListDto followersDto = profilesService.findByFollowsByUsername(username);
+        ProfileListDto followersDto = profilesService.findProfilesFollowersByUsername(username);
         return ResponseEntity.ok(followersDto);
     }
 
@@ -42,30 +42,7 @@ public class ProfilesController {
     public ResponseEntity<ProfileListDto> getFolloweeByUsername(
             @PathVariable String username
     ){
-        ProfileListDto followeesDto = profilesService.findByFollowsByUsername(username);
+        ProfileListDto followeesDto = profilesService.findProfilesFolloweesByUsername(username);
         return ResponseEntity.ok(followeesDto);
     }
-
-    @PreAuthorize("hasAnyRole('USER')")
-    @GetMapping("/{username}/follows/count")
-    public ResponseEntity<ProfileListDto> getFollowsCountByUsername(
-            @PathVariable String username
-    ){
-        ProfileListDto followsCountDto = profilesService.findByFollowsByUsername(username);
-        return ResponseEntity.ok(followsCountDto);
-    }
-
-
-
-//    @PostMapping("/{username}/follow")
-//    @PreAuthorize("hasAnyRole('USER','ADMIN')")
-//    public ResponseEntity<ArticleResponseDto> createArticle(
-//            @RequestBody ProfileCreateDto ProfileCreateDto
-//    ){
-//        ProfileDto profileDto = profilesService.save(ProfileCreateDto);
-//
-//        return new ResponseEntity<>(
-//                new ArticleResponseDto(articleDto),
-//                HttpStatus.CREATED);
-//    }
 }

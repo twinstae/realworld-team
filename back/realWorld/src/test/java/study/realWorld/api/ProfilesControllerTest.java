@@ -52,6 +52,4 @@ public class ProfilesControllerTest  extends TestingUtil {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
-
-
 }

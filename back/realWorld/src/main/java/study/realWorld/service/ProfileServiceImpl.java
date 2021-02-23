@@ -41,46 +41,49 @@ public class ProfileServiceImpl implements ProfilesService{
         String myUserName = userService.getMyUser().getUserName();
         Profile currentUserProfile = getProfileByUserNameOr404(myUserName);
         Profile targetUserProfile = getProfileByUserNameOr404(username);
-        currentUserProfile.follow(targetUserProfile);
-        boolean isFollowed = targetUserProfile.isFollow(currentUserProfile);
 
+        currentUserProfile.follow(targetUserProfile);
+
+        boolean isFollowed = targetUserProfile.isFollow(currentUserProfile);
         return ProfileDto.fromEntity(targetUserProfile, isFollowed);
     }
 
+    @Transactional
     public ProfileDto unFollowByUsername(String username) {
         String myUserName = userService.getMyUser().getUserName();
         Profile currentUserProfile = getProfileByUserNameOr404(myUserName);
         Profile targetUserProfile = getProfileByUserNameOr404(username);
-        currentUserProfile.unfollow(targetUserProfile);
-        boolean isFollowed = targetUserProfile.isFollow(currentUserProfile);
 
+        currentUserProfile.unfollow(targetUserProfile);
+
+        boolean isFollowed = targetUserProfile.isFollow(currentUserProfile);
         return ProfileDto.fromEntity(targetUserProfile, isFollowed);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public ProfileListDto findProfilesFolloweesByUsername(String username){
+        Profile targetUserProfile = getProfileByUserNameOr404(username);
 
+        System.out.println("in the 서비스");
+        System.out.println(targetUserProfile.getFollowees());
+
+        return ProfileListDto
+                .builder()
+                .profileList(targetUserProfile.getFollowees())
+                .profileCount(targetUserProfile.getFollowees().size())
+                .build();
+    }
 
     @Override
     @Transactional(readOnly = true)
-    public ProfileListDto findByFollowsByUsername(String username){
+    public ProfileListDto findProfilesFollowersByUsername(String username){
         Profile targetUserProfile = getProfileByUserNameOr404(username);
 
         return ProfileListDto
                 .builder()
-                .followeeRelations(targetUserProfile.getFolloweeRelations())
-                .followerRelations(targetUserProfile.getFollowerRelations())
+                .profileList(targetUserProfile.getFollowers())
+                .profileCount(targetUserProfile.getFollowers().size())
                 .build();
     }
-
-
-
-//    @Transactional
-//    @Override
-//    public ProfileDto save(ProfileCreateDto profileCreateDto) {
-//        User currentUser =  userService.getMyUser(); //현재 접속한 user
-//        Profile findProfile =profilesRepository.findProfilesByUsername(currentUser.getUserName())
-//                .orElseThrow(ResourceNotFoundException::new);
-//        Profile profile = profilesRepository.save(ProfileCreateDto.toEntity(currentUser));
-//        return ProfileDto.fromEntity(profile);
-//    }
-
 }

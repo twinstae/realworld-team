@@ -5,14 +5,9 @@ import study.realWorld.api.dto.profilesDtos.ProfileDto;
 import study.realWorld.api.dto.profilesDtos.ProfileListDto;
 
 public interface ProfilesService {
-
     ProfileDto findByUsername(String username);
-
-    @Transactional
     ProfileDto followByUsername(String username);
-
     ProfileDto unFollowByUsername(String username);
-
-    ProfileListDto findByFollowsByUsername(String username);
-
+    ProfileListDto findProfilesFolloweesByUsername(String username);
+    ProfileListDto findProfilesFollowersByUsername(String username);
 }
