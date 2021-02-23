@@ -11,7 +11,7 @@ import study.realWorld.repository.ProfilesRepository;
 
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 
 @RequiredArgsConstructor
 @Service
@@ -19,7 +19,7 @@ public class ProfileServiceImpl implements ProfilesService{
     private final ProfilesRepository profilesRepository;
     private final UserService userService;
 
-    private ProfileDto context(String username, BiConsumer<Profile, Profile> strategy){
+    private ProfileDto getProfileDtoContext(String username, BiConsumer<Profile, Profile> strategy){
         String myUserName = userService.getMyUserName();
         Profile currentUserProfile = getProfileByUserNameOr404(myUserName);
         Profile targetUserProfile = getProfileByUserNameOr404(username);
@@ -37,40 +37,40 @@ public class ProfileServiceImpl implements ProfilesService{
     @Override
     @Transactional(readOnly = true)
     public ProfileDto findByUsername(String username) {
-        return context(username, (a, b)->{});
+        return getProfileDtoContext(username, (a, b)->{});
     }
 
     @Transactional
     public ProfileDto followByUsername(String username) {
-        return context(username, Profile::follow);
+        return getProfileDtoContext(username, Profile::follow);
     }
 
     @Transactional
     public ProfileDto unFollowByUsername(String username) {
-        return context(username, Profile::unfollow);
+        return getProfileDtoContext(username, Profile::unfollow);
+    }
+
+
+    private ProfileListDto getProfileListDtoContext(String username, Function<Profile, List<Profile>> strategy) {
+        Profile targetUserProfile = getProfileByUserNameOr404(username);
+
+        List<Profile> profileList = strategy.apply(targetUserProfile);
+        return ProfileListDto
+                .builder()
+                .profileList(profileList)
+                .profileCount(profileList.size())
+                .build();
     }
 
     @Override
     @Transactional(readOnly = true)
     public ProfileListDto findProfilesFolloweesByUsername(String username){
-        Profile targetUserProfile = getProfileByUserNameOr404(username);
-
-        return ProfileListDto
-                .builder()
-                .profileList(targetUserProfile.getFollowees())
-                .profileCount(targetUserProfile.getFollowees().size())
-                .build();
+        return getProfileListDtoContext(username, Profile::getFollowees);
     }
 
     @Override
     @Transactional(readOnly = true)
     public ProfileListDto findProfilesFollowersByUsername(String username){
-        Profile targetUserProfile = getProfileByUserNameOr404(username);
-
-        return ProfileListDto
-                .builder()
-                .profileList(targetUserProfile.getFollowers())
-                .profileCount(targetUserProfile.getFollowers().size())
-                .build();
+        return getProfileListDtoContext(username, Profile::getFollowers);
     }
 }
