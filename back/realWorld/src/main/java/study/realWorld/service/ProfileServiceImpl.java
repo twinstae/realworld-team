@@ -23,7 +23,6 @@ public class ProfileServiceImpl implements ProfilesService{
     @Transactional(readOnly = true)
     public ProfileDto findByUsername(String username) {
         String myUserName = userService.getMyUserName();
-
         Profile currentUserProfile = getProfileByUserNameOr404(myUserName);
         Profile targetUserProfile = getProfileByUserNameOr404(username);
 
@@ -45,8 +44,7 @@ public class ProfileServiceImpl implements ProfilesService{
 
         currentUserProfile.follow(targetUserProfile);
 
-        boolean isFollowed = currentUserProfile.isFollow(targetUserProfile);
-        return ProfileDto.fromEntity(targetUserProfile, isFollowed);
+        return ProfileDto.fromEntity(targetUserProfile, true);
     }
 
     @Transactional
@@ -57,8 +55,7 @@ public class ProfileServiceImpl implements ProfilesService{
 
         currentUserProfile.unfollow(targetUserProfile);
 
-        boolean isFollowed = currentUserProfile.isFollow(targetUserProfile);
-        return ProfileDto.fromEntity(targetUserProfile, isFollowed);
+        return ProfileDto.fromEntity(targetUserProfile, false);
     }
 
     @Override

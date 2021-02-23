@@ -20,6 +20,7 @@ public class ProfileServiceTest extends TestingUtil {
     public void setUp(){
         createUserInit();
         anotherUserInit();
+        getToken(userSignInDto);
     }
 
     @DisplayName("findByUsername에 찾고자하는 username을 넣으면 ProfileDto에 follwing 여부를 boolean값으로 넣어 리턴한다.")
@@ -33,8 +34,6 @@ public class ProfileServiceTest extends TestingUtil {
 
     @Test
     public void followByUsernameTest() throws Exception {
-        getToken(userSignInDto);
-
         ProfileDto responseDto = profilesService.followByUsername(userSignUpDto2.getUsername());
         assertThat(responseDto.getUsername()).isEqualTo(userSignUpDto2.getUsername());
         assertThat(responseDto.isFollowing()).isTrue();

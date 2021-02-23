@@ -45,7 +45,6 @@ public class ProfileEntityTest extends TestingUtil {
 
         profile1.unfollow(profile2);
 
-        List<Profile> followers = profile2.getFollowers();
         assertThat(profile1.isFollow(profile2)).isFalse();
     }
 

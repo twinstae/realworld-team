@@ -23,7 +23,9 @@ import study.realWorld.repository.UserRepository;
 import study.realWorld.util.SecurityUtil;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 @RequiredArgsConstructor
 @Service
@@ -98,6 +100,8 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public String getMyUserName() {
         return SecurityUtil.getCurrentUsername()
+                .flatMap(userRepository::findOneByEmail)
+                .map(User::getUserName)
                 .orElseThrow(RuntimeException::new);
     }
 
