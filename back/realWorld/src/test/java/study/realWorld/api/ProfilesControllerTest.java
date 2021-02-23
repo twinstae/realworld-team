@@ -24,16 +24,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class ProfilesControllerTest  extends TestingUtil {
-
-    @LocalServerPort
-    private int port;
-
-    @Autowired
-    private ProfilesService profilesService;
-
-    @Autowired
-    private TestRestTemplate restTemplate;
-
     private String profileUrl(){
         return "http://localhost:" + port + "/api/profiles";
     }
