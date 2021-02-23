@@ -8,6 +8,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.dto.profilesDtos.ProfileDto;
@@ -18,6 +19,7 @@ import study.realWorld.entity.Articles;
 import study.realWorld.entity.Authority;
 import study.realWorld.repository.*;
 import study.realWorld.service.ArticlesService;
+import study.realWorld.service.ProfilesService;
 import study.realWorld.service.UserService;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -42,7 +44,7 @@ public class TestingUtil {
     @Autowired
     protected ProfilesRepository profileRepository;
     @Autowired
-    protected FollowRepository followRepository;
+    protected ProfilesService profilesService;
 
     protected final String title = "제목";
     protected final String description = "개요";
@@ -117,7 +119,7 @@ public class TestingUtil {
         System.out.println("\n테스트 user 생성 끝\n");
     }
 
-    private String getToken(UserSignInDto signInDto) {
+    protected String getToken(UserSignInDto signInDto) {
         UserWithTokenDto userWithTokenDto = userService.signIn(signInDto);
         return userWithTokenDto.getToken();
     }
@@ -155,7 +157,7 @@ public class TestingUtil {
     protected void tearDown() {
         System.out.println("\n테스트 데이터 정리\n");
         articlesRepository.deleteAll();
-        followRepository.deleteAll();
+        profilesService.unfollowAllProfile();
         profileRepository.deleteAll();
         userRepository.deleteAll();
         authorityRepository.deleteAll();

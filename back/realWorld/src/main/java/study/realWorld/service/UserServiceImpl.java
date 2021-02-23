@@ -94,6 +94,12 @@ public class UserServiceImpl implements UserService {
                 .flatMap(userRepository::findOneByEmail)
                 .orElseThrow(RuntimeException::new);
     }
+    @Override
+    @Transactional(readOnly = true)
+    public String getMyUserName() {
+        return SecurityUtil.getCurrentUsername()
+                .orElseThrow(RuntimeException::new);
+    }
 
     @Override
     @Transactional(readOnly = true)

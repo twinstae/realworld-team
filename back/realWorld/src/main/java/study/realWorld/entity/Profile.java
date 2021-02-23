@@ -36,7 +36,7 @@ public class Profile {
         this.user = user;
     }
 
-    @OneToMany(mappedBy = "fromProfile") //나를 팔로우한..
+    @OneToMany(mappedBy = "fromProfile", cascade = CascadeType.REMOVE) //나를 팔로우한..
     private List<Follow> followeeRelations = new ArrayList<>();
 
     public List<Profile> getFollowees(){
@@ -45,7 +45,7 @@ public class Profile {
                 .collect(Collectors.toList());
     }
 
-    @OneToMany(mappedBy = "toProfile")// 내가 팔로우 한..
+    @OneToMany(mappedBy = "toProfile", cascade = CascadeType.REMOVE)// 내가 팔로우 한..
     private final List<Follow> followerRelations = new ArrayList<>();
 
     public List<Profile> getFollowers(){
@@ -54,8 +54,11 @@ public class Profile {
                 .collect(Collectors.toList());
     }
 
-
     public void follow(Profile toProfile){
+        if (this.equals(toProfile)){
+            throw new RuntimeException("자신을 follow할 수는 없습니다");
+        }
+
         Follow follow = Follow.builder()
                 .fromProfile(this)
                 .toProfile(toProfile)

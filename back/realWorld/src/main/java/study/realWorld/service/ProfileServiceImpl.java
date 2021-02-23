@@ -16,48 +16,58 @@ import java.util.stream.Collectors;
 @Service
 public class ProfileServiceImpl implements ProfilesService{
 
-    // followRepository
     private final ProfilesRepository profilesRepository;
     private final UserService userService;
 
     @Override
     @Transactional(readOnly = true)
     public ProfileDto findByUsername(String username) {
-        String myUserName = userService.getMyUser().getUserName();
+        String myUserName = userService.getMyUserName();
+
         Profile currentUserProfile = getProfileByUserNameOr404(myUserName);
         Profile targetUserProfile = getProfileByUserNameOr404(username);
-        boolean isFollowed = targetUserProfile.isFollow(currentUserProfile);
+
+        boolean isFollowed = currentUserProfile.isFollow(targetUserProfile);
 
         return ProfileDto.fromEntity(targetUserProfile, isFollowed);
     }
 
-    @Transactional
     Profile getProfileByUserNameOr404(String username){
         return profilesRepository.findOneByUsername(username).orElseThrow(ResourceNotFoundException::new);
     }
 
     @Transactional
     public ProfileDto followByUsername(String username) {
-        String myUserName = userService.getMyUser().getUserName();
+        String myUserName = userService.getMyUserName();
+
         Profile currentUserProfile = getProfileByUserNameOr404(myUserName);
         Profile targetUserProfile = getProfileByUserNameOr404(username);
 
         currentUserProfile.follow(targetUserProfile);
 
-        boolean isFollowed = targetUserProfile.isFollow(currentUserProfile);
+        boolean isFollowed = currentUserProfile.isFollow(targetUserProfile);
         return ProfileDto.fromEntity(targetUserProfile, isFollowed);
     }
 
     @Transactional
     public ProfileDto unFollowByUsername(String username) {
-        String myUserName = userService.getMyUser().getUserName();
+        String myUserName =  userService.getMyUserName();
         Profile currentUserProfile = getProfileByUserNameOr404(myUserName);
         Profile targetUserProfile = getProfileByUserNameOr404(username);
 
         currentUserProfile.unfollow(targetUserProfile);
 
-        boolean isFollowed = targetUserProfile.isFollow(currentUserProfile);
+        boolean isFollowed = currentUserProfile.isFollow(targetUserProfile);
         return ProfileDto.fromEntity(targetUserProfile, isFollowed);
+    }
+
+    @Override
+    @Transactional
+    public void unfollowAllProfile(){
+        profilesRepository.findAll()
+                .forEach(profile -> {
+                    profile.getFollowees().forEach(profile::unfollow);
+                });
     }
 
     @Override

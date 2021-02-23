@@ -21,6 +21,7 @@ public interface UserService {
     Set<Authority> getUserAuthorities();
 
     User getMyUser();
+    String getMyUserName();
     User getMyUserWithAuthorities();
     User getUserWithAuthoritiesByEmail(String email);
 }
