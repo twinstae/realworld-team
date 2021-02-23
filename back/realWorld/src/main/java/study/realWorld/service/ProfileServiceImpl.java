@@ -4,11 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.realWorld.api.dto.profilesDtos.ProfileDto;
+import study.realWorld.api.dto.profilesDtos.ProfileListDto;
 import study.realWorld.api.exception.ResourceNotFoundException;
 import study.realWorld.entity.Profile;
-import study.realWorld.entity.User;
 import study.realWorld.repository.ProfilesRepository;
-import study.realWorld.util.SecurityUtil;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -55,8 +57,20 @@ public class ProfileServiceImpl implements ProfilesService{
         return ProfileDto.fromEntity(targetUserProfile, isFollowed);
     }
 
-    // followees list 내가 팔로우한 사람 목록
-    // followers list 나를 팔로우하는 사람 목록
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public ProfileListDto findByFollowsByUsername(String username){
+        Profile targetUserProfile = getProfileByUserNameOr404(username);
+
+        return ProfileListDto
+                .builder()
+                .followeeRelations(targetUserProfile.getFolloweeRelations())
+                .followerRelations(targetUserProfile.getFollowerRelations())
+                .build();
+    }
+
     // followees, followers count
 
 //    @Transactional

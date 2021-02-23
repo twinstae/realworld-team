@@ -1,10 +1,8 @@
 package study.realWorld.service;
 
 import org.springframework.transaction.annotation.Transactional;
-import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
-import study.realWorld.api.dto.articleDtos.ArticleDto;
-import study.realWorld.api.dto.profilesDtos.ProfileCreateDto;
 import study.realWorld.api.dto.profilesDtos.ProfileDto;
+import study.realWorld.api.dto.profilesDtos.ProfileListDto;
 
 public interface ProfilesService {
 
@@ -15,5 +13,6 @@ public interface ProfilesService {
 
     ProfileDto unFollowByUsername(String username);
 
-    // ProfileDto save(ProfileCreateDto profileCreateDto);
+    ProfileListDto findByFollowsByUsername(String username);
+
 }
