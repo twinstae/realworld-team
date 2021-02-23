@@ -71,7 +71,7 @@ public class ProfileServiceImpl implements ProfilesService{
                 .build();
     }
 
-    // followees, followers count
+
 
 //    @Transactional
 //    @Override

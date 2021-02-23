@@ -46,6 +46,17 @@ public class ProfilesController {
         return ResponseEntity.ok(followeesDto);
     }
 
+    @PreAuthorize("hasAnyRole('USER')")
+    @GetMapping("/{username}/follows/count")
+    public ResponseEntity<ProfileListDto> getFollowsCountByUsername(
+            @PathVariable String username
+    ){
+        ProfileListDto followsCountDto = profilesService.findByFollowsByUsername(username);
+        return ResponseEntity.ok(followsCountDto);
+    }
+
+
+
 //    @PostMapping("/{username}/follow")
 //    @PreAuthorize("hasAnyRole('USER','ADMIN')")
 //    public ResponseEntity<ArticleResponseDto> createArticle(
