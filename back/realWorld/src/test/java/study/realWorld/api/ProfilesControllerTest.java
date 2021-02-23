@@ -1,6 +1,7 @@
 package study.realWorld.api;
 
 import org.assertj.core.api.AssertionsForClassTypes;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +33,14 @@ public class ProfilesControllerTest  extends TestingUtil {
         return profileUrl() + "/" + userSignUpDto2.getUsername();
     }
 
-    @Test
-    public void findProfileByUsername() throws Exception {
+    @BeforeEach
+    public void setUp(){
         createUserInit();
         anotherUserInit();
+    }
 
+    @Test
+    public void findProfileByUsername() throws Exception {
         HttpEntity<?> entity = new HttpEntity<>(null, getHttpHeadersWithToken(token));
 
         ResponseEntity<ProfileResponseDto> responseEntity = restTemplate.exchange(
@@ -48,4 +52,6 @@ public class ProfilesControllerTest  extends TestingUtil {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
+
+
 }

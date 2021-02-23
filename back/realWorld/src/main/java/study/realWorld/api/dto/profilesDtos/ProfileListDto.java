@@ -14,19 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 public class ProfileListDto {
-
-    private List<Follow> followeeRelations;
-    private List<Follow> followerRelations;
-    private int followeesCount;
-    private int followersCount;
-
-    public static ProfileListDto fromEntity(Profile profile) {
-        return ProfileListDto
-                .builder()
-                .followeeRelations(profile.getFolloweeRelations())
-                .followerRelations(profile.getFollowerRelations())
-                .followeesCount(profile.getFolloweeRelations().size())
-                .followersCount(profile.getFollowerRelations().size())
-                .build();
-    }
+    private List<Profile> profileList;
+    private int profilesCount;
 }
