@@ -8,6 +8,10 @@ public interface ProfilesService {
     ProfileDto findByUsername(String username);
     ProfileDto followByUsername(String username);
     ProfileDto unFollowByUsername(String username);
+
+    @Transactional
+    void unfollowAllProfile();
+
     ProfileListDto findProfilesFolloweesByUsername(String username);
     ProfileListDto findProfilesFollowersByUsername(String username);
 }

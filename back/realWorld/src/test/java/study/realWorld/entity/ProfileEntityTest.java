@@ -66,6 +66,6 @@ public class ProfileEntityTest extends TestingUtil {
         setUp();
         profile1.follow(profile2);
 
-        assertThat(profile1.getFollowings().size()).isEqualTo(1);
+        assertThat(profile1.getFollowees().size()).isEqualTo(1);
     }
 }
