@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class ProfileServiceImpl implements ProfilesService{
-
     private final ProfilesRepository profilesRepository;
     private final UserService userService;
 
@@ -59,21 +58,9 @@ public class ProfileServiceImpl implements ProfilesService{
     }
 
     @Override
-    @Transactional
-    public void unfollowAllProfile(){
-        profilesRepository.findAll()
-                .forEach(profile -> {
-                    profile.getFollowees().forEach(profile::unfollow);
-                });
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public ProfileListDto findProfilesFolloweesByUsername(String username){
         Profile targetUserProfile = getProfileByUserNameOr404(username);
-
-        System.out.println("in the 서비스");
-        System.out.println(targetUserProfile.getFollowees());
 
         return ProfileListDto
                 .builder()

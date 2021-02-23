@@ -4,7 +4,6 @@ package study.realWorld.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -36,7 +35,7 @@ public class Profile {
         this.user = user;
     }
 
-    @OneToMany(mappedBy = "fromProfile", cascade = CascadeType.REMOVE) //나를 팔로우한..
+    @OneToMany(mappedBy = "fromProfile", cascade = CascadeType.ALL) //나를 팔로우한..
     private List<Follow> followeeRelations = new ArrayList<>();
 
     public List<Profile> getFollowees(){
@@ -45,7 +44,7 @@ public class Profile {
                 .collect(Collectors.toList());
     }
 
-    @OneToMany(mappedBy = "toProfile", cascade = CascadeType.REMOVE)// 내가 팔로우 한..
+    @OneToMany(mappedBy = "toProfile", cascade = CascadeType.ALL)// 내가 팔로우 한..
     private final List<Follow> followerRelations = new ArrayList<>();
 
     public List<Profile> getFollowers(){
@@ -54,32 +53,30 @@ public class Profile {
                 .collect(Collectors.toList());
     }
 
-    public void follow(Profile toProfile){
-        if (this.equals(toProfile)){
-            throw new RuntimeException("자신을 follow할 수는 없습니다");
-        }
+    private void addFollower(Follow follow){
+        this.followerRelations.add(follow);
+    }
 
+    private void removeFollower(Follow follow){
+        this.followerRelations.remove(follow);
+    }
+
+    public void follow(Profile toProfile){
         Follow follow = Follow.builder()
                 .fromProfile(this)
                 .toProfile(toProfile)
                 .build();
-
         this.followeeRelations.add(follow);
-
-        List<Follow> newFollowerRelations = toProfile.getFollowerRelations();
-        newFollowerRelations.add(follow);
-        toProfile.setFolloweeRelations(newFollowerRelations);
+        toProfile.addFollower(follow);
     }
 
     public void unfollow(Profile toProfile){
-        this.followeeRelations = this.followeeRelations.stream()
-                .filter(follow-> !follow.getToProfile().equals(toProfile))
-                .collect(Collectors.toList());
+        Follow follow = this.followeeRelations.stream().filter(it -> it.getToProfile().equals(toProfile))
+                .findFirst()
+                .orElseThrow(()->new RuntimeException("팔로우하고 있지 않습니다."));
 
-        toProfile.setFolloweeRelations(
-                toProfile.getFolloweeRelations().stream()
-                .filter(follow-> !follow.getFromProfile().equals(this))
-                .collect(Collectors.toList()));
+        this.followeeRelations.remove(follow);
+        toProfile.removeFollower(follow);
     }
 
     public boolean isFollow(Profile toProfile){

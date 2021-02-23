@@ -41,7 +41,7 @@ public class ProfileServiceTest extends TestingUtil {
 
     @Test
     public void unFollowByUsernameTest() throws Exception {
-        followByUsernameTest();
+        profilesService.followByUsername(userSignUpDto2.getUsername());
 
         ProfileDto responseDto = profilesService.unFollowByUsername(userSignUpDto2.getUsername());
         assertThat(responseDto.getUsername()).isEqualTo(userSignUpDto2.getUsername());
@@ -50,7 +50,7 @@ public class ProfileServiceTest extends TestingUtil {
 
     @Test
     public void findProfilesFolloweesByUsernameTest() throws Exception {
-        followByUsernameTest();
+        profilesService.followByUsername(userSignUpDto2.getUsername());
 
         ProfileListDto result = profilesService.findProfilesFolloweesByUsername(userSignUpDto.getUsername());
 
@@ -64,7 +64,6 @@ public class ProfileServiceTest extends TestingUtil {
                 .isTrue();
     }
 
-    @Transactional
     @Test
     public void findProfilesFollowersByUsernameTest() throws Exception {
         followByUsernameTest();

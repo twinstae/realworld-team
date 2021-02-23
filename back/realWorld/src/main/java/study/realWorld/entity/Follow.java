@@ -14,10 +14,10 @@ public class Follow {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name="PROFILE_ID", insertable=false, updatable=false)
+    @JoinColumn(name="followeeRelations")
     private Profile fromProfile;
 
     @ManyToOne
-    @JoinColumn(name="PROFILE_ID", insertable=false, updatable=false)
+    @JoinColumn(name="followerRelations")
     private Profile toProfile;
 }

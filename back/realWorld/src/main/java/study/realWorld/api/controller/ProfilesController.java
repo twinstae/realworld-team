@@ -29,6 +29,23 @@ public class ProfilesController {
     }
 
     @PreAuthorize("hasAnyRole('USER')")
+    @PostMapping("/{username}/follow")
+    public ResponseEntity<ProfileResponseDto> followByUsername(
+            @PathVariable String username
+    ){
+        ProfileDto followingDto = profilesService.followByUsername(username);
+        return ResponseEntity.ok(new ProfileResponseDto(followingDto));
+    }
+
+    @PreAuthorize("hasAnyRole('USER')")
+    @DeleteMapping("/{username}/follow")
+    public ResponseEntity<ProfileResponseDto> unfollowByUsername(
+            @PathVariable String username
+    ){
+        ProfileDto followingDto = profilesService.unFollowByUsername(username);
+        return ResponseEntity.ok(new ProfileResponseDto(followingDto));
+    }
+    @PreAuthorize("hasAnyRole('USER')")
     @GetMapping("/{username}/followers")
     public ResponseEntity<ProfileListDto> getFollowersByUsername(
             @PathVariable String username

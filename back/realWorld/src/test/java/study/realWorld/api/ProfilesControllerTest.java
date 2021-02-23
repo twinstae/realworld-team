@@ -41,12 +41,39 @@ public class ProfilesControllerTest  extends TestingUtil {
 
     @Test
     public void findProfileByUsername() throws Exception {
-        HttpEntity<?> entity = new HttpEntity<>(null, getHttpHeadersWithToken(token));
-
         ResponseEntity<ProfileResponseDto> responseEntity = restTemplate.exchange(
                 fullProfileUrl(),
                 HttpMethod.GET,
-                entity,
+                getHttpEntityWithToken(),
+                ProfileResponseDto.class
+        );
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    private HttpEntity<?> getHttpEntityWithToken() {
+        return new HttpEntity<>(null, getHttpHeadersWithToken(token));
+    }
+
+    @Test
+    public void followingByUsernameTest() throws Exception {
+        ResponseEntity<ProfileResponseDto> responseEntity = restTemplate.postForEntity(
+                fullProfileUrl()+"/follow",
+                getHttpEntityWithToken(),
+                ProfileResponseDto.class
+        );
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void followerByUsernameTest() throws Exception {
+        followingByUsernameTest();
+
+        ResponseEntity<ProfileResponseDto> responseEntity = restTemplate.exchange(
+                fullProfileUrl()+"/follow",
+                HttpMethod.DELETE,
+                getHttpEntityWithToken(),
                 ProfileResponseDto.class
         );
 

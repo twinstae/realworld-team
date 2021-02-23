@@ -43,8 +43,6 @@ public class TestingUtil {
     protected AuthorityRepository authorityRepository;
     @Autowired
     protected ProfilesRepository profileRepository;
-    @Autowired
-    protected ProfilesService profilesService;
 
     protected final String title = "제목";
     protected final String description = "개요";
@@ -157,7 +155,6 @@ public class TestingUtil {
     protected void tearDown() {
         System.out.println("\n테스트 데이터 정리\n");
         articlesRepository.deleteAll();
-        profilesService.unfollowAllProfile();
         profileRepository.deleteAll();
         userRepository.deleteAll();
         authorityRepository.deleteAll();

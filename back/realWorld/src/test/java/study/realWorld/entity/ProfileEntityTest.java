@@ -29,10 +29,13 @@ public class ProfileEntityTest extends TestingUtil {
     @Test
     public void followTest(){
         setUp();
-
-        profile1.follow(profile2);
+        initFollow();
 
         assertThat(profile1.isFollow(profile2)).isTrue();
+    }
+
+    private void initFollow() {
+        profile1.follow(profile2);
     }
 
     // unfollow 테스트
@@ -41,7 +44,7 @@ public class ProfileEntityTest extends TestingUtil {
     @Test
     public void unFollowTest() throws Exception {
         setUp();
-        profile1.follow(profile2);
+        initFollow();
 
         profile1.unfollow(profile2);
 
@@ -53,10 +56,9 @@ public class ProfileEntityTest extends TestingUtil {
     @Test
     public void getFollowersTest() throws Exception {
         setUp();
-        profile1.follow(profile2);
+        initFollow();
 
-        List<Profile> followers = profile2.getFollowers();
-        assertThat(followers.size()).isEqualTo(1);
+        assertThat(profile2.getFollowers().size()).isEqualTo(1);
     }
 
     @Transactional
@@ -64,7 +66,7 @@ public class ProfileEntityTest extends TestingUtil {
     @Test
     public void getFolloweesTest() throws Exception {
         setUp();
-        profile1.follow(profile2);
+        initFollow();
 
         assertThat(profile1.getFollowees().size()).isEqualTo(1);
     }
