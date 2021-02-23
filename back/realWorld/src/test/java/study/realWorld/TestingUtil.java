@@ -16,10 +16,7 @@ import study.realWorld.api.dto.userDtos.UserSignUpDto;
 import study.realWorld.api.dto.userDtos.UserWithTokenDto;
 import study.realWorld.entity.Articles;
 import study.realWorld.entity.Authority;
-import study.realWorld.repository.ArticlesRepository;
-import study.realWorld.repository.AuthorityRepository;
-import study.realWorld.repository.ProfilesRepository;
-import study.realWorld.repository.UserRepository;
+import study.realWorld.repository.*;
 import study.realWorld.service.ArticlesService;
 import study.realWorld.service.UserService;
 
@@ -44,6 +41,8 @@ public class TestingUtil {
     protected AuthorityRepository authorityRepository;
     @Autowired
     protected ProfilesRepository profileRepository;
+    @Autowired
+    protected FollowRepository followRepository;
 
     protected final String title = "제목";
     protected final String description = "개요";
@@ -156,6 +155,7 @@ public class TestingUtil {
     protected void tearDown() {
         System.out.println("\n테스트 데이터 정리\n");
         articlesRepository.deleteAll();
+        followRepository.deleteAll();
         profileRepository.deleteAll();
         userRepository.deleteAll();
         authorityRepository.deleteAll();

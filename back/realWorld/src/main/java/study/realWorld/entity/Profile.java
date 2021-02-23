@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Entity
 public class Profile {
     @Id
@@ -64,9 +63,9 @@ public class Profile {
 
         this.followeeRelations.add(follow);
 
-        List<Follow> newFolloweeRelations = toProfile.getFolloweeRelations();
-        newFolloweeRelations.add(follow);
-        toProfile.setFolloweeRelations(newFolloweeRelations);
+        List<Follow> newFollowerRelations = toProfile.getFollowerRelations();
+        newFollowerRelations.add(follow);
+        toProfile.setFolloweeRelations(newFollowerRelations);
     }
 
     public void unfollow(Profile toProfile){

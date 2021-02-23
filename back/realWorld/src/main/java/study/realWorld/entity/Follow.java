@@ -3,7 +3,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @ManyToOne
     @JoinColumn(name="PROFILE_ID", insertable=false, updatable=false)
