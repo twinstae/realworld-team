@@ -32,10 +32,11 @@ public class ProfileEntityTest extends TestingUtil {
         initFollow();
 
         assertThat(profile1.isFollow(profile2)).isTrue();
+        assertThat(profile2.isFollowed(profile1)).isTrue();
     }
 
     private void initFollow() {
-        profile1.follow(profile2);
+        profile1.follow(profile2); //1이 2를 팔로우했다.그러면 Profile1의 follower가 1이 되고, Profilie2의 follwee가 1이된다.
     }
 
     // unfollow 테스트

@@ -35,7 +35,7 @@ public class Profile {
         this.user = user;
     }
 
-    @OneToMany(mappedBy = "fromProfile", cascade = CascadeType.ALL) //나를 팔로우한..
+    @OneToMany(mappedBy = "fromProfile", cascade = CascadeType.ALL) //이 Profile이 팔로우한 목록
     private List<Follow> followeeRelations = new ArrayList<>();
 
     public List<Profile> getFollowees(){
@@ -44,7 +44,7 @@ public class Profile {
                 .collect(Collectors.toList());
     }
 
-    @OneToMany(mappedBy = "toProfile", cascade = CascadeType.ALL)// 내가 팔로우 한..
+    @OneToMany(mappedBy = "toProfile", cascade = CascadeType.ALL)// 이 Profile을 팔로우한 목록
     private final List<Follow> followerRelations = new ArrayList<>();
 
     public List<Profile> getFollowers(){
@@ -80,7 +80,12 @@ public class Profile {
     }
 
     public boolean isFollow(Profile toProfile){
-        return this.followeeRelations.stream()
+        return this.followeeRelations.stream() //이 Profile이 팔로우한 녀석들 중에 toProfile이 있니??
                 .anyMatch(follow-> follow.getToProfile().equals(toProfile));
+    }
+
+    public boolean isFollowed(Profile fromProfile){
+        return this.followerRelations.stream() //이 Profile을 팔로우한 녀석들 중에 fromProfile이 있니??
+                .anyMatch(follow-> follow.getFromProfile().equals(fromProfile));
     }
 }
