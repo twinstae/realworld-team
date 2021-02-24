@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -46,6 +45,9 @@ public class Profile {
 
     @OneToMany(mappedBy = "toProfile", cascade = CascadeType.ALL)// 이 Profile을 팔로우한 목록
     private final List<Follow> followerRelations = new ArrayList<>();
+
+    @OneToMany
+    private final List<Favorite> favoriteList = new ArrayList<>();
 
     public List<Profile> getFollowers(){
         return this.followerRelations.stream()

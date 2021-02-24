@@ -5,6 +5,8 @@ import lombok.*;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -14,6 +16,7 @@ public class Articles extends DateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ARTICLES_ID")
     private Long id;
 
     @NotNull
@@ -35,6 +38,9 @@ public class Articles extends DateEntity {
     @ManyToOne
     @JoinColumn(name = "AUTHOR_ID") //외래키 얘가 주인
     private User author;
+
+    @OneToMany
+    private final List<Favorite> favoriteList = new ArrayList<>();
 
     @Builder
     public Articles(String title, String slug, String description, String body, User author) {
