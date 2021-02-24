@@ -52,7 +52,7 @@ public class ProfileServiceTest extends TestingUtil {
 
     @Test
     public void findProfilesFolloweesByUsernameTest() throws Exception {
-        profilesService.followByUsername(userSignUpDto2.getUsername());
+        followByUsernameTest();
 
         ProfileListDto result = profilesService.findProfilesFolloweesByUsername(userSignUpDto.getUsername());
 
