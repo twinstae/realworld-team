@@ -84,7 +84,7 @@ public class Profile {
                 .anyMatch(follow-> follow.getToProfile().equals(toProfile));
     }
 
-    public boolean isFollowed(Profile fromProfile){
+    public boolean isFollowedBy(Profile fromProfile){
         return this.followerRelations.stream() //이 Profile을 팔로우한 녀석들 중에 fromProfile이 있니??
                 .anyMatch(follow-> follow.getFromProfile().equals(fromProfile));
     }

@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import study.realWorld.TestingUtil;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -32,7 +31,7 @@ public class ProfileEntityTest extends TestingUtil {
         initFollow();
 
         assertThat(profile1.isFollow(profile2)).isTrue();
-        assertThat(profile2.isFollowed(profile1)).isTrue();
+        assertThat(profile2.isFollowedBy(profile1)).isTrue();
     }
 
     private void initFollow() {
