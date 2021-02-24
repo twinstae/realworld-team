@@ -39,7 +39,7 @@ public class Articles extends DateEntity {
     @JoinColumn(name = "AUTHOR_ID") //외래키 얘가 주인
     private User author;
 
-    @OneToMany
+    @OneToMany(mappedBy = "article")
     private final List<Favorite> favoriteList = new ArrayList<>();
 
     @Builder

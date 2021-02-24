@@ -46,7 +46,7 @@ public class Profile {
     @OneToMany(mappedBy = "toProfile", cascade = CascadeType.ALL)// 이 Profile을 팔로우한 목록
     private final List<Follow> followerRelations = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "profile")
     private final List<Favorite> favoriteList = new ArrayList<>();
 
     public List<Profile> getFollowers(){
