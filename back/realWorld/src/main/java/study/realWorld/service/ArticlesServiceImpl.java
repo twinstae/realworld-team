@@ -42,14 +42,12 @@ public class ArticlesServiceImpl implements ArticlesService {
     }
 
     private ArticleDto getArticleDtoFromArticlesAndProfile(Articles articles, Optional<Profile> optionalProfile) {
-        if (optionalProfile.isPresent()){
-            Profile currentProfile = optionalProfile.get();
+        return optionalProfile.map((currentProfile)->{
             boolean isFollow = profileService.isFollow(currentProfile, articles.getAuthor());
             boolean favorited = profileService.haveFavorited(currentProfile, articles);
 
             return ArticleDto.fromEntity(articles, isFollow, favorited);
-        }
-        return ArticleDto.fromEntity(articles, false, false);
+        }).orElse(ArticleDto.fromEntity(articles, false, false));
     }
 
 

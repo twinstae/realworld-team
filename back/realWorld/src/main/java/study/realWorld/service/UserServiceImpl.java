@@ -31,7 +31,6 @@ import java.util.Set;
 public class UserServiceImpl implements UserService {
     private final AuthorityRepository authorityRepository;
     private final UserRepository userRepository;
-    private final ProfilesRepository profileRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
