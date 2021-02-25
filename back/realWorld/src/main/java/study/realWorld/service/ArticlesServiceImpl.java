@@ -14,6 +14,7 @@ import study.realWorld.repository.ArticlesRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -25,8 +26,9 @@ public class ArticlesServiceImpl implements ArticlesService {
     @Override
     @Transactional(readOnly = true)
     public ArticleListDto getPage(){
+        Profile profile = profileService.getCurrentProfileOrEmpty();
         List<ArticleDto> articleDtoList = articlesRepository.findAll().stream()
-                .map(this::getArticleDtoFromArticlesAndProfile)
+                .map(articles -> getArticleDtoFromArticlesAndProfile(articles, profile))
                 .collect(Collectors.toList());
         long articlesCount = articlesRepository.count();
 
@@ -36,8 +38,7 @@ public class ArticlesServiceImpl implements ArticlesService {
                 .build();
     }
 
-    private ArticleDto getArticleDtoFromArticlesAndProfile(Articles articles) {
-        Profile profile = profileService.getCurrentProfileOrEmpty();
+    private ArticleDto getArticleDtoFromArticlesAndProfile(Articles articles, Profile profile) {
         return ArticleDto.fromEntity(
                 articles,
                 profile
@@ -47,17 +48,18 @@ public class ArticlesServiceImpl implements ArticlesService {
     @Override
     @Transactional(readOnly = true)
     public ArticleDto findBySlug(String slug) {
-        Articles articles = getArticleBySlugOr404(slug);
-        return getArticleDtoFromArticlesAndProfile(articles);
+        return getArticleDtoBySlugThenStrategy(slug, (p,a)->{});
     }
 
     @Override
     @Transactional
     public void deleteBySlug(String slug) {
-        Articles articles = getArticleBySlugOr404(slug);
-        checkCurrentProfileIsTheAuthor(articles);
-
-        articlesRepository.delete(articles);
+        getArticleDtoBySlugThenStrategy(
+                slug,
+                (currentProfile, articles)->{
+                    checkProfileIsArticlesAuthor(currentProfile, articles);
+                    articlesRepository.delete(articles);
+        });
     }
 
     @Override
@@ -65,23 +67,20 @@ public class ArticlesServiceImpl implements ArticlesService {
     public ArticleDto save(ArticleCreateDto articleCreateDto){
         Profile profile = profileService.getCurrentProfileOr404();
         Articles articles = articlesRepository.save(articleCreateDto.toEntity(profile));
-
-        return getArticleDtoFromArticlesAndProfile(articles);
+        return getArticleDtoFromArticlesAndProfile(articles, profile);
     }
 
     @Override
     @Transactional
     public ArticleDto updateArticleBySlug(String slug, ArticleCreateDto updateArticleDto) {
-        Articles articles = getArticleBySlugOr404(slug);
-        checkCurrentProfileIsTheAuthor(articles);
-
-        articles.update(updateArticleDto);
-
-        return getArticleDtoFromArticlesAndProfile(articles);
+        return getArticleDtoBySlugThenStrategy(slug,
+                (currentProfile, articles)->{
+            checkProfileIsArticlesAuthor(currentProfile, articles);
+            articles.update(updateArticleDto);
+        });
     }
 
-    private void checkCurrentProfileIsTheAuthor(Articles articles) {
-        Profile currentProfile = profileService.getCurrentProfileOr404();
+    private void checkProfileIsArticlesAuthor(Profile currentProfile, Articles articles) {
         if (! articles.getAuthor().equals(currentProfile)){
             throw new NoAuthorizationException();
         }
@@ -95,22 +94,21 @@ public class ArticlesServiceImpl implements ArticlesService {
     @Override
     @Transactional
     public ArticleDto favoriteArticleBySlug(String slug) {
-        Articles articles = getArticleBySlugOr404(slug); //일단 article을 찾는다.
-        Profile profile = profileService.getCurrentProfileOr404();
-
-        profile.favorite(articles);
-
-        return getArticleDtoFromArticlesAndProfile(articles);
+        return getArticleDtoBySlugThenStrategy(slug, Profile::favorite);
     }
 
     @Override
     @Transactional
     public ArticleDto unfavoriteArticleBySlug(String slug) {
+        return getArticleDtoBySlugThenStrategy(slug, Profile::unfavorite);
+    }
+
+    private ArticleDto getArticleDtoBySlugThenStrategy(String slug, BiConsumer<Profile, Articles> strategy){
         Articles articles = getArticleBySlugOr404(slug); //일단 article을 찾는다.
-        Profile profile = profileService.getCurrentProfileOr404();
+        Profile currentProfile = profileService.getCurrentProfileOr404();
 
-        profile.unfavorite(articles);
+        strategy.accept(currentProfile, articles);
 
-        return getArticleDtoFromArticlesAndProfile(articles);
+        return getArticleDtoFromArticlesAndProfile(articles, currentProfile);
     }
 }
