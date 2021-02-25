@@ -55,12 +55,14 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    @Transactional
     @Override
     public UserDto signUp(UserSignUpDto userSignUpDto) {
         checkUserAlreadyExist(userSignUpDto);
         User user = userRepository.save(userSignUpDto.toEntity(passwordEncoder, getUserAuthorities()));
         Profile profile = profileRepository.save(ProfileCreateDto.toEntity(user));
-        return UserDto.fromUser(user.initProfile(profile));
+        user.initProfile(profile);
+        return UserDto.fromUser(user);
     }
 
     @Transactional(readOnly = true)

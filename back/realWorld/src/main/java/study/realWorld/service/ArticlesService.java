@@ -20,8 +20,7 @@ public interface ArticlesService {
     ArticleDto updateArticleBySlug(String slug, ArticleCreateDto updateArticleDto);
 
     Articles getArticleBySlugOr404(String slug);
-    ArticleDto favoriteArticleBySlug(String slug);
 
-    @Transactional
+    ArticleDto favoriteArticleBySlug(String slug);
     ArticleDto unfavoriteArticleBySlug(String slug);
 }

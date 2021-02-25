@@ -204,8 +204,8 @@ public class ArticlesControllerTest extends TestingUtil {
         );
 
         ArticleDto articleDto = extractArticleDto(responseEntity);
-        assertThat(articleDto.isFavorited()).isFalse();
         assertThat(articleDto.getFavoritesCount()).isEqualTo(0);
+        assertThat(articleDto.isFavorited()).isFalse();
     }
 
     private ArticleDto extractArticleDto(ResponseEntity<ArticleResponseDto> responseEntity) {
