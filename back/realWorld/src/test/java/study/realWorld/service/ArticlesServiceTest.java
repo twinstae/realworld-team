@@ -25,6 +25,12 @@ public class ArticlesServiceTest extends TestingUtil {
         ArticleDto responseDto = articlesService.findBySlug(createDto.getSlug());
 
         assertThat(responseDto.getTitle()).isEqualTo(createDto.getTitle());
+        assertInitState(responseDto);
+    }
+
+    private void assertInitState(ArticleDto responseDto) {
+        assertThat(responseDto.getAuthor().isFollowing()).isEqualTo(false);
+        assertThat(responseDto.getFavoritesCount()).isEqualTo(0);
     }
 
     @DisplayName("deleteBySlug에 slug를 넘기면 article이 삭제되어 존재하지 않는다.")
@@ -52,6 +58,7 @@ public class ArticlesServiceTest extends TestingUtil {
 
         assertDtoIsEqualTo(articleDto, createDto);
         assertThat(getCreatedArticle()).isPresent();
+        assertInitState(articleDto);
     }
 
     private Optional<Articles> getCreatedArticle() {
@@ -65,9 +72,6 @@ public class ArticlesServiceTest extends TestingUtil {
         ArticleDto updatedArticleDto = articlesService.updateArticleBySlug(createDto.getSlug(), updateDto);
 
         assertDtoIsEqualTo(updatedArticleDto, updateDto);
+        assertInitState(updatedArticleDto);
     }
-
-
-
-
 }
