@@ -86,7 +86,7 @@ public class ArticlesServiceTest extends TestingUtil {
         assertThat(articleDto.isFavorited()).isTrue();
     }
 
-    @DisplayName("favoriteArticleBySlug를 하면 articleDto를 반환하고 isFavorited는 true, favoritesCount 1이다")
+    @DisplayName("unfavoriteArticleBySlug를 하면 articleDto를 반환하고 isFavorited는 false, favoritesCount 0이다")
     @Test
     public void unfavoriteArticleBySlugTest(){
         favoriteArticleBySlugTest();

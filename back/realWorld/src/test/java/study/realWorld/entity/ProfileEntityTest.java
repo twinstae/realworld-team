@@ -21,6 +21,8 @@ public class ProfileEntityTest extends TestingUtil {
                 .orElseThrow(RuntimeException::new);
         profile2 = profileRepository.findOneByUsername(userSignUpDto2.getUsername())
                 .orElseThrow(RuntimeException::new);
+
+        loginAndGetToken(userSignInDto);
     }
 
     @Transactional
@@ -86,7 +88,7 @@ public class ProfileEntityTest extends TestingUtil {
     }
 
     @Transactional
-    @DisplayName("profile이 article을 favortie하면... -> profile이 article을 haveFavorited는 true")
+    @DisplayName("profile이 article을 unfavortie하면... -> profile이 article을 haveFavorited는 false")
     @Test
     public void unfavoriteTest(){
         favoriteTest();
