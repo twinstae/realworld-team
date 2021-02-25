@@ -34,6 +34,14 @@ public class Profile {
         this.user = user;
     }
 
+    public static Profile empty(){
+        return Profile.builder()
+                .username("")
+                .image("")
+                .user(new User())
+                .build();
+    }
+
     @OneToMany(mappedBy = "fromProfile", cascade = CascadeType.ALL) //이 Profile이 팔로우한 목록
     private List<Follow> followeeRelations = new ArrayList<>();
 
@@ -94,7 +102,7 @@ public class Profile {
                 .anyMatch(follow-> follow.getFromProfile().equals(fromProfile));
     }
 
-    @OneToMany(mappedBy = "profile")
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
     private final List<Favorite> favoriteList = new ArrayList<>();
 
     public void favorite(Articles articles){
@@ -116,5 +124,4 @@ public class Profile {
         return this.favoriteList.stream()
                 .anyMatch(f-> f.getArticle().equals(articles));
     }
-
 }

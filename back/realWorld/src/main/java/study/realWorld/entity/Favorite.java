@@ -32,6 +32,4 @@ public class Favorite {
         this.profile = profile;
         this.article = article;
     }
-
-
 }
