@@ -5,7 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.realWorld.api.dto.profilesDtos.ProfileDto;
 import study.realWorld.api.dto.profilesDtos.ProfileListDto;
+import study.realWorld.entity.Articles;
 import study.realWorld.entity.Profile;
+import study.realWorld.repository.FavoriteRepository;
+import study.realWorld.repository.FollowRepository;
 import study.realWorld.repository.ProfilesRepository;
 
 import java.util.List;
@@ -31,8 +34,10 @@ public class ProfileServiceImpl implements ProfilesService{
 
     @Override
     public Optional<Profile> getCurrentProfile() {
-        return userService.getMyUserName()
-                .flatMap(this::getProfileByUserName);
+        if(userService.isMyUserPresent()){
+            return Optional.of(userService.getMyUserWithProfile().getProfile());
+        }
+        return Optional.empty();
     }
 
     @Override

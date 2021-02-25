@@ -81,32 +81,30 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public User getUserWithAuthoritiesByEmail(String email) {
         return userRepository.findOneWithAuthoritiesByEmail(email)
                 .orElseThrow(RuntimeException::new);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public User getMyUser() {
-        return SecurityUtil.getCurrentUsername()
-                .flatMap(userRepository::findOneByEmail)
-                .orElseThrow(RuntimeException::new);
-    }
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<String> getMyUserName() {
-        return SecurityUtil.getCurrentUsername()
-                .flatMap(userRepository::findOneByEmail)
-                .map(User::getUserName);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public User getMyUserWithAuthorities() {
         return SecurityUtil.getCurrentUsername()
                 .flatMap(userRepository::findOneWithAuthoritiesByEmail)
                 .orElseThrow(RuntimeException::new);
+    }
+
+    @Override
+    @Transactional
+    public User getMyUserWithProfile() {
+        return SecurityUtil.getCurrentUsername()
+                .flatMap(userRepository::findOneWithProfileByEmail)
+                .orElseThrow(RuntimeException::new);
+    }
+
+    @Override
+    public boolean isMyUserPresent() {
+        return SecurityUtil.getCurrentUsername().isPresent();
     }
 }

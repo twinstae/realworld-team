@@ -15,9 +15,8 @@ public interface UserService {
     UserDto signUp(UserSignUpDto userSignUpDto);
 
     Set<Authority> getUserAuthorities();
-
-    User getMyUser();
-    Optional<String> getMyUserName();
     User getMyUserWithAuthorities();
     User getUserWithAuthoritiesByEmail(String email);
+    User getMyUserWithProfile();
+    boolean isMyUserPresent();
 }
