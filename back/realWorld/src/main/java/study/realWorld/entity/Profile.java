@@ -43,11 +43,14 @@ public class Profile {
                 .collect(Collectors.toList());
     }
 
+    @OneToMany(mappedBy = "author")
+    private final List<Articles> articlesList = new ArrayList<>();
+    public void addArticle(Articles articles){
+        this.articlesList.add(articles);
+    }
+
     @OneToMany(mappedBy = "toProfile", cascade = CascadeType.ALL)// 이 Profile을 팔로우한 목록
     private final List<Follow> followerRelations = new ArrayList<>();
-
-    @OneToMany(mappedBy = "profile")
-    private final List<Favorite> favoriteList = new ArrayList<>();
 
     public List<Profile> getFollowers(){
         return this.followerRelations.stream()
@@ -91,11 +94,25 @@ public class Profile {
                 .anyMatch(follow-> follow.getFromProfile().equals(fromProfile));
     }
 
-    public void addFavorite(Favorite favorite){
-        this.getFavoriteList().add(favorite);
+    @OneToMany(mappedBy = "profile")
+    private final List<Favorite> favoriteList = new ArrayList<>();
+
+    public void favorite(Articles articles){
+        Favorite favorite = new Favorite(this, articles);
+        this.favoriteList.add(favorite);
+        articles.addFavorite(favorite);
     }
 
-    public boolean isFavorited(Articles articles){
+    public void unfavorite(Articles articles){
+        Favorite favorite = this.favoriteList.stream().filter(it -> it.getArticle().equals(articles))
+                .findFirst()
+                .orElseThrow(()->new RuntimeException("좋아요를 누르지 않았습니다."));
+
+        this.favoriteList.remove(favorite);
+        articles.removeFavorite(favorite);
+    }
+
+    public boolean haveFavorited(Articles articles){
         return this.favoriteList.stream()
                 .anyMatch(f-> f.getArticle().equals(articles));
     }
