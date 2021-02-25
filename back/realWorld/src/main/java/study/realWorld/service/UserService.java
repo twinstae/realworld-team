@@ -17,6 +17,5 @@ public interface UserService {
     Set<Authority> getUserAuthorities();
     User getMyUserWithAuthorities();
     User getUserWithAuthoritiesByEmail(String email);
-    User getMyUserWithProfile();
-    boolean isMyUserPresent();
+    Optional<User> getMyUserWithProfile();
 }

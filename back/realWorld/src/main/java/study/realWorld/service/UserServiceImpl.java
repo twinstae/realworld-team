@@ -14,6 +14,7 @@ import study.realWorld.api.dto.userDtos.UserSignInDto;
 import study.realWorld.api.dto.userDtos.UserSignUpDto;
 import study.realWorld.api.dto.userDtos.UserWithTokenDto;
 import study.realWorld.entity.Authority;
+import study.realWorld.entity.Profile;
 import study.realWorld.entity.User;
 import study.realWorld.jwt.TokenProvider;
 import study.realWorld.repository.AuthorityRepository;
@@ -58,7 +59,8 @@ public class UserServiceImpl implements UserService {
     public UserDto signUp(UserSignUpDto userSignUpDto) {
         checkUserAlreadyExist(userSignUpDto);
         User user = userRepository.save(userSignUpDto.toEntity(passwordEncoder, getUserAuthorities()));
-        return UserDto.fromUser(user);
+        Profile profile = profileRepository.save(ProfileCreateDto.toEntity(user));
+        return UserDto.fromUser(user.initProfile(profile));
     }
 
     @Transactional(readOnly = true)
@@ -96,14 +98,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User getMyUserWithProfile() {
+    public Optional<User> getMyUserWithProfile() {
         return SecurityUtil.getCurrentUsername()
-                .flatMap(userRepository::findOneWithProfileByEmail)
-                .orElseThrow(RuntimeException::new);
-    }
-
-    @Override
-    public boolean isMyUserPresent() {
-        return SecurityUtil.getCurrentUsername().isPresent();
+                .flatMap(userRepository::findOneWithProfileByEmail);
     }
 }

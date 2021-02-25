@@ -23,14 +23,12 @@ public class UserSignUpDto {
     private String password;
 
     public User toEntity(PasswordEncoder passwordEncoder, Set<Authority> authorities){
-        User user = User
+        return User
                 .builder()
                 .userName(this.username)
                 .email(this.email)
                 .password(passwordEncoder.encode(this.password))
                 .authorities(authorities)
                 .build();
-        user.initProfile();
-        return user;
     }
 }

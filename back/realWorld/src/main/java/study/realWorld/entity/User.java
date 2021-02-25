@@ -47,8 +47,9 @@ public class User {
     @Column
     private boolean activated;
 
-    public void initProfile(){
+    public User initProfile(Profile profile){
         this.profile = ProfileCreateDto.toEntity(this);
+        return this;
     }
 
     @ManyToMany

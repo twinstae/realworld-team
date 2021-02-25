@@ -38,12 +38,7 @@ public class ProfileServiceImpl implements ProfilesService{
     @Override
     @Transactional
     public Optional<Profile> getCurrentProfile() {
-        if(userService.isMyUserPresent()){
-            User myUserWithProfile = userService.getMyUserWithProfile();
-            Profile profile = myUserWithProfile.getProfile();
-            return Optional.ofNullable(profile);
-        }
-        return Optional.empty();
+        return userService.getMyUserWithProfile().map(User::getProfile);
     }
 
     @Override
