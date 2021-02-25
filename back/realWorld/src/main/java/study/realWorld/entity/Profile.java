@@ -2,6 +2,10 @@ package study.realWorld.entity;
 
 
 import lombok.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.beans.factory.annotation.Autowired;
+import study.realWorld.repository.FavoriteRepository;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -42,6 +46,12 @@ public class Profile {
                 .build();
     }
 
+    @OneToMany(mappedBy = "author")
+    private final List<Articles> articlesList = new ArrayList<>();
+    public void addArticle(Articles articles){
+        this.articlesList.add(articles);
+    }
+
     @OneToMany(mappedBy = "fromProfile", cascade = CascadeType.ALL) //이 Profile이 팔로우한 목록
     private List<Follow> followeeRelations = new ArrayList<>();
 
@@ -49,12 +59,6 @@ public class Profile {
         return this.followeeRelations.stream()
                 .map(Follow::getToProfile)
                 .collect(Collectors.toList());
-    }
-
-    @OneToMany(mappedBy = "author")
-    private final List<Articles> articlesList = new ArrayList<>();
-    public void addArticle(Articles articles){
-        this.articlesList.add(articles);
     }
 
     @OneToMany(mappedBy = "toProfile", cascade = CascadeType.ALL)// 이 Profile을 팔로우한 목록
@@ -102,6 +106,7 @@ public class Profile {
                 .anyMatch(follow-> follow.getFromProfile().equals(fromProfile));
     }
 
+    @LazyCollection(LazyCollectionOption.EXTRA)
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
     private final List<Favorite> favoriteList = new ArrayList<>();
 

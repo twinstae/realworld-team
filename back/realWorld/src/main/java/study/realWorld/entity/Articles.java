@@ -2,6 +2,8 @@ package study.realWorld.entity;
 
 import com.sun.istack.NotNull;
 import lombok.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 
 import javax.persistence.*;
@@ -63,6 +65,7 @@ public class Articles extends DateEntity {
         }
     }
 
+    @LazyCollection(LazyCollectionOption.EXTRA)
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private final List<Favorite> favoriteList = new ArrayList<>();
 
