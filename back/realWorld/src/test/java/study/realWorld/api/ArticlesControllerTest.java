@@ -185,4 +185,15 @@ public class ArticlesControllerTest extends TestingUtil {
                 slugUrl(), HttpMethod.DELETE, requestUpdate, Map.class
         );
     }
+
+    @Test
+    public void createArticleFavorite() throws Exception {
+        createUserAndArticleInit();
+        anotherUserInit();
+        getToken(userSignInDto);
+        ResponseEntity<ArticleResponseDto> responseEntity = updateRequestWithToken(token);
+
+        assertStatus(responseEntity, HttpStatus.OK);
+        assertResponseBodyIsEqualToDto(responseEntity, updateDto);
+    }
 }

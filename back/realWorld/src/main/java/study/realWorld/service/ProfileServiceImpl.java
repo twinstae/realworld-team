@@ -30,7 +30,7 @@ public class ProfileServiceImpl implements ProfilesService{
         return ProfileDto.fromEntity(targetUserProfile, isFollowed);
     }
 
-    Profile getProfileByUserNameOr404(String username){
+     Profile getProfileByUserNameOr404(String username){
         return profilesRepository.findOneByUsername(username).orElseThrow(ResourceNotFoundException::new);
     }
 

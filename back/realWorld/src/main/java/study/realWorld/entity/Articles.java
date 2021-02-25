@@ -65,4 +65,10 @@ public class Articles extends DateEntity {
             this.body = updateDto.getBody();
         }
     }
+
+    public void addFavorite(Favorite favorite) {
+        this.getFavoriteList().add(favorite);
+    }
+
+
 }

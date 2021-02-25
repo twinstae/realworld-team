@@ -90,4 +90,14 @@ public class Profile {
         return this.followerRelations.stream() //이 Profile을 팔로우한 녀석들 중에 fromProfile이 있니??
                 .anyMatch(follow-> follow.getFromProfile().equals(fromProfile));
     }
+
+    public void addFavorite(Favorite favorite){
+        this.getFavoriteList().add(favorite);
+    }
+
+    public boolean isFavorited(Articles articles){
+        return this.favoriteList.stream()
+                .anyMatch(f-> f.getArticle().equals(articles));
+    }
+
 }

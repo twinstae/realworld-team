@@ -67,5 +67,19 @@ public class ArticlesController {
 
         return ResponseEntity.ok(new ArticleResponseDto(updatedArticleDto));
     }
+
+
+    @PostMapping("/{slug}/favorite")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<ArticleResponseDto> createArticleFavorite(
+            @PathVariable String slug
+    ){
+        ArticleDto articleDto = articlesService.addFavoriteArticle(slug);
+
+        return new ResponseEntity<>(
+                new ArticleResponseDto(articleDto),
+                HttpStatus.CREATED);
+    }
+
 }
 

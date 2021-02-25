@@ -19,8 +19,10 @@ public class ArticleDto {
     private UserDto author;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private boolean favorited;
+    private Long favoritesCount;
 
-    public static ArticleDto fromEntity(Articles articles) {
+    public static ArticleDto fromEntity(Articles articles,boolean favorited,Long favoritesCount) {
 
         return ArticleDto
                 .builder()
@@ -31,6 +33,8 @@ public class ArticleDto {
                 .author(UserDto.fromUser(articles.getAuthor()))
                 .createdAt(articles.getCreatedAt())
                 .updatedAt(articles.getUpdatedAt())
+                .favorited(favorited)
+                .favoritesCount(favoritesCount)
                 .build();
     }
 

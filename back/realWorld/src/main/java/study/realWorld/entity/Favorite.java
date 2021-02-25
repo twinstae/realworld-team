@@ -2,6 +2,7 @@ package study.realWorld.entity;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,4 +26,12 @@ public class Favorite {
     @ManyToOne
     @JoinColumn(name ="ARTICLES_ID")
     private Articles article;
+
+    @Builder
+    public Favorite(Profile profile, Articles article) {
+        this.profile = profile;
+        this.article = article;
+    }
+
+
 }

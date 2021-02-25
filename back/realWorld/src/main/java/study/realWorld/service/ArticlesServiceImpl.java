@@ -8,10 +8,15 @@ import study.realWorld.api.dto.articleDtos.ArticleListDto;
 import study.realWorld.api.exception.NoAuthorizationException;
 import study.realWorld.api.exception.ResourceNotFoundException;
 import study.realWorld.entity.Articles;
+import study.realWorld.entity.Favorite;
+import study.realWorld.entity.Profile;
 import study.realWorld.entity.User;
 import study.realWorld.repository.ArticlesRepository;
 
 import org.springframework.transaction.annotation.Transactional;
+import study.realWorld.repository.FavoriteRepository;
+import study.realWorld.repository.ProfilesRepository;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +25,8 @@ import java.util.stream.Collectors;
 public class ArticlesServiceImpl implements ArticlesService {
     private final ArticlesRepository articlesRepository;
     private final UserService userService;
+    private final ProfilesRepository profilesRepository;
+    private final FavoriteRepository favoriteRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -39,7 +46,7 @@ public class ArticlesServiceImpl implements ArticlesService {
     @Transactional(readOnly = true)
     public ArticleDto findBySlug(String slug) {
         Articles articles = getArticleBySlugOr404(slug);
-        return ArticleDto.fromEntity(articles);
+        return ArticleDto.fromEntity(articles,articles,favorited,favoriteCount);
     }
 
     @Override
@@ -56,7 +63,7 @@ public class ArticlesServiceImpl implements ArticlesService {
     public ArticleDto save(ArticleCreateDto articleCreateDto){
         User currentUser = userService.getMyUser();
         Articles articles = articlesRepository.save(articleCreateDto.toEntity(currentUser));
-        return ArticleDto.fromEntity(articles);
+        return ArticleDto.fromEntity(articles,articles,favorited,favoriteCount);
     }
 
     @Transactional
@@ -66,7 +73,9 @@ public class ArticlesServiceImpl implements ArticlesService {
         checkCurrentUserIsTheAuthor(articles);
 
         articles.update(updateArticleDto);
-        return ArticleDto.fromEntity(articles);
+        long favoriteCount = articles.getFavoriteList().size();
+        boolean favorited = profile.isFavorited(articles);
+        return ArticleDto.fromEntity(articles,articles,favorited,favoriteCount);
     }
 
     private void checkCurrentUserIsTheAuthor(Articles articles) {
@@ -80,4 +89,19 @@ public class ArticlesServiceImpl implements ArticlesService {
         return articlesRepository.findOneWithAuthorBySlug(slug)
                 .orElseThrow(ResourceNotFoundException::new);
     }
+
+    public ArticleDto addFavoriteArticle(String slug) {
+        Articles articles = getArticleBySlugOr404(slug); //일단 article을 찾는다.
+        User currentUser = userService.getMyUser(); // 로그인되어 있는 user를 찾는다.
+        Profile profile =profilesRepository.findOneByUsername(currentUser.getUserName())
+                .orElseThrow(ResourceNotFoundException::new); // 로그인 되어 있는 유저의 Profile을 찾는다.
+        Favorite favorite = new Favorite(profile,articles); // 찾아놓은 article과 profile에 favorite을 생성한다.
+        profile.addFavorite(favorite);
+        articles.addFavorite(favorite);
+        long favoriteCount = articles.getFavoriteList().size();
+        boolean favorited = profile.isFavorited(articles);
+
+        return ArticleDto.fromEntity(articles,favorited,favoriteCount);
+    }
+
 }

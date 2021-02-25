@@ -16,4 +16,6 @@ public interface ArticlesService {
     ArticleDto save(ArticleCreateDto articleCreateDto);
 
     ArticleDto updateArticleBySlug(String slug, ArticleCreateDto updateArticleDto);
+
+    ArticleDto addFavoriteArticle(String slug);
 }
