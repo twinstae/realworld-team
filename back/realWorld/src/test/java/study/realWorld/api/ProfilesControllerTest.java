@@ -51,10 +51,6 @@ public class ProfilesControllerTest  extends TestingUtil {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
-    private HttpEntity<?> getHttpEntityWithToken() {
-        return new HttpEntity<>(null, getHttpHeadersWithToken(token));
-    }
-
     @Test
     public void followingByUsernameTest() throws Exception {
         ResponseEntity<ProfileResponseDto> responseEntity = restTemplate.postForEntity(

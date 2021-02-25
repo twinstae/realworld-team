@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
@@ -100,6 +101,9 @@ public class TestingUtil {
         assertThat(articleDto.getTitle()).isEqualTo(testDto.getTitle());
         assertThat(articleDto.getDescription()).isEqualTo(testDto.getDescription());
         assertThat(articleDto.getBody()).isEqualTo(testDto.getBody());
+
+        assertThat(articleDto.isFavorited()).isFalse();
+        assertThat(articleDto.getAuthor().isFollowing()).isFalse();
     }
 
     protected void authorityInit() {
@@ -146,6 +150,10 @@ public class TestingUtil {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Token "+token);
         return headers;
+    }
+
+    protected HttpEntity<?> getHttpEntityWithToken() {
+        return new HttpEntity<>(null, getHttpHeadersWithToken(token));
     }
 
     protected void assertDtoIsEqualTo(ArticleDto dto, ArticleCreateDto expected) {
