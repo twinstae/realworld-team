@@ -21,6 +21,8 @@ import java.util.function.Function;
 public class ProfileServiceImpl implements ProfilesService{
     private final ProfilesRepository profilesRepository;
     private final UserService userService;
+    private final FollowRepository followRepository;
+    private final FavoriteRepository favoriteRepository;
 
     private ProfileDto getProfileDtoContext(String username, BiConsumer<Profile, Profile> strategy){
         Profile currentUserProfile = getCurrentProfileOr404();
@@ -101,5 +103,15 @@ public class ProfileServiceImpl implements ProfilesService{
     @Transactional(readOnly = true)
     public ProfileListDto findProfilesFollowersByUsername(String username){
         return getProfileListDtoContext(username, Profile::getFollowers);
+    }
+
+    @Override
+    public boolean isFollow(Profile from, Profile to){
+        return followRepository.existsCountByFromProfileAndToProfile(from, to);
+    };
+
+    @Override
+    public boolean haveFavorited(Profile currentProfile, Articles articles){
+        return favoriteRepository.existsCountByProfileAndArticle(currentProfile, articles);
     }
 }

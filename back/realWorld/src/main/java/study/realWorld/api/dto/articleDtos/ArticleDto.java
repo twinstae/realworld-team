@@ -24,10 +24,7 @@ public class ArticleDto {
     private boolean favorited;
     private int favoritesCount;
 
-    public static ArticleDto fromEntity(Articles articles, Profile currentProfile) {
-
-        boolean isFollow = currentProfile.isFollow(articles.getAuthor());
-        boolean favorited = currentProfile.haveFavorited(articles);
+    public static ArticleDto fromEntity(Articles articles, boolean isFollow, boolean favorited) {
         return ArticleDto
                 .builder()
                 .slug(articles.getSlug())

@@ -12,7 +12,6 @@ import study.realWorld.entity.Profile;
 import study.realWorld.repository.ArticlesRepository;
 
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
@@ -38,11 +37,30 @@ public class ArticlesServiceImpl implements ArticlesService {
                 .build();
     }
 
-    private ArticleDto getArticleDtoFromArticlesAndProfile(Articles articles, Profile profile) {
+    private ArticleDto getArticleDtoFromArticlesAndProfile(Articles articles, Profile currentProfile) {
+        boolean isFollow = profileService.isFollow(currentProfile, articles.getAuthor());
+        boolean favorited = profileService.haveFavorited(currentProfile, articles);
         return ArticleDto.fromEntity(
                 articles,
-                profile
+                isFollow,
+                favorited
         );
+    }
+
+
+    private ArticleDto getArticleDtoBySlugThenStrategy(String slug, BiConsumer<Profile, Articles> strategy){
+        Articles articles = getArticleBySlugOr404(slug);
+        Profile currentProfile = profileService.getCurrentProfileOrEmpty();
+
+        strategy.accept(currentProfile, articles);
+
+        return getArticleDtoFromArticlesAndProfile(articles, currentProfile);
+    }
+
+    @Override
+    public Articles getArticleBySlugOr404(String slug) {
+        return articlesRepository.findOneWithAuthorBySlug(slug)
+                .orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
@@ -85,11 +103,6 @@ public class ArticlesServiceImpl implements ArticlesService {
             throw new NoAuthorizationException();
         }
     }
-    @Override
-    public Articles getArticleBySlugOr404(String slug) {
-        return articlesRepository.findOneWithAuthorBySlug(slug)
-                .orElseThrow(ResourceNotFoundException::new);
-    }
 
     @Override
     @Transactional
@@ -101,14 +114,5 @@ public class ArticlesServiceImpl implements ArticlesService {
     @Transactional
     public ArticleDto unfavoriteArticleBySlug(String slug) {
         return getArticleDtoBySlugThenStrategy(slug, Profile::unfavorite);
-    }
-
-    private ArticleDto getArticleDtoBySlugThenStrategy(String slug, BiConsumer<Profile, Articles> strategy){
-        Articles articles = getArticleBySlugOr404(slug); //일단 article을 찾는다.
-        Profile currentProfile = profileService.getCurrentProfileOr404();
-
-        strategy.accept(currentProfile, articles);
-
-        return getArticleDtoFromArticlesAndProfile(articles, currentProfile);
     }
 }
