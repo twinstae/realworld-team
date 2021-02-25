@@ -24,12 +24,11 @@ public class ArticlesServiceImpl implements ArticlesService {
     private final ProfilesService profileService;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public ArticleListDto getPage(){
         List<ArticleDto> articleDtoList = articlesRepository.findAll().stream()
                 .map(articles ->
-                        getArticleDtoFromArticlesAndProfile(
-                                articles, profileService.getCurrentProfile()))
+                        getArticleDtoFromArticlesAndProfile(articles, Optional.empty()))
                 .collect(Collectors.toList());
         long articlesCount = articlesRepository.count();
 
@@ -65,7 +64,7 @@ public class ArticlesServiceImpl implements ArticlesService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public ArticleDto findBySlug(String slug) {
         return getArticleDtoBySlugThenStrategy(slug, ((profile, articles) -> {}));
     }
