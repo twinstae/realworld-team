@@ -74,4 +74,26 @@ public class ArticlesServiceTest extends TestingUtil {
         assertDtoIsEqualTo(updatedArticleDto, updateDto);
         assertInitState(updatedArticleDto);
     }
+
+    @DisplayName("favoriteArticleBySlug를 하면 articleDto를 반환하고 isFavorited는 true, favoritesCount 1이다")
+    @Test
+    public void favoriteArticleBySlugTest(){
+        createUserAndArticleInit();
+
+        ArticleDto articleDto = articlesService.favoriteArticleBySlug(createDto.getSlug());
+
+        assertThat(articleDto.getFavoritesCount()).isEqualTo(1);
+        assertThat(articleDto.isFavorited()).isTrue();
+    }
+
+    @DisplayName("favoriteArticleBySlug를 하면 articleDto를 반환하고 isFavorited는 true, favoritesCount 1이다")
+    @Test
+    public void unfavoriteArticleBySlugTest(){
+        favoriteArticleBySlugTest();
+
+        ArticleDto articleDto = articlesService.unfavoriteArticleBySlug(createDto.getSlug());
+
+        assertThat(articleDto.getFavoritesCount()).isEqualTo(0);
+        assertThat(articleDto.isFavorited()).isFalse();
+    }
 }
