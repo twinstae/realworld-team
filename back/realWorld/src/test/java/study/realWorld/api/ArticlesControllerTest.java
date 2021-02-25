@@ -24,20 +24,12 @@ public class ArticlesControllerTest extends TestingUtil {
         return baseUrl() + "/" + createDto.getSlug();
     }
 
-    private String wrongSlugUrl() {
-        return baseUrl() + "/잘못된슬러그";
+    private String favoriteUrl(){
+        return slugUrl() + "/favorite";
     }
 
-    @Test
-    public void articleResponseDtoTest() {
-        ArticleDto responseDto = ArticleDto
-                .builder()
-                .title(title)
-                .description(description)
-                .body(body)
-                .build();
-
-        assertArticlesResponseEqualToDto(responseDto, createDto);
+    private String wrongSlugUrl() {
+        return baseUrl() + "/잘못된슬러그";
     }
 
     @DisplayName("/api/articles에 get 요청을 보내면 status는 ok이고 모든 articleList를 받는다.")
@@ -101,9 +93,8 @@ public class ArticlesControllerTest extends TestingUtil {
             ResponseEntity<ArticleResponseDto> responseEntity,
             ArticleCreateDto dto
     ) {
-        ArticleResponseDto responseBody = responseEntity.getBody();
-        assert responseBody != null;
-        assertArticlesResponseEqualToDto(responseBody.getArticle(), dto);
+
+        assertArticlesResponseEqualToDto(extractArticleDto(responseEntity), dto);
         System.out.println(responseEntity.getBody());
     }
 
@@ -187,13 +178,37 @@ public class ArticlesControllerTest extends TestingUtil {
     }
 
     @Test
-    public void createArticleFavorite() throws Exception {
+    public void favoriteArticleBySlugTest() throws Exception {
         createUserAndArticleInit();
-        anotherUserInit();
         getToken(userSignInDto);
-        ResponseEntity<ArticleResponseDto> responseEntity = updateRequestWithToken(token);
+
+        ResponseEntity<ArticleResponseDto> responseEntity = restTemplate.postForEntity(
+                favoriteUrl(), getHttpEntityWithToken(), ArticleResponseDto.class
+        );
 
         assertStatus(responseEntity, HttpStatus.OK);
-        assertResponseBodyIsEqualToDto(responseEntity, updateDto);
+
+        ArticleDto articleDto = extractArticleDto(responseEntity);
+        assertThat(articleDto.getFavoritesCount()).isEqualTo(1);
+        assertThat(articleDto.isFavorited()).isTrue();
+    }
+
+    @Test
+    public void unfavoriteArticleBySlugTest() throws Exception {
+        favoriteArticleBySlugTest();
+
+        ResponseEntity<ArticleResponseDto> responseEntity = restTemplate.exchange(
+                favoriteUrl(), HttpMethod.DELETE, getHttpEntityWithToken(), ArticleResponseDto.class
+        );
+
+        ArticleDto articleDto = extractArticleDto(responseEntity);
+        assertThat(articleDto.isFavorited()).isFalse();
+        assertThat(articleDto.getFavoritesCount()).isEqualTo(0);
+    }
+
+    private ArticleDto extractArticleDto(ResponseEntity<ArticleResponseDto> responseEntity) {
+        ArticleResponseDto responseBody = responseEntity.getBody();
+        assert responseBody != null;
+        return responseBody.getArticle();
     }
 }

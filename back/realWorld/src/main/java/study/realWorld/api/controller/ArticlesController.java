@@ -78,7 +78,19 @@ public class ArticlesController {
 
         return new ResponseEntity<>(
                 new ArticleResponseDto(articleDto),
-                HttpStatus.CREATED);
+                HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{slug}/favorite")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<ArticleResponseDto> unfavoriteArticleBySlug(
+            @PathVariable String slug
+    ){
+        ArticleDto articleDto = articlesService.unfavoriteArticleBySlug(slug);
+
+        return new ResponseEntity<>(
+                new ArticleResponseDto(articleDto),
+                HttpStatus.OK);
     }
 
 }
