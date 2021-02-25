@@ -28,6 +28,7 @@ public class ServiceIntegrationTest extends TestingUtil {
     public void getFavoritedArticleTest(){
         articlesService.favoriteArticleBySlug(createDto.getSlug());
 
+        System.out.println("\n get article 시작 \n");
         ArticleDto articleDto = articlesService.findBySlug(createDto.getSlug());
 
         assertThat(articleDto.isFavorited()).isEqualTo(true);

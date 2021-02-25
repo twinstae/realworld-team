@@ -182,6 +182,8 @@ public class ArticlesControllerTest extends TestingUtil {
         createUserAndArticleInit();
         getToken(userSignInDto);
 
+        System.out.println("요청 시작");
+
         ResponseEntity<ArticleResponseDto> responseEntity = restTemplate.postForEntity(
                 favoriteUrl(), getHttpEntityWithToken(), ArticleResponseDto.class
         );
