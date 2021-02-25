@@ -3,6 +3,7 @@ package study.realWorld.service;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.dto.articleDtos.ArticleListDto;
+import study.realWorld.entity.Articles;
 
 import java.util.List;
 
@@ -17,5 +18,6 @@ public interface ArticlesService {
 
     ArticleDto updateArticleBySlug(String slug, ArticleCreateDto updateArticleDto);
 
-    ArticleDto addFavoriteArticle(String slug);
+    Articles getArticleBySlugOr404(String slug);
+    ArticleDto favoriteArticleBySlug(String slug);
 }
