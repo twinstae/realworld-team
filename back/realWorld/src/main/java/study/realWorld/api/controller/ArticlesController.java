@@ -71,10 +71,10 @@ public class ArticlesController {
 
     @PostMapping("/{slug}/favorite")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<ArticleResponseDto> createArticleFavorite(
+    public ResponseEntity<ArticleResponseDto> favoriteArticleBySlug(
             @PathVariable String slug
     ){
-        ArticleDto articleDto = articlesService.addFavoriteArticle(slug);
+        ArticleDto articleDto = articlesService.favoriteArticleBySlug(slug);
 
         return new ResponseEntity<>(
                 new ArticleResponseDto(articleDto),
