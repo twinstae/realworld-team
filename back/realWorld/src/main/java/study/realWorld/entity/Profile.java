@@ -103,9 +103,11 @@ public class Profile {
     private final List<Favorite> favoriteList = new ArrayList<>();
 
     public void favorite(Articles articles){
-        Favorite favorite = new Favorite(this, articles);
-        this.favoriteList.add(favorite);
-        articles.addFavorite(favorite);
+        if(!this.haveFavorited(articles)){
+            Favorite favorite = new Favorite(this, articles);
+            this.favoriteList.add(favorite);
+            articles.addFavorite(favorite);
+        }
     }
 
     public void unfavorite(Articles articles){

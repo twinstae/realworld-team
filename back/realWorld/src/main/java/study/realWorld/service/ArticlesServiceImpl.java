@@ -106,12 +106,12 @@ public class ArticlesServiceImpl implements ArticlesService {
     @Override
     @Transactional
     public ArticleDto favoriteArticleBySlug(String slug) {
-        return getArticleDtoBySlugThenStrategy(slug, Profile::favorite);
+        return getArticleDtoBySlugThenStrategy(slug, Profile::favorite).afterFavorite();
     }
 
     @Override
     @Transactional
     public ArticleDto unfavoriteArticleBySlug(String slug) {
-        return getArticleDtoBySlugThenStrategy(slug, Profile::unfavorite);
+        return getArticleDtoBySlugThenStrategy(slug, Profile::unfavorite).afterUnFavorite();
     }
 }

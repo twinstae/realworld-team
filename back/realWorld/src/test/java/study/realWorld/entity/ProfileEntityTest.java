@@ -84,7 +84,23 @@ public class ProfileEntityTest extends TestingUtil {
         profile1.favorite(article1);
 
         assertThat(profile1.haveFavorited(article1)).isEqualTo(true);
-        assertThat(article1.favoritesCount).isEqualTo(1);
+        assertThat(article1.getFavoriteList().size()).isEqualTo(1);
+    }
+
+    @Transactional
+    @DisplayName("여러 번 favorite해도 favorite은 한 번만")
+    @Test
+    public void favoriteNTimesTest(){
+        setUp();
+        createArticleInit();
+        Articles article1 = articlesService.getArticleBySlugOr404(createDto.getSlug());
+
+        profile1.favorite(article1);
+        profile1.favorite(article1);
+        profile1.favorite(article1);
+
+        assertThat(profile1.haveFavorited(article1)).isEqualTo(true);
+        assertThat(article1.getFavoriteList().size()).isEqualTo(1);
     }
 
     @Transactional
@@ -97,6 +113,6 @@ public class ProfileEntityTest extends TestingUtil {
         profile1.unfavorite(article1);
 
         assertThat(profile1.haveFavorited(article1)).isEqualTo(false);
-        assertThat(article1.favoritesCount).isEqualTo(0);
+        assertThat(article1.getFavoriteList().size()).isEqualTo(0);
     }
 }
