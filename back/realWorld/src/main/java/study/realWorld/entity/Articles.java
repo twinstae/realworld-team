@@ -2,6 +2,7 @@ package study.realWorld.entity;
 
 import com.sun.istack.NotNull;
 import lombok.*;
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
@@ -77,7 +78,6 @@ public class Articles extends DateEntity {
         this.favoriteList.remove(favorite);
     }
 
-    public int getFavoritesCount(){
-        return this.favoriteList.size();
-    }
+    @Formula("(SELECT COUNT(*) FROM favorite f WHERE f.ARTICLES_ID=ARTICLES_ID)")
+    public int favoritesCount;
 }

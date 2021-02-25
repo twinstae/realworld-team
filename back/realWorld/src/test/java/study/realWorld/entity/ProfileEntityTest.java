@@ -84,7 +84,7 @@ public class ProfileEntityTest extends TestingUtil {
         profile1.favorite(article1);
 
         assertThat(profile1.haveFavorited(article1)).isEqualTo(true);
-        assertThat(article1.getFavoritesCount()).isEqualTo(1);
+        assertThat(article1.favoritesCount).isEqualTo(1);
     }
 
     @Transactional
@@ -97,6 +97,6 @@ public class ProfileEntityTest extends TestingUtil {
         profile1.unfavorite(article1);
 
         assertThat(profile1.haveFavorited(article1)).isEqualTo(false);
-        assertThat(article1.getFavoritesCount()).isEqualTo(0);
+        assertThat(article1.favoritesCount).isEqualTo(0);
     }
 }
