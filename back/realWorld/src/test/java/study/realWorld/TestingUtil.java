@@ -9,6 +9,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.dto.userDtos.UserSignInDto;
@@ -110,6 +111,7 @@ public class TestingUtil {
         System.out.println("\n테스트 authority 생성 끝\n");
     }
 
+    @Transactional
     protected void createUserInit() {
         authorityInit();
         System.out.println("\n테스트 user 생성 시작\n");
@@ -123,6 +125,7 @@ public class TestingUtil {
         return userWithTokenDto.getToken();
     }
 
+    @Transactional
     protected void anotherUserInit(){
         System.out.println("\n테스트 user2 생성 시작\n");
         userService.signUp(userSignUpDto2);
@@ -130,11 +133,13 @@ public class TestingUtil {
         System.out.println("\n테스트 user2 생성 끝\n");
     };
 
+    @Transactional
     protected void createUserAndArticleInit(){
         createUserInit();
         createArticleInit();
     }
 
+    @Transactional
     protected void createArticleInit(){
         System.out.println("\n테스트 Article 생성 시작\n");
         articlesService.save(createDto);

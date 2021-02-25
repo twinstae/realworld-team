@@ -13,6 +13,7 @@ import study.realWorld.repository.ArticlesRepository;
 
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
@@ -23,11 +24,14 @@ public class ArticlesServiceImpl implements ArticlesService {
     private final ProfilesService profileService;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public ArticleListDto getPage(){
-        Profile profile = profileService.getCurrentProfileOrEmpty();
+        ;
         List<ArticleDto> articleDtoList = articlesRepository.findAll().stream()
-                .map(articles -> getArticleDtoFromArticlesAndProfile(articles, profile))
+                .map(articles ->
+                        getArticleDtoFromArticlesAndProfile(
+                                articles, profileService.getCurrentProfile()
+                        ))
                 .collect(Collectors.toList());
         long articlesCount = articlesRepository.count();
 
@@ -37,22 +41,23 @@ public class ArticlesServiceImpl implements ArticlesService {
                 .build();
     }
 
-    private ArticleDto getArticleDtoFromArticlesAndProfile(Articles articles, Profile currentProfile) {
-        boolean isFollow = profileService.isFollow(currentProfile, articles.getAuthor());
-        boolean favorited = profileService.haveFavorited(currentProfile, articles);
-        return ArticleDto.fromEntity(
-                articles,
-                isFollow,
-                favorited
-        );
+    private ArticleDto getArticleDtoFromArticlesAndProfile(Articles articles, Optional<Profile> optionalProfile) {
+        if (optionalProfile.isPresent()){
+            Profile currentProfile = optionalProfile.get();
+            boolean isFollow = profileService.isFollow(currentProfile, articles.getAuthor());
+            boolean favorited = profileService.haveFavorited(currentProfile, articles);
+
+            return ArticleDto.fromEntity(articles, isFollow, favorited);
+        }
+        return ArticleDto.fromEntity(articles, false, false);
     }
 
 
     private ArticleDto getArticleDtoBySlugThenStrategy(String slug, BiConsumer<Profile, Articles> strategy){
         Articles articles = getArticleBySlugOr404(slug);
-        Profile currentProfile = profileService.getCurrentProfileOrEmpty();
+        Optional<Profile> currentProfile = profileService.getCurrentProfile();
 
-        strategy.accept(currentProfile, articles);
+        currentProfile.ifPresent(profile -> strategy.accept(profile, articles));
 
         return getArticleDtoFromArticlesAndProfile(articles, currentProfile);
     }
@@ -64,9 +69,9 @@ public class ArticlesServiceImpl implements ArticlesService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public ArticleDto findBySlug(String slug) {
-        return getArticleDtoBySlugThenStrategy(slug, (p,a)->{});
+        return getArticleDtoBySlugThenStrategy(slug, ((profile, articles) -> {}));
     }
 
     @Override
@@ -85,7 +90,7 @@ public class ArticlesServiceImpl implements ArticlesService {
     public ArticleDto save(ArticleCreateDto articleCreateDto){
         Profile profile = profileService.getCurrentProfileOr404();
         Articles articles = articlesRepository.save(articleCreateDto.toEntity(profile));
-        return getArticleDtoFromArticlesAndProfile(articles, profile);
+        return getArticleDtoFromArticlesAndProfile(articles, Optional.of(profile));
     }
 
     @Override

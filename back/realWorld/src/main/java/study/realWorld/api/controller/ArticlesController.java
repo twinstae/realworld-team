@@ -30,7 +30,7 @@ public class ArticlesController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<ArticleResponseDto> createArticle(
+    public ResponseEntity<ArticleResponseDto> createArticle (
             @RequestBody ArticleCreateDto articleCreateDto
     ){
         ArticleDto articleDto = articlesService.save(articleCreateDto);
@@ -41,7 +41,7 @@ public class ArticlesController {
     }
 
     @GetMapping("/{slug}")
-    public ResponseEntity<ArticleResponseDto> getArticleBySlug(
+    public ResponseEntity<ArticleResponseDto> getArticleBySlug (
             @PathVariable String slug
     ){
         ArticleDto articleDto = articlesService.findBySlug(slug);

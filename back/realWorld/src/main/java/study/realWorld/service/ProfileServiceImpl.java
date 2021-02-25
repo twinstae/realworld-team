@@ -42,11 +42,6 @@ public class ProfileServiceImpl implements ProfilesService{
     }
 
     @Override
-    public Profile getCurrentProfileOrEmpty() {
-        return getCurrentProfile().orElse(Profile.empty());
-    }
-
-    @Override
     public Profile getCurrentProfileOr404() {
         return getCurrentProfile().orElseThrow(RuntimeException::new);
     }

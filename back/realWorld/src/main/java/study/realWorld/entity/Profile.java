@@ -38,14 +38,6 @@ public class Profile {
         this.user = user;
     }
 
-    public static Profile empty(){
-        return Profile.builder()
-                .username("")
-                .image("")
-                .user(new User())
-                .build();
-    }
-
     @OneToMany(mappedBy = "author")
     private final List<Articles> articlesList = new ArrayList<>();
     public void addArticle(Articles articles){
