@@ -37,11 +37,10 @@ public class ArticlesServiceImpl implements ArticlesService {
     }
 
     private ArticleDto getArticleDtoFromArticlesAndProfile(Articles articles) {
-        Profile profile = profileService.getCurrentProfileOr404();
+        Profile profile = profileService.getCurrentProfileOrEmpty();
         return ArticleDto.fromEntity(
                 articles,
-                profile.haveFavorited(articles),
-                profile.isFollow(articles.getAuthor())
+                profile
         );
     }
 
@@ -92,11 +91,25 @@ public class ArticlesServiceImpl implements ArticlesService {
         return articlesRepository.findOneWithAuthorBySlug(slug)
                 .orElseThrow(ResourceNotFoundException::new);
     }
+
     @Override
+    @Transactional
     public ArticleDto favoriteArticleBySlug(String slug) {
         Articles articles = getArticleBySlugOr404(slug); //일단 article을 찾는다.
         Profile profile = profileService.getCurrentProfileOr404();
+
         profile.favorite(articles);
+
+        return getArticleDtoFromArticlesAndProfile(articles);
+    }
+
+    @Override
+    @Transactional
+    public ArticleDto unfavoriteArticleBySlug(String slug) {
+        Articles articles = getArticleBySlugOr404(slug); //일단 article을 찾는다.
+        Profile profile = profileService.getCurrentProfileOr404();
+
+        profile.unfavorite(articles);
 
         return getArticleDtoFromArticlesAndProfile(articles);
     }

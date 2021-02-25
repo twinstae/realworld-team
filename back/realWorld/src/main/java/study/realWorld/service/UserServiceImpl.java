@@ -14,7 +14,6 @@ import study.realWorld.api.dto.userDtos.UserSignInDto;
 import study.realWorld.api.dto.userDtos.UserSignUpDto;
 import study.realWorld.api.dto.userDtos.UserWithTokenDto;
 import study.realWorld.entity.Authority;
-import study.realWorld.entity.Profile;
 import study.realWorld.entity.User;
 import study.realWorld.jwt.TokenProvider;
 import study.realWorld.repository.AuthorityRepository;
@@ -25,7 +24,6 @@ import study.realWorld.util.SecurityUtil;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 
 @RequiredArgsConstructor
 @Service
@@ -98,11 +96,10 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     @Transactional(readOnly = true)
-    public String getMyUserName() {
+    public Optional<String> getMyUserName() {
         return SecurityUtil.getCurrentUsername()
                 .flatMap(userRepository::findOneByEmail)
-                .map(User::getUserName)
-                .orElseThrow(RuntimeException::new);
+                .map(User::getUserName);
     }
 
     @Override

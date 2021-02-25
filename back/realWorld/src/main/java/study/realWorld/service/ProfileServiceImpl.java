@@ -5,11 +5,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.realWorld.api.dto.profilesDtos.ProfileDto;
 import study.realWorld.api.dto.profilesDtos.ProfileListDto;
-import study.realWorld.api.exception.ResourceNotFoundException;
 import study.realWorld.entity.Profile;
 import study.realWorld.repository.ProfilesRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -30,15 +30,30 @@ public class ProfileServiceImpl implements ProfilesService{
     }
 
     @Override
-    public Profile getCurrentProfileOr404() {
-        String myUserName = userService.getMyUserName();
-        return getProfileByUserNameOr404(myUserName);
+    public Optional<Profile> getCurrentProfile() {
+        return userService.getMyUserName()
+                .flatMap(this::getProfileByUserName);
     }
 
     @Override
-    public Profile getProfileByUserNameOr404(String username){
-        return profilesRepository.findOneByUsername(username)
-                .orElseThrow(ResourceNotFoundException::new);
+    public Profile getCurrentProfileOrEmpty() {
+        return getCurrentProfile().orElse(Profile.empty());
+    }
+
+    @Override
+    public Profile getCurrentProfileOr404() {
+        return getCurrentProfile().orElseThrow(RuntimeException::new);
+    }
+
+    @Override
+    public Optional<Profile> getProfileByUserName(String username){
+        return profilesRepository.findOneByUsername(username);
+    }
+
+    @Override
+    public Profile getProfileByUserNameOr404(String username) {
+        return getProfileByUserName(username)
+                .orElseThrow(RuntimeException::new);
     }
 
     @Override
