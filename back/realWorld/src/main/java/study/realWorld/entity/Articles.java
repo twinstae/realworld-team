@@ -37,13 +37,13 @@ public class Articles extends DateEntity {
 
     @ManyToOne
     @JoinColumn(name = "AUTHOR_ID") //외래키 얘가 주인
-    private User author;
+    private Profile author;
 
     @OneToMany(mappedBy = "article")
     private final List<Favorite> favoriteList = new ArrayList<>();
 
     @Builder
-    public Articles(String title, String slug, String description, String body, User author) {
+    public Articles(String title, String slug, String description, String body, Profile author) {
         this.title = title;
         this.slug = slug;
         this.description = description;
@@ -67,8 +67,14 @@ public class Articles extends DateEntity {
     }
 
     public void addFavorite(Favorite favorite) {
-        this.getFavoriteList().add(favorite);
+        this.favoriteList.add(favorite);
     }
 
+    public void removeFavorite(Favorite favorite){
+        this.favoriteList.remove(favorite);
+    }
 
+    public int getFavoritesCount(){
+        return this.favoriteList.size();
+    }
 }

@@ -31,9 +31,6 @@ public class User {
     @Column(length = 100)
     private String password;
 
-    @OneToMany(mappedBy = "author")
-    private final List<Articles> articlesList = new ArrayList<>();
-
     @OneToOne(mappedBy = "user")
     private Profile profile;
 

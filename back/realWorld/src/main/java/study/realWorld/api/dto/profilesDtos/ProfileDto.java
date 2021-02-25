@@ -19,7 +19,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProfileDto {
-
     private String username;
     private String image;
     private boolean following;

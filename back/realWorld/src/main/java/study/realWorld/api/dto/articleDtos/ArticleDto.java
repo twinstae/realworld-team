@@ -1,6 +1,7 @@
 package study.realWorld.api.dto.articleDtos;
 
 import lombok.*;
+import study.realWorld.api.dto.profilesDtos.ProfileDto;
 import study.realWorld.api.dto.userDtos.UserDto;
 import study.realWorld.entity.Articles;
 
@@ -16,13 +17,13 @@ public class ArticleDto {
     private String title;
     private String description;
     private String body;
-    private UserDto author;
+    private ProfileDto author;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private boolean favorited;
-    private Long favoritesCount;
+    private int favoritesCount;
 
-    public static ArticleDto fromEntity(Articles articles,boolean favorited,Long favoritesCount) {
+    public static ArticleDto fromEntity(Articles articles, boolean isFollowed, boolean favorited) {
 
         return ArticleDto
                 .builder()
@@ -30,11 +31,11 @@ public class ArticleDto {
                 .title(articles.getTitle())
                 .description(articles.getDescription())
                 .body(articles.getBody())
-                .author(UserDto.fromUser(articles.getAuthor()))
+                .author(ProfileDto.fromEntity(articles.getAuthor(), isFollowed))
                 .createdAt(articles.getCreatedAt())
                 .updatedAt(articles.getUpdatedAt())
                 .favorited(favorited)
-                .favoritesCount(favoritesCount)
+                .favoritesCount(articles.getFavoritesCount())
                 .build();
     }
 
