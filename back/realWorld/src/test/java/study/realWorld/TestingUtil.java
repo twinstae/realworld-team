@@ -131,6 +131,10 @@ public class TestingUtil {
 
     protected void createUserAndArticleInit(){
         createUserInit();
+        createArticleInit();
+    }
+
+    protected void createArticleInit(){
         System.out.println("\n테스트 Article 생성 시작\n");
         articlesService.save(createDto);
         System.out.println("\n테스트 Article 생성 끝\n");
