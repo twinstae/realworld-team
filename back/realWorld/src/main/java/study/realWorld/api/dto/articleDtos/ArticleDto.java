@@ -25,10 +25,7 @@ public class ArticleDto {
     private int favoritesCount;
 
     public static ArticleDto fromEntity(Articles articles, boolean isFollow, boolean favorited) {
-        int favoritesCount = articles.getFavoritesCount();
-        if (favoritesCount==0){
-            favorited = false;
-        }
+        int favoritesCount = articles.favoritesCount;
         return ArticleDto
                 .builder()
                 .slug(articles.getSlug())
@@ -43,7 +40,7 @@ public class ArticleDto {
                 )
                 .createdAt(articles.getCreatedAt())
                 .updatedAt(articles.getUpdatedAt())
-                .favorited(favorited)
+                .favorited(favoritesCount != 0 && favorited)
                 .favoritesCount(favoritesCount)
                 .build();
     }

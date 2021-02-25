@@ -26,12 +26,10 @@ public class ArticlesServiceImpl implements ArticlesService {
     @Override
     @Transactional
     public ArticleListDto getPage(){
-        ;
         List<ArticleDto> articleDtoList = articlesRepository.findAll().stream()
                 .map(articles ->
                         getArticleDtoFromArticlesAndProfile(
-                                articles, profileService.getCurrentProfile()
-                        ))
+                                articles, profileService.getCurrentProfile()))
                 .collect(Collectors.toList());
         long articlesCount = articlesRepository.count();
 
@@ -75,11 +73,10 @@ public class ArticlesServiceImpl implements ArticlesService {
     @Override
     @Transactional
     public void deleteBySlug(String slug) {
-        getArticleDtoBySlugThenStrategy(
-                slug,
+        getArticleDtoBySlugThenStrategy(slug,
                 (currentProfile, articles)->{
-                    checkProfileIsArticlesAuthor(currentProfile, articles);
-                    articlesRepository.delete(articles);
+            checkProfileIsArticlesAuthor(currentProfile, articles);
+            articlesRepository.delete(articles);
         });
     }
 
