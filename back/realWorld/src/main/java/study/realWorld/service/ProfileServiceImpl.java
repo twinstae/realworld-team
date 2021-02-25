@@ -7,6 +7,7 @@ import study.realWorld.api.dto.profilesDtos.ProfileDto;
 import study.realWorld.api.dto.profilesDtos.ProfileListDto;
 import study.realWorld.entity.Articles;
 import study.realWorld.entity.Profile;
+import study.realWorld.entity.User;
 import study.realWorld.repository.FavoriteRepository;
 import study.realWorld.repository.FollowRepository;
 import study.realWorld.repository.ProfilesRepository;
@@ -35,9 +36,12 @@ public class ProfileServiceImpl implements ProfilesService{
     }
 
     @Override
+    @Transactional
     public Optional<Profile> getCurrentProfile() {
         if(userService.isMyUserPresent()){
-            return Optional.of(userService.getMyUserWithProfile().getProfile());
+            User myUserWithProfile = userService.getMyUserWithProfile();
+            Profile profile = myUserWithProfile.getProfile();
+            return Optional.ofNullable(profile);
         }
         return Optional.empty();
     }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import study.realWorld.api.dto.profilesDtos.ProfileCreateDto;
 import study.realWorld.entity.Authority;
 import study.realWorld.entity.User;
 
@@ -22,13 +23,14 @@ public class UserSignUpDto {
     private String password;
 
     public User toEntity(PasswordEncoder passwordEncoder, Set<Authority> authorities){
-
-        return User
+        User user = User
                 .builder()
                 .userName(this.username)
                 .email(this.email)
                 .password(passwordEncoder.encode(this.password))
                 .authorities(authorities)
                 .build();
+        user.initProfile();
+        return user;
     }
 }

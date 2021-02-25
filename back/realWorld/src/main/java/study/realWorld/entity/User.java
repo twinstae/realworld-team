@@ -3,6 +3,7 @@ package study.realWorld.entity;
 
 import com.sun.istack.NotNull;
 import lombok.*;
+import study.realWorld.api.dto.profilesDtos.ProfileCreateDto;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class User {
     @Column(length = 100)
     private String password;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Profile profile;
 
     @Builder
@@ -43,12 +44,12 @@ public class User {
         this.authorities = authorities;
     }
 
-    // activated;
     @Column
     private boolean activated;
-    //bio??
-    //img??는 경로설정을 하니까 String으로 쓰는 것인가..?
-    //token??은 잘 모르겠으니 일단 pass
+
+    public void initProfile(){
+        this.profile = ProfileCreateDto.toEntity(this);
+    }
 
     @ManyToMany
     @JoinTable(
