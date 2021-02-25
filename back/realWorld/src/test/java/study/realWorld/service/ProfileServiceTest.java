@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import study.realWorld.TestingUtil;
 import study.realWorld.api.dto.profilesDtos.ProfileDto;
 import study.realWorld.api.dto.profilesDtos.ProfileListDto;
@@ -20,7 +19,7 @@ public class ProfileServiceTest extends TestingUtil {
     public void setUp(){
         createUserInit();
         anotherUserInit();
-        getToken(userSignInDto);
+        userService.signIn(userSignInDto);
     }
 
     @DisplayName("findByUsername에 찾고자하는 username을 넣으면 ProfileDto에 follwing 여부를 boolean값으로 넣어 리턴한다.")

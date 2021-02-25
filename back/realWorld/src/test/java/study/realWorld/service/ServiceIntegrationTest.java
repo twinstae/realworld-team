@@ -19,7 +19,7 @@ public class ServiceIntegrationTest extends TestingUtil {
     public void setUp(){
         createUserInit();
         anotherUserInit();
-        getToken(userSignInDto);
+        userService.signIn(userSignInDto);
         createArticleInit();
     }
 

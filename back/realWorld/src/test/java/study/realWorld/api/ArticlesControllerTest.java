@@ -180,7 +180,7 @@ public class ArticlesControllerTest extends TestingUtil {
     @Test
     public void favoriteArticleBySlugTest() throws Exception {
         createUserAndArticleInit();
-        getToken(userSignInDto);
+        userService.signIn(userSignInDto);
 
         System.out.println("요청 시작");
 

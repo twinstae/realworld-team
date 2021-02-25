@@ -9,10 +9,8 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.transaction.annotation.Transactional;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
-import study.realWorld.api.dto.profilesDtos.ProfileDto;
 import study.realWorld.api.dto.userDtos.UserSignInDto;
 import study.realWorld.api.dto.userDtos.UserSignUpDto;
 import study.realWorld.api.dto.userDtos.UserWithTokenDto;
@@ -20,7 +18,6 @@ import study.realWorld.entity.Articles;
 import study.realWorld.entity.Authority;
 import study.realWorld.repository.*;
 import study.realWorld.service.ArticlesService;
-import study.realWorld.service.ProfilesService;
 import study.realWorld.service.UserService;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -117,11 +114,11 @@ public class TestingUtil {
         authorityInit();
         System.out.println("\n테스트 user 생성 시작\n");
         userService.signUp(userSignUpDto);
-        token = getToken(userSignInDto);
+        token = loginAndGetToken(userSignInDto);
         System.out.println("\n테스트 user 생성 끝\n");
     }
 
-    protected String getToken(UserSignInDto signInDto) {
+    protected String loginAndGetToken(UserSignInDto signInDto) {
         UserWithTokenDto userWithTokenDto = userService.signIn(signInDto);
         return userWithTokenDto.getToken();
     }
@@ -129,7 +126,7 @@ public class TestingUtil {
     protected void anotherUserInit(){
         System.out.println("\n테스트 user2 생성 시작\n");
         userService.signUp(userSignUpDto2);
-        token2 = getToken(userSignInDto2);
+        token2 = loginAndGetToken(userSignInDto2);
         System.out.println("\n테스트 user2 생성 끝\n");
     };
 
