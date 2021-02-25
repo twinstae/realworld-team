@@ -60,8 +60,7 @@ public class UserServiceImpl implements UserService {
     public UserDto signUp(UserSignUpDto userSignUpDto) {
         checkUserAlreadyExist(userSignUpDto);
         User user = userRepository.save(userSignUpDto.toEntity(passwordEncoder, getUserAuthorities()));
-        Profile profile = profileRepository.save(ProfileCreateDto.toEntity(user));
-        user.initProfile(profile);
+        user.initProfile(ProfileCreateDto.toEntity(user));
         return UserDto.fromUser(user);
     }
 
