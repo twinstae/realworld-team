@@ -20,8 +20,7 @@ public class ProfileServiceImpl implements ProfilesService{
     private final UserService userService;
 
     private ProfileDto getProfileDtoContext(String username, BiConsumer<Profile, Profile> strategy){
-        String myUserName = userService.getMyUserName();
-        Profile currentUserProfile = getProfileByUserNameOr404(myUserName);
+        Profile currentUserProfile = getCurrentProfileOr404();
         Profile targetUserProfile = getProfileByUserNameOr404(username);
 
         strategy.accept(currentUserProfile, targetUserProfile);
@@ -30,8 +29,16 @@ public class ProfileServiceImpl implements ProfilesService{
         return ProfileDto.fromEntity(targetUserProfile, isFollowed);
     }
 
-     Profile getProfileByUserNameOr404(String username){
-        return profilesRepository.findOneByUsername(username).orElseThrow(ResourceNotFoundException::new);
+    @Override
+    public Profile getCurrentProfileOr404() {
+        String myUserName = userService.getMyUserName();
+        return getProfileByUserNameOr404(myUserName);
+    }
+
+    @Override
+    public Profile getProfileByUserNameOr404(String username){
+        return profilesRepository.findOneByUsername(username)
+                .orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
@@ -40,11 +47,13 @@ public class ProfileServiceImpl implements ProfilesService{
         return getProfileDtoContext(username, (a, b)->{});
     }
 
+    @Override
     @Transactional
     public ProfileDto followByUsername(String username) {
         return getProfileDtoContext(username, Profile::follow);
     }
 
+    @Override
     @Transactional
     public ProfileDto unFollowByUsername(String username) {
         return getProfileDtoContext(username, Profile::unfollow);
