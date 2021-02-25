@@ -70,4 +70,31 @@ public class ProfileEntityTest extends TestingUtil {
 
         assertThat(profile1.getFollowees().size()).isEqualTo(1);
     }
+
+    @Transactional
+    @DisplayName("profile이 article을 favortie하면... -> profile이 article을 haveFavorited는 true")
+    @Test
+    public void favoriteTest(){
+        setUp();
+        createArticleInit();
+        Articles article1 = articlesService.getArticleBySlugOr404(createDto.getSlug());
+
+        profile1.favorite(article1);
+
+        assertThat(profile1.haveFavorited(article1)).isEqualTo(true);
+        assertThat(article1.getFavoritesCount()).isEqualTo(1);
+    }
+
+    @Transactional
+    @DisplayName("profile이 article을 favortie하면... -> profile이 article을 haveFavorited는 true")
+    @Test
+    public void unfavoriteTest(){
+        favoriteTest();
+        Articles article1 = articlesService.getArticleBySlugOr404(createDto.getSlug());
+
+        profile1.unfavorite(article1);
+
+        assertThat(profile1.haveFavorited(article1)).isEqualTo(false);
+        assertThat(article1.getFavoritesCount()).isEqualTo(0);
+    }
 }
