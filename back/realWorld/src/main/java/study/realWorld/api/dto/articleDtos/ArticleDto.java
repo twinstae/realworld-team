@@ -44,5 +44,12 @@ public class ArticleDto {
                 .favoritesCount(favoritesCount)
                 .build();
     }
-
+    public void afterFavorite(){
+        this.favoritesCount += 1;
+        this.favorited = true;
+    }
+    public void afterUnFavorite(){
+        this.favoritesCount -= 1;
+        this.favorited = false;
+    }
 }

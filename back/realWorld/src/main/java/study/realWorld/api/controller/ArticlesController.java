@@ -75,7 +75,7 @@ public class ArticlesController {
             @PathVariable String slug
     ){
         ArticleDto articleDto = articlesService.favoriteArticleBySlug(slug);
-
+        articleDto.afterFavorite();
         return new ResponseEntity<>(
                 new ArticleResponseDto(articleDto),
                 HttpStatus.OK);
@@ -87,7 +87,7 @@ public class ArticlesController {
             @PathVariable String slug
     ){
         ArticleDto articleDto = articlesService.unfavoriteArticleBySlug(slug);
-
+        articleDto.afterUnFavorite();
         return new ResponseEntity<>(
                 new ArticleResponseDto(articleDto),
                 HttpStatus.OK);
