@@ -10,7 +10,9 @@ import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.dto.articleDtos.ArticleListDto;
 import study.realWorld.api.dto.articleDtos.ArticleResponseDto;
+import study.realWorld.api.dto.commentsDtos.CommentListDto;
 import study.realWorld.service.ArticlesService;
+import study.realWorld.service.CommentService;
 
 import java.util.List;
 
@@ -21,6 +23,7 @@ import java.util.List;
 public class ArticlesController {
 
     private final ArticlesService articlesService;
+    private final CommentService commentService;
 
     @GetMapping
     public ResponseEntity<ArticleListDto> getArticles(){
@@ -89,6 +92,15 @@ public class ArticlesController {
         return new ResponseEntity<>(
                 new ArticleResponseDto(articleDto),
                 HttpStatus.OK);
+    }
+
+    @GetMapping("/{slug}/comments")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<CommentListDto> getCommentsBySlug(
+            @PathVariable String slug
+    ) {
+        CommentListDto commentListDto = commentService.getComments(slug);
+        return ResponseEntity.ok(commentListDto);
     }
 
 }
