@@ -1,6 +1,5 @@
 package study.realWorld.api;
 
-import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.*;
@@ -14,7 +13,6 @@ import study.realWorld.api.dto.commentsDtos.CommentDto;
 import study.realWorld.api.dto.commentsDtos.CommentListDto;
 import study.realWorld.api.dto.commentsDtos.CommentResponseDto;
 import study.realWorld.entity.Articles;
-import study.realWorld.entity.Comment;
 
 import java.util.Map;
 import java.util.Optional;
@@ -44,7 +42,7 @@ public class ArticlesControllerTest extends TestingUtil {
     @Test
     public void getArticleListTest() {
         createUserAndArticleInit();
-        articlesService.save(updateDto); // 2번째 article 생성
+        articlesService.create(updateDto); // 2번째 article 생성
         System.out.println("\n2번째 article 생성 끝\n");
 
         ResponseEntity<ArticleListDto> responseEntity = restTemplate.getForEntity(
@@ -242,9 +240,8 @@ public class ArticlesControllerTest extends TestingUtil {
     @Test
     public void getCommentsBySlugTest() throws Exception {
         createUserAndArticleInit();
-        commentService.save(createDto.getSlug(),commentCreateDto);
-        commentService.save(createDto.getSlug(),commentCreateDto2);
-
+        articlesService.addCommentToArticleBySlug(createDto.getSlug(),commentCreateDto);
+        articlesService.addCommentToArticleBySlug(createDto.getSlug(),commentCreateDto2);
 
         ResponseEntity<CommentListDto> responseEntity = restTemplate.exchange(
                 commentSlugUrl(), HttpMethod.GET, getHttpEntityWithToken(), CommentListDto.class
@@ -260,6 +257,4 @@ public class ArticlesControllerTest extends TestingUtil {
         CommentDto firstComment = responseBody.getComments().get(0);
         assertThat(firstComment.getBody()).isEqualTo("이 글은 참 좋군요.");
     }
-
-
 }

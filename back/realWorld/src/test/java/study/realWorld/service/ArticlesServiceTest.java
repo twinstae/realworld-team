@@ -54,7 +54,7 @@ public class ArticlesServiceTest extends TestingUtil {
         createUserInit();
         assertThat(getCreatedArticle()).isEmpty();
 
-        ArticleDto articleDto = articlesService.save(createDto);
+        ArticleDto articleDto = articlesService.create(createDto);
 
         assertDtoIsEqualTo(articleDto, createDto);
         assertThat(getCreatedArticle()).isPresent();

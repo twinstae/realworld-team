@@ -13,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.dto.commentsDtos.CommentCreateDto;
-import study.realWorld.api.dto.commentsDtos.CommentDto;
-import study.realWorld.api.dto.profilesDtos.ProfileDto;
 import study.realWorld.api.dto.userDtos.UserSignInDto;
 import study.realWorld.api.dto.userDtos.UserSignUpDto;
 import study.realWorld.api.dto.userDtos.UserWithTokenDto;
@@ -22,7 +20,6 @@ import study.realWorld.entity.Articles;
 import study.realWorld.entity.Authority;
 import study.realWorld.repository.*;
 import study.realWorld.service.ArticlesService;
-import study.realWorld.service.CommentService;
 import study.realWorld.service.UserService;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -40,8 +37,6 @@ public class TestingUtil {
     protected ArticlesService articlesService;
     @Autowired
     protected UserService userService;
-    @Autowired
-    protected CommentService commentService;
     @Autowired
     protected UserRepository userRepository;
     @Autowired
@@ -158,7 +153,7 @@ public class TestingUtil {
     @Transactional
     protected void createArticleInit(){
         System.out.println("\n테스트 Article 생성 시작\n");
-        articlesService.save(createDto);
+        articlesService.create(createDto);
         System.out.println("\n테스트 Article 생성 끝\n");
     }
 

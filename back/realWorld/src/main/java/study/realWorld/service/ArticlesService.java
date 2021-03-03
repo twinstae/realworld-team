@@ -4,6 +4,9 @@ import org.springframework.transaction.annotation.Transactional;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.dto.articleDtos.ArticleListDto;
+import study.realWorld.api.dto.commentsDtos.CommentCreateDto;
+import study.realWorld.api.dto.commentsDtos.CommentDto;
+import study.realWorld.api.dto.commentsDtos.CommentListDto;
 import study.realWorld.entity.Articles;
 
 import java.util.List;
@@ -15,7 +18,7 @@ public interface ArticlesService {
 
     void deleteBySlug(String slug);
 
-    ArticleDto save(ArticleCreateDto articleCreateDto);
+    ArticleDto create(ArticleCreateDto articleCreateDto);
 
     ArticleDto updateArticleBySlug(String slug, ArticleCreateDto updateArticleDto);
 
@@ -23,4 +26,10 @@ public interface ArticlesService {
 
     ArticleDto favoriteArticleBySlug(String slug);
     ArticleDto unfavoriteArticleBySlug(String slug);
+
+    @Transactional(readOnly = true)
+    CommentListDto getComments(String slug);
+
+    @Transactional
+    CommentDto addCommentToArticleBySlug(String slug, CommentCreateDto commentCreateDto);
 }
