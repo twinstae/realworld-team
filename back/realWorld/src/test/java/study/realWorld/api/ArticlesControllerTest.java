@@ -1,5 +1,6 @@
 package study.realWorld.api;
 
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.*;
@@ -8,6 +9,10 @@ import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleListDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.dto.articleDtos.ArticleResponseDto;
+import study.realWorld.api.dto.commentsDtos.CommentCreateDto;
+import study.realWorld.api.dto.commentsDtos.CommentDto;
+import study.realWorld.api.dto.commentsDtos.CommentListDto;
+import study.realWorld.api.dto.commentsDtos.CommentResponseDto;
 import study.realWorld.entity.Articles;
 
 import java.util.Map;
@@ -31,6 +36,8 @@ public class ArticlesControllerTest extends TestingUtil {
     private String wrongSlugUrl() {
         return baseUrl() + "/잘못된슬러그";
     }
+
+    private String commentSlugUrl() { return slugUrl() + "/comments";}
 
     @DisplayName("/api/articles에 get 요청을 보내면 status는 ok이고 모든 articleList를 받는다.")
     @Test
@@ -213,4 +220,22 @@ public class ArticlesControllerTest extends TestingUtil {
         assert responseBody != null;
         return responseBody.getArticle();
     }
+
+    @DisplayName("slug로 Comment를 Post하면 글이 생긴다 ")
+    @Test
+    public void postCommentBySlugTest() throws Exception {
+        createUserAndArticleInit();
+
+        HttpEntity<CommentCreateDto> entity = new HttpEntity<>(commentCreateDto, getHttpHeadersWithToken(token));
+        ResponseEntity<CommentResponseDto> responseEntity = restTemplate.postForEntity(
+                commentSlugUrl(), entity, CommentResponseDto.class);
+
+        assertStatus(responseEntity, HttpStatus.CREATED);
+        CommentResponseDto responseBody = responseEntity.getBody();
+        assert responseBody != null;
+        assertThat(responseEntity.getBody().getCommentDto().getBody()).isEqualTo(commentCreateDto.getBody());
+
+    }
+
+
 }

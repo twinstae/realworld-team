@@ -12,6 +12,9 @@ import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
+import study.realWorld.api.dto.commentsDtos.CommentCreateDto;
+import study.realWorld.api.dto.commentsDtos.CommentDto;
+import study.realWorld.api.dto.profilesDtos.ProfileDto;
 import study.realWorld.api.dto.userDtos.UserSignInDto;
 import study.realWorld.api.dto.userDtos.UserSignUpDto;
 import study.realWorld.api.dto.userDtos.UserWithTokenDto;
@@ -19,6 +22,7 @@ import study.realWorld.entity.Articles;
 import study.realWorld.entity.Authority;
 import study.realWorld.repository.*;
 import study.realWorld.service.ArticlesService;
+import study.realWorld.service.CommentService;
 import study.realWorld.service.UserService;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -36,6 +40,8 @@ public class TestingUtil {
     protected ArticlesService articlesService;
     @Autowired
     protected UserService userService;
+    @Autowired
+    protected CommentService commentService;
     @Autowired
     protected UserRepository userRepository;
     @Autowired
@@ -87,6 +93,11 @@ public class TestingUtil {
             .title("타이틀")
             .description("디스크립션")
             .body("바디")
+            .build();
+
+    protected final CommentCreateDto commentCreateDto = CommentCreateDto
+            .builder()
+            .body("이 글은 참 좋군요.")
             .build();
 
     protected void assertArticlesEqualToDto(Articles articles, ArticleCreateDto testDto) {
