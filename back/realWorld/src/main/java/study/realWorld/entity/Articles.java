@@ -42,6 +42,9 @@ public class Articles extends DateEntity {
     @JoinColumn(name = "AUTHOR_ID") //외래키 얘가 주인
     private Profile author;
 
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
     @Builder
     public Articles(String title, String slug, String description, String body, Profile author) {
         this.title = title;
@@ -72,6 +75,10 @@ public class Articles extends DateEntity {
 
     public void addFavorite(Favorite favorite) {
         this.favoriteList.add(favorite);
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
     }
 
     public void removeFavorite(Favorite favorite){

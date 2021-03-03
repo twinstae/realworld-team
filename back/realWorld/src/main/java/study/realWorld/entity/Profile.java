@@ -47,6 +47,10 @@ public class Profile {
     @OneToMany(mappedBy = "fromProfile", cascade = CascadeType.ALL) //이 Profile이 팔로우한 목록
     private List<Follow> followeeRelations = new ArrayList<>();
 
+
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
     public List<Profile> getFollowees(){
         return this.followeeRelations.stream()
                 .map(Follow::getToProfile)
@@ -60,6 +64,10 @@ public class Profile {
         return this.followerRelations.stream()
                 .map(Follow::getFromProfile)
                 .collect(Collectors.toList());
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
     }
 
     private void addFollower(Follow follow){
