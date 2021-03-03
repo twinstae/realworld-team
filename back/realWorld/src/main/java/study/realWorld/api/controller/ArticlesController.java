@@ -95,14 +95,16 @@ public class ArticlesController {
                 HttpStatus.OK);
     }
 
-//    @GetMapping("/{slug}/comments")
-//    @PreAuthorize("hasAnyRole('USER','ADMIN')")
-//    public ResponseEntity<CommentListDto> getCommentsBySlug(
-//            @PathVariable String slug
-//    ) {
-//        CommentListDto commentListDto = commentService.getComments(slug);
-//        return ResponseEntity.ok(commentListDto);
-//    }
+    @GetMapping("/{slug}/comments")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<CommentListDto> getCommentsBySlug(
+            @PathVariable String slug
+    ) {
+        CommentListDto commentListDto = commentService.getComments(slug);
+        return ResponseEntity.ok(commentListDto);
+    }
+
+
 
     @PostMapping("/{slug}/comments")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
