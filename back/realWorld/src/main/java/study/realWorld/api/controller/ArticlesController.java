@@ -10,17 +10,14 @@ import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.dto.articleDtos.ArticleListDto;
 import study.realWorld.api.dto.articleDtos.ArticleResponseDto;
-import study.realWorld.api.dto.commentsDtos.CommentCreateDto;
-import study.realWorld.api.dto.commentsDtos.CommentDto;
-import study.realWorld.api.dto.commentsDtos.CommentListDto;
-import study.realWorld.api.dto.commentsDtos.CommentResponseDto;
 import study.realWorld.service.ArticlesService;
 
 @Api(tags = {"1.Articles"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/api/articles")
+@RequestMapping(path = ArticlesController.API_ARTICLES_URL)
 public class ArticlesController {
+    public static final String API_ARTICLES_URL = "/api/articles";
     private final ArticlesService articlesService;
 
     @GetMapping
@@ -90,26 +87,6 @@ public class ArticlesController {
         return new ResponseEntity<>(
                 new ArticleResponseDto(articleDto),
                 HttpStatus.OK);
-    }
-
-    @GetMapping("/{slug}/comments")
-    public ResponseEntity<CommentListDto> getCommentsBySlug(
-            @PathVariable String slug
-    ) {
-        CommentListDto commentListDto = articlesService.getComments(slug);
-        return ResponseEntity.ok(commentListDto);
-    }
-
-    @PostMapping("/{slug}/comments")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<CommentResponseDto> addCommentToArticleBySlug(
-            @PathVariable String slug,
-            @RequestBody CommentCreateDto commentCreateDto
-    ) {
-        CommentDto commentDto = articlesService.addCommentToArticleBySlug(slug, commentCreateDto);
-        return new ResponseEntity<>(
-                new CommentResponseDto(commentDto),
-                HttpStatus.CREATED);
     }
 }
 

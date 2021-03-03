@@ -28,12 +28,12 @@ public class ArticlesControllerTest extends TestingUtil {
         return baseUrl() + "/" + createDto.getSlug();
     }
 
-    private String favoriteUrl(){
-        return slugUrl() + "/favorite";
-    }
-
     private String wrongSlugUrl() {
         return baseUrl() + "/잘못된슬러그";
+    }
+
+    private String favoriteUrl(){
+        return slugUrl() + "/favorite";
     }
 
     private String commentSlugUrl() { return slugUrl() + "/comments";}
@@ -240,8 +240,8 @@ public class ArticlesControllerTest extends TestingUtil {
     @Test
     public void getCommentsBySlugTest() throws Exception {
         createUserAndArticleInit();
-        articlesService.addCommentToArticleBySlug(createDto.getSlug(),commentCreateDto);
-        articlesService.addCommentToArticleBySlug(createDto.getSlug(),commentCreateDto2);
+        commentService.addCommentToArticleBySlug(createDto.getSlug(),commentCreateDto);
+        commentService.addCommentToArticleBySlug(createDto.getSlug(),commentCreateDto2);
 
         ResponseEntity<CommentListDto> responseEntity = restTemplate.exchange(
                 commentSlugUrl(), HttpMethod.GET, getHttpEntityWithToken(), CommentListDto.class

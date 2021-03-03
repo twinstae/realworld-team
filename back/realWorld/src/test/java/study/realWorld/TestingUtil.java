@@ -20,6 +20,8 @@ import study.realWorld.entity.Articles;
 import study.realWorld.entity.Authority;
 import study.realWorld.repository.*;
 import study.realWorld.service.ArticlesService;
+import study.realWorld.service.CommentService;
+import study.realWorld.service.CommentServiceImpl;
 import study.realWorld.service.UserService;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -35,6 +37,8 @@ public class TestingUtil {
     protected ArticlesRepository articlesRepository;
     @Autowired
     protected ArticlesService articlesService;
+    @Autowired
+    protected CommentService commentService;
     @Autowired
     protected UserService userService;
     @Autowired

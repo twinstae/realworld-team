@@ -5,13 +5,9 @@ import org.springframework.stereotype.Service;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.dto.articleDtos.ArticleListDto;
-import study.realWorld.api.dto.commentsDtos.CommentCreateDto;
-import study.realWorld.api.dto.commentsDtos.CommentDto;
-import study.realWorld.api.dto.commentsDtos.CommentListDto;
 import study.realWorld.api.exception.NoAuthorizationException;
 import study.realWorld.api.exception.ResourceNotFoundException;
 import study.realWorld.entity.Articles;
-import study.realWorld.entity.Comment;
 import study.realWorld.entity.Profile;
 import study.realWorld.repository.ArticlesRepository;
 
@@ -117,36 +113,5 @@ public class ArticlesServiceImpl implements ArticlesService {
     @Transactional
     public ArticleDto unfavoriteArticleBySlug(String slug) {
         return getArticleDtoBySlugThenStrategy(slug, Profile::unfavorite).afterUnFavorite();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public CommentListDto getComments(String slug) {
-        Articles articles = getArticleBySlugOr404(slug);
-        Optional<Profile> currentProfile = profileService.getCurrentProfile(); // 현재 내 프로필 찾았다.
-
-        List<CommentDto> commentDtoList = articles.getComments().stream()
-                .map(comment ->{
-                    boolean isFollowing =
-                            currentProfile.map(current->current.isFollow(comment.getAuthor()))
-                                    .orElse(false);
-                    return CommentDto.fromEntity(comment, isFollowing);
-                })
-                .collect(Collectors.toList());
-
-        return CommentListDto.builder()
-                .comments(commentDtoList)
-                .build();
-    }
-
-    @Override
-    @Transactional
-    public CommentDto addCommentToArticleBySlug(String slug, CommentCreateDto commentCreateDto) {
-        Articles article = getArticleBySlugOr404(slug);
-        Profile profile = profileService.getCurrentProfileOr404();
-
-        Comment comment = commentCreateDto.toEntity(profile, article);
-        
-        return CommentDto.fromEntity(comment, false);
     }
 }

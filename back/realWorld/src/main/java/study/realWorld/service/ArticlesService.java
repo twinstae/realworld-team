@@ -26,10 +26,4 @@ public interface ArticlesService {
 
     ArticleDto favoriteArticleBySlug(String slug);
     ArticleDto unfavoriteArticleBySlug(String slug);
-
-    @Transactional(readOnly = true)
-    CommentListDto getComments(String slug);
-
-    @Transactional
-    CommentDto addCommentToArticleBySlug(String slug, CommentCreateDto commentCreateDto);
 }
