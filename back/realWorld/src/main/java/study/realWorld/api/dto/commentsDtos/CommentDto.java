@@ -5,6 +5,7 @@ import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.dto.profilesDtos.ProfileDto;
 import study.realWorld.entity.Articles;
 import study.realWorld.entity.Comment;
+import study.realWorld.entity.Profile;
 
 import java.time.LocalDateTime;
 
@@ -22,14 +23,14 @@ public class CommentDto {
     private ProfileDto author;
 
 
-    public static CommentDto fromEntity(Comment comment, boolean isFollow) {
+    public static CommentDto fromEntity(Comment comment, boolean isFollowing) {
         return CommentDto
                 .builder()
                 .body(comment.getBody())
                 .author(
                         ProfileDto.fromEntity(
-                                comment.getProfile(),
-                                isFollow
+                                comment.getAuthor(),
+                                isFollowing
                         )
                 )
                 .createdAt(comment.getCreatedAt())

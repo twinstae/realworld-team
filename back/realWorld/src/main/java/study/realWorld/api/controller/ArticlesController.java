@@ -15,16 +15,13 @@ import study.realWorld.api.dto.commentsDtos.CommentDto;
 import study.realWorld.api.dto.commentsDtos.CommentListDto;
 import study.realWorld.api.dto.commentsDtos.CommentResponseDto;
 import study.realWorld.service.ArticlesService;
-import study.realWorld.service.CommentService;
 
 @Api(tags = {"1.Articles"})
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/api/articles")
 public class ArticlesController {
-
     private final ArticlesService articlesService;
-    private final CommentService commentService;
 
     @GetMapping
     public ResponseEntity<ArticleListDto> getArticles(){
@@ -37,7 +34,7 @@ public class ArticlesController {
     public ResponseEntity<ArticleResponseDto> createArticle (
             @RequestBody ArticleCreateDto articleCreateDto
     ){
-        ArticleDto articleDto = articlesService.save(articleCreateDto);
+        ArticleDto articleDto = articlesService.create(articleCreateDto);
 
         return new ResponseEntity<>(
                 new ArticleResponseDto(articleDto),
@@ -96,30 +93,23 @@ public class ArticlesController {
     }
 
     @GetMapping("/{slug}/comments")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<CommentListDto> getCommentsBySlug(
             @PathVariable String slug
     ) {
-        CommentListDto commentListDto = commentService.getComments(slug);
+        CommentListDto commentListDto = articlesService.getComments(slug);
         return ResponseEntity.ok(commentListDto);
     }
 
-
-
     @PostMapping("/{slug}/comments")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<CommentResponseDto> addCommentBySlug(
+    public ResponseEntity<CommentResponseDto> addCommentToArticleBySlug(
             @PathVariable String slug,
             @RequestBody CommentCreateDto commentCreateDto
     ) {
-
-        CommentDto commentDto = commentService.save(slug,commentCreateDto);
-
+        CommentDto commentDto = articlesService.addCommentToArticleBySlug(slug, commentCreateDto);
         return new ResponseEntity<>(
                 new CommentResponseDto(commentDto),
                 HttpStatus.CREATED);
     }
-
-
 }
 

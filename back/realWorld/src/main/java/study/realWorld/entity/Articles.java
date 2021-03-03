@@ -42,7 +42,7 @@ public class Articles extends DateEntity {
     @JoinColumn(name = "AUTHOR_ID") //외래키 얘가 주인
     private Profile author;
 
-    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "articles", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
     @Builder

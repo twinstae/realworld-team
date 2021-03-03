@@ -25,13 +25,13 @@ public class Comment extends DateEntity {
     private Articles articles;
 
     @ManyToOne
-    @JoinColumn(name ="PROFILE_ID")
-    private Profile profile;
+    @JoinColumn(name ="AUTHOR_ID")
+    private Profile author;
 
     @Builder
-    public Comment(String body, Articles articles, Profile profile) {
+    public Comment(String body, Articles articles, Profile author) {
         this.body = body;
         this.articles = articles;
-        this.profile = profile;
+        this.author = author;
     }
 }
