@@ -14,6 +14,7 @@ import study.realWorld.api.dto.commentsDtos.CommentDto;
 import study.realWorld.api.dto.commentsDtos.CommentListDto;
 import study.realWorld.api.dto.commentsDtos.CommentResponseDto;
 import study.realWorld.entity.Articles;
+import study.realWorld.entity.Comment;
 
 import java.util.Map;
 import java.util.Optional;
@@ -221,12 +222,13 @@ public class ArticlesControllerTest extends TestingUtil {
         return responseBody.getArticle();
     }
 
-    @DisplayName("slug로 Comment를 Post하면 글이 생긴다 ")
+    @DisplayName("slug로 Comment를 Post하면 comment가 저장된다. ")
     @Test
     public void postCommentBySlugTest() throws Exception {
         createUserAndArticleInit();
 
         HttpEntity<CommentCreateDto> entity = new HttpEntity<>(commentCreateDto, getHttpHeadersWithToken(token));
+
         ResponseEntity<CommentResponseDto> responseEntity = restTemplate.postForEntity(
                 commentSlugUrl(), entity, CommentResponseDto.class);
 
@@ -234,7 +236,29 @@ public class ArticlesControllerTest extends TestingUtil {
         CommentResponseDto responseBody = responseEntity.getBody();
         assert responseBody != null;
         assertThat(responseEntity.getBody().getCommentDto().getBody()).isEqualTo(commentCreateDto.getBody());
+    }
 
+    @DisplayName("slug로 Comments를 Get하면 comments들을 가져온다")
+    @Test
+    public void getCommentsBySlugTest() throws Exception {
+        createUserAndArticleInit();
+        commentService.save(createDto.getSlug(),commentCreateDto);
+        commentService.save(createDto.getSlug(),commentCreateDto2);
+
+
+        ResponseEntity<CommentListDto> responseEntity = restTemplate.exchange(
+                commentSlugUrl(), HttpMethod.GET, getHttpEntityWithToken(), CommentListDto.class
+        );
+
+        assertStatus(responseEntity, HttpStatus.OK);
+
+        CommentListDto responseBody = responseEntity.getBody();
+
+        assert responseBody != null;
+        assertThat(responseBody.getComments().size()).isEqualTo(2);
+
+        CommentDto firstComment = responseBody.getComments().get(0);
+        assertThat(firstComment.getBody()).isEqualTo("이 글은 참 좋군요.");
     }
 
 

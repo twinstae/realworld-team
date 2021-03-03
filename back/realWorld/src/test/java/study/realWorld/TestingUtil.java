@@ -100,6 +100,11 @@ public class TestingUtil {
             .body("이 글은 참 좋군요.")
             .build();
 
+    protected  final CommentCreateDto commentCreateDto2 = CommentCreateDto
+            .builder()
+            .body("안좋아요")
+            .build();
+
     protected void assertArticlesEqualToDto(Articles articles, ArticleCreateDto testDto) {
         assertThat(articles.getTitle()).isEqualTo(testDto.getTitle());
         assertThat(articles.getDescription()).isEqualTo(testDto.getDescription());
