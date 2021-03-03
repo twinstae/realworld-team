@@ -10,11 +10,12 @@ import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.dto.articleDtos.ArticleListDto;
 import study.realWorld.api.dto.articleDtos.ArticleResponseDto;
+import study.realWorld.api.dto.commentsDtos.CommentCreateDto;
+import study.realWorld.api.dto.commentsDtos.CommentDto;
 import study.realWorld.api.dto.commentsDtos.CommentListDto;
+import study.realWorld.api.dto.commentsDtos.CommentResponseDto;
 import study.realWorld.service.ArticlesService;
 import study.realWorld.service.CommentService;
-
-import java.util.List;
 
 @Api(tags = {"1.Articles"})
 @RequiredArgsConstructor
@@ -94,14 +95,29 @@ public class ArticlesController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/{slug}/comments")
+//    @GetMapping("/{slug}/comments")
+//    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+//    public ResponseEntity<CommentListDto> getCommentsBySlug(
+//            @PathVariable String slug
+//    ) {
+//        CommentListDto commentListDto = commentService.getComments(slug);
+//        return ResponseEntity.ok(commentListDto);
+//    }
+
+    @PostMapping("/{slug}/comments")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<CommentListDto> getCommentsBySlug(
-            @PathVariable String slug
+    public ResponseEntity<CommentResponseDto> addCommentBySlug(
+            @PathVariable String slug,
+            @RequestBody CommentCreateDto commentCreateDto
     ) {
-        CommentListDto commentListDto = commentService.getComments(slug);
-        return ResponseEntity.ok(commentListDto);
+
+        CommentDto commentDto = commentService.save(slug,commentCreateDto);
+
+        return new ResponseEntity<>(
+                new CommentResponseDto(commentDto),
+                HttpStatus.CREATED);
     }
+
 
 }
 
