@@ -22,14 +22,14 @@ public class CommentDto {
     private ProfileDto author;
 
 
-    public static CommentDto fromEntity(Comment comment) {
+    public static CommentDto fromEntity(Comment comment, boolean isFollow) {
         return CommentDto
                 .builder()
                 .body(comment.getBody())
                 .author(
                         ProfileDto.fromEntity(
                                 comment.getProfile(),
-                                false
+                                isFollow
                         )
                 )
                 .createdAt(comment.getCreatedAt())
