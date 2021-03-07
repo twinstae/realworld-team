@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @Builder
 public class CommentDto {
 
+    private Long id;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String body;
@@ -26,6 +27,7 @@ public class CommentDto {
     public static CommentDto fromEntity(Comment comment, boolean isFollowing) {
         return CommentDto
                 .builder()
+                .id(comment.getId())
                 .body(comment.getBody())
                 .author(
                         ProfileDto.fromEntity(

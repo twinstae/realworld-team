@@ -73,6 +73,7 @@ public class CommentServiceImpl implements CommentService {
         Optional<Profile> currentProfile = profilesService.getCurrentProfile();
 
         currentProfile.ifPresent(profile -> strategy.accept(profile, comment));
+        article.removeComment(comment);
 
 
     }

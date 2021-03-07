@@ -13,6 +13,7 @@ import study.realWorld.api.dto.commentsDtos.CommentDto;
 import study.realWorld.api.dto.commentsDtos.CommentListDto;
 import study.realWorld.api.dto.commentsDtos.CommentResponseDto;
 import study.realWorld.entity.Articles;
+import study.realWorld.entity.Comment;
 
 import java.util.Map;
 import java.util.Optional;
@@ -37,6 +38,7 @@ public class ArticlesControllerTest extends TestingUtil {
     }
 
     private String commentSlugUrl() { return slugUrl() + "/comments";}
+
 
     @DisplayName("/api/articles에 get 요청을 보내면 status는 ok이고 모든 articleList를 받는다.")
     @Test
@@ -257,4 +259,40 @@ public class ArticlesControllerTest extends TestingUtil {
         CommentDto firstComment = responseBody.getComments().get(0);
         assertThat(firstComment.getBody()).isEqualTo("이 글은 참 좋군요.");
     }
+
+    @DisplayName("slug로 article을 찾아서 comment를 삭제한다.")
+    @Test
+    public void deleteCommentByslugTest() throws Exception {
+        createUserAndArticleInit(); // User 및 Article 생성
+        commentService.addCommentToArticleBySlug(createDto.getSlug(),commentCreateDto); //commentService에서 comment추가
+
+
+        CommentListDto commentListDto = commentService.getComments(createDto.getSlug());
+        CommentDto commentDto= commentListDto.getComments().get(0);
+
+        assertThat(commentDto).isNotNull();
+        System.out.println("==============================");
+        System.out.println(commentDto.getId());
+
+        HttpEntity<?> requestUpdate = new HttpEntity<>(
+                null, getHttpHeadersWithToken(token)
+        );
+
+        ResponseEntity<?> responseEntity =  restTemplate.exchange(
+                commentSlugUrl()+"/"+commentDto.getId(), HttpMethod.DELETE, requestUpdate, Map.class
+        );
+        // then
+        assertStatus(responseEntity, HttpStatus.NO_CONTENT);
+
+        ResponseEntity<CommentListDto> commentResponseEntity = restTemplate.exchange(
+                commentSlugUrl(), HttpMethod.GET, getHttpEntityWithToken(), CommentListDto.class
+        );
+        CommentListDto responseBody = commentResponseEntity.getBody();
+
+        assert responseBody != null;
+        assertThat(responseBody.getComments()).isEmpty();
+    }
+
+
+
 }

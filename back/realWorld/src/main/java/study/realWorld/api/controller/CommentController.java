@@ -40,7 +40,7 @@ public class CommentController{
                 HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/comment_id}")
+    @DeleteMapping("/{comment_id}")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<?> deleteArticleBySlug(
             @PathVariable String slug,

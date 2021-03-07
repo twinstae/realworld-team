@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.dto.commentsDtos.CommentCreateDto;
+import study.realWorld.api.dto.commentsDtos.CommentDto;
 import study.realWorld.api.dto.userDtos.UserSignInDto;
 import study.realWorld.api.dto.userDtos.UserSignUpDto;
 import study.realWorld.api.dto.userDtos.UserWithTokenDto;
@@ -23,6 +24,8 @@ import study.realWorld.service.ArticlesService;
 import study.realWorld.service.CommentService;
 import study.realWorld.service.CommentServiceImpl;
 import study.realWorld.service.UserService;
+
+import javax.persistence.EntityManager;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -47,6 +50,8 @@ public class TestingUtil {
     protected AuthorityRepository authorityRepository;
     @Autowired
     protected ProfilesRepository profileRepository;
+    @Autowired
+    protected EntityManager em;
 
     protected final String title = "제목";
     protected final String description = "개요";
@@ -102,6 +107,12 @@ public class TestingUtil {
     protected  final CommentCreateDto commentCreateDto2 = CommentCreateDto
             .builder()
             .body("안좋아요")
+            .build();
+
+    protected  final CommentDto commentDto = CommentDto
+            .builder()
+            .id(1L)
+            .body("이 글 좋아요")
             .build();
 
     protected void assertArticlesEqualToDto(Articles articles, ArticleCreateDto testDto) {
