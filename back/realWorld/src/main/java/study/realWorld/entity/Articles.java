@@ -10,6 +10,7 @@ import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -84,6 +85,14 @@ public class Articles extends DateEntity {
     public void removeFavorite(Favorite favorite){
         this.favoriteList.remove(favorite);
     }
+
+    public Comment getCommentById(Long id) {
+        return
+                this.comments.stream().filter(c -> c.getId().equals(id))
+                .findFirst()
+                .orElseThrow(()->new RuntimeException("해당 comment를 찾을 수 없습니다."));
+    }
+
 
     @Formula("(SELECT COUNT(*) FROM favorite f WHERE f.ARTICLES_ID=ARTICLES_ID)")
     public int favoritesCount;

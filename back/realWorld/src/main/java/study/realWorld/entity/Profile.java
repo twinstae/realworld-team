@@ -107,6 +107,10 @@ public class Profile {
         this.comments.add(comment);
     }
 
+    public void removeComment(Comment comment) {
+        this.comments.remove(comment);
+    }
+
     @LazyCollection(LazyCollectionOption.EXTRA)
     @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL)
     private final List<Favorite> favoriteList = new ArrayList<>();
@@ -131,5 +135,10 @@ public class Profile {
     public boolean haveFavorited(Articles articles){
         return this.favoriteList.stream()
                 .anyMatch(f-> f.getArticle().equals(articles));
+    }
+
+    public boolean isCommented(Comment comment){
+        return this.comments.stream()
+                .anyMatch(c-> c.getId().equals(comment.getId()));
     }
 }
