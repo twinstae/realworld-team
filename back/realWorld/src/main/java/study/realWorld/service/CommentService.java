@@ -11,4 +11,6 @@ public interface CommentService {
 
     @Transactional
     CommentDto addCommentToArticleBySlug(String slug, CommentCreateDto commentCreateDto);
+
+    void deleteBySlugAndCommentId(String slug, Long commentId);
 }
