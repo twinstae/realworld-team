@@ -241,9 +241,8 @@ public class ArticlesControllerTest extends TestingUtil {
     @DisplayName("slug로 Comments를 Get하면 comments들을 가져온다")
     @Test
     public void getCommentsBySlugTest() throws Exception {
-        createUserAndArticleInit();
-        commentService.addCommentToArticleBySlug(createDto.getSlug(),commentCreateDto);
-        commentService.addCommentToArticleBySlug(createDto.getSlug(),commentCreateDto2);
+        postCommentBySlugTest();
+        commentService.addCommentToArticleBySlug(createDto.getSlug(), commentCreateDto2);
 
         ResponseEntity<CommentListDto> responseEntity = restTemplate.exchange(
                 commentSlugUrl(), HttpMethod.GET, getHttpEntityWithToken(), CommentListDto.class
@@ -263,36 +262,22 @@ public class ArticlesControllerTest extends TestingUtil {
     @DisplayName("slug로 article을 찾아서 comment를 삭제한다.")
     @Test
     public void deleteCommentByslugTest() throws Exception {
-        createUserAndArticleInit(); // User 및 Article 생성
-        commentService.addCommentToArticleBySlug(createDto.getSlug(),commentCreateDto); //commentService에서 comment추가
+        postCommentBySlugTest();
+        assertThat(commentService
+                .getComments(createDto.getSlug())
+                .getComments()
+                .size()).isEqualTo(1);
 
-
-        CommentListDto commentListDto = commentService.getComments(createDto.getSlug());
-        CommentDto commentDto= commentListDto.getComments().get(0);
-
-        assertThat(commentDto).isNotNull();
-        System.out.println("==============================");
-        System.out.println(commentDto.getId());
-
-        HttpEntity<?> requestUpdate = new HttpEntity<>(
-                null, getHttpHeadersWithToken(token)
-        );
-
+        System.out.println("삭제 시작");
         ResponseEntity<?> responseEntity =  restTemplate.exchange(
-                commentSlugUrl()+"/"+commentDto.getId(), HttpMethod.DELETE, requestUpdate, Map.class
+                commentSlugUrl()+"/"+commentDto.getId(), HttpMethod.DELETE, getHttpEntityWithToken(), Map.class
         );
         // then
         assertStatus(responseEntity, HttpStatus.NO_CONTENT);
 
-        ResponseEntity<CommentListDto> commentResponseEntity = restTemplate.exchange(
-                commentSlugUrl(), HttpMethod.GET, getHttpEntityWithToken(), CommentListDto.class
-        );
-        CommentListDto responseBody = commentResponseEntity.getBody();
-
-        assert responseBody != null;
-        assertThat(responseBody.getComments()).isEmpty();
+        assertThat(commentService
+                .getComments(createDto.getSlug())
+                .getComments()
+                .size()).isEqualTo(0);
     }
-
-
-
 }
