@@ -40,13 +40,13 @@ public class CommentController{
                 HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{comment_id}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<?> deleteArticleBySlug(
             @PathVariable String slug,
-            @PathVariable Long comment_id
+            @PathVariable Long id
     ) {
-        commentService.deleteBySlugAndCommentId(slug,comment_id);
+        commentService.deleteBySlugAndCommentId(slug,id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -23,14 +23,11 @@ public class CommentCreateDto {
     }
 
     public Comment toEntity(Profile author, Articles articles){
-        Comment comment = Comment
+        return Comment
                 .builder()
                 .body(this.body)
                 .author(author)
                 .articles(articles)
                 .build();
-        author.addComment(comment);
-        articles.addComment(comment);
-        return comment;
     }
 }

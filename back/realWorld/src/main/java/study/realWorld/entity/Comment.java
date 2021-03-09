@@ -33,5 +33,12 @@ public class Comment extends DateEntity {
         this.body = body;
         this.articles = articles;
         this.author = author;
+        author.addComment(this);
+        articles.addComment(this);
+    }
+
+    public void delete(){
+        this.articles.removeComment(this);
+        this.author.removeComment(this);
     }
 }
