@@ -6,6 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import study.realWorld.TestingUtil;
 import study.realWorld.api.dto.commentsDtos.CommentDto;
 import study.realWorld.api.dto.commentsDtos.CommentListDto;
+import study.realWorld.entity.Articles;
+import study.realWorld.entity.Comment;
+import study.realWorld.entity.Profile;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -14,6 +19,15 @@ public class CommentServiceTest extends TestingUtil {
 
     @Autowired
     CommentService commentService;
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    ProfilesService profilesService;
+
+    @Autowired
+    ArticlesService articlesService;
 
     @DisplayName("slug를 이용하여 article을 찾고, 거기에 comment를 추가하고, CommentDto를 반환한다.")
     @Test
@@ -42,5 +56,25 @@ public class CommentServiceTest extends TestingUtil {
         assertThat(responseCommentListDto.getComments().get(0).getBody()).isEqualTo("이 글은 참 좋군요.");
         assertThat(responseCommentListDto.getComments().get(1).getBody()).isEqualTo("안좋아요");
     }
+
+    @Test
+    public void deleteBySlugAndCommentIdTest() throws Exception {
+        createUserAndArticleInit(); // 유저 생성, article 생성
+        commentService.addCommentToArticleBySlug(createDto.getSlug(),commentCreateDto);//댓글 생성
+
+        Optional<Profile> profile = profilesService.getCurrentProfile();
+        Profile currentProfile = profile.get();
+
+        Articles articles = createDto.toEntity(currentProfile);
+
+        Comment comment = commentCreateDto.toEntity(currentProfile,articles); //profile, article
+
+        commentService.deleteBySlugAndCommentId(createDto.getSlug(), comment.getId());
+
+        CommentListDto responseCommentListDto = commentService.getComments(createDto.getSlug());
+
+        assertThat(responseCommentListDto.getComments().isEmpty());
+    }
+
 
 }

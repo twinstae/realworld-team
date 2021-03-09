@@ -109,11 +109,6 @@ public class TestingUtil {
             .body("안좋아요")
             .build();
 
-    protected  final CommentDto commentDto = CommentDto
-            .builder()
-            .id(1L)
-            .body("이 글 좋아요")
-            .build();
 
     protected void assertArticlesEqualToDto(Articles articles, ArticleCreateDto testDto) {
         assertThat(articles.getTitle()).isEqualTo(testDto.getTitle());
