@@ -62,7 +62,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private void checkProfileIsTheAuthor(Profile currentProfile, Comment comment) {
-        if (!currentProfile.isCommentedBy(comment)){
+        System.out.println(comment.getBody()+"여기다ㅁㄴㅇㅁㅇㅁㄴㅇㅁㄴㅇㅁㅇㅁㄴㅇㅁㅇㄴㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁㄴㅇ");
+        if (!currentProfile.isCommented(comment)){
             throw new NoAuthorizationException();
         }
     }
