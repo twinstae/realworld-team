@@ -62,17 +62,11 @@ public class CommentServiceTest extends TestingUtil {
         createUserAndArticleInit(); // 유저 생성, article 생성
         commentService.addCommentToArticleBySlug(createDto.getSlug(),commentCreateDto);//댓글 생성
 
-        Optional<Profile> profile = profilesService.getCurrentProfile();
-        Profile currentProfile = profile.get();
+        CommentDto commentDto = commentService.getComments(createDto.getSlug()).getComments().get(0);
 
-        Articles articles = createDto.toEntity(currentProfile);
-
-        Comment comment = commentCreateDto.toEntity(currentProfile,articles); //profile, article
-
-        commentService.deleteBySlugAndCommentId(createDto.getSlug(), comment.getId());
+        commentService.deleteBySlugAndCommentId(createDto.getSlug(), commentDto.getId());
 
         CommentListDto responseCommentListDto = commentService.getComments(createDto.getSlug());
-
         assertThat(responseCommentListDto.getComments().isEmpty());
     }
 
