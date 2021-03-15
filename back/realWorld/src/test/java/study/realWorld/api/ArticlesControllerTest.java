@@ -269,6 +269,8 @@ public class ArticlesControllerTest extends TestingUtil {
                 .size()).isEqualTo(1);
 
         System.out.println("삭제 시작");
+
+        CommentDto commentDto = commentService.getComments(createDto.getSlug()).getComments().get(0);
         ResponseEntity<?> responseEntity =  restTemplate.exchange(
                 commentSlugUrl()+"/"+commentDto.getId(), HttpMethod.DELETE, getHttpEntityWithToken(), Map.class
         );
