@@ -2,28 +2,25 @@ package study.realWorld.api;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
 import study.realWorld.TestingUtil;
 import study.realWorld.api.dto.articleDtos.ArticleCreateDto;
 import study.realWorld.api.dto.articleDtos.ArticleListDto;
 import study.realWorld.api.dto.articleDtos.ArticleDto;
 import study.realWorld.api.dto.articleDtos.ArticleResponseDto;
+import study.realWorld.api.dto.commentsDtos.CommentCreateDto;
+import study.realWorld.api.dto.commentsDtos.CommentDto;
+import study.realWorld.api.dto.commentsDtos.CommentListDto;
+import study.realWorld.api.dto.commentsDtos.CommentResponseDto;
 import study.realWorld.entity.Articles;
+import study.realWorld.entity.Comment;
 
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ArticlesControllerTest extends TestingUtil {
-    @LocalServerPort
-    private int port;
-
-    @Autowired
-    private TestRestTemplate restTemplate;
-
     private String baseUrl(){
         return "http://localhost:" + port + "/api/articles";
     }
@@ -36,23 +33,19 @@ public class ArticlesControllerTest extends TestingUtil {
         return baseUrl() + "/잘못된슬러그";
     }
 
-    @Test
-    public void articleResponseDtoTest() {
-        ArticleDto responseDto = ArticleDto
-                .builder()
-                .title(title)
-                .description(description)
-                .body(body)
-                .build();
-
-        assertArticlesResponseEqualToDto(responseDto, createDto);
+    private String favoriteUrl(){
+        return slugUrl() + "/favorite";
     }
+
+    private String commentSlugUrl() { return slugUrl() + "/comments";}
+
 
     @DisplayName("/api/articles에 get 요청을 보내면 status는 ok이고 모든 articleList를 받는다.")
     @Test
     public void getArticleListTest() {
         createUserAndArticleInit();
-        articlesService.save(updateDto); // 2번째 article 생성
+        articlesService.create(updateDto); // 2번째 article 생성
+        System.out.println("\n2번째 article 생성 끝\n");
 
         ResponseEntity<ArticleListDto> responseEntity = restTemplate.getForEntity(
                 baseUrl(), ArticleListDto.class
@@ -108,9 +101,9 @@ public class ArticlesControllerTest extends TestingUtil {
             ResponseEntity<ArticleResponseDto> responseEntity,
             ArticleCreateDto dto
     ) {
-        ArticleResponseDto responseBody = responseEntity.getBody();
-        assert responseBody != null;
-        assertArticlesResponseEqualToDto(responseBody.getArticle(), dto);
+
+        assertArticlesResponseEqualToDto(extractArticleDto(responseEntity), dto);
+        System.out.println(responseEntity.getBody());
     }
 
     @Test
@@ -119,20 +112,15 @@ public class ArticlesControllerTest extends TestingUtil {
         createUserAndArticleInit();
 
         // when
-        restTemplate.delete(slugUrl());
+        ResponseEntity<?> responseEntity = deleteRequestWithToken(token);
 
         // then
-        Optional<Articles> result = articlesRepository.findOneBySlug(slugUrl());
+        assertStatus(responseEntity, HttpStatus.NO_CONTENT);
+
+        Optional<Articles> result = articlesRepository.findOneWithAuthorBySlug(slugUrl());
         assertThat(result).isEmpty();
     }
-//        {
-//        "article": {
-//        "title": "string",
-//                "description": "string",
-//                "body": "string",
-//
-//    }
-//    }
+
 
     @Test
     public void createArticleTest() throws Exception {
@@ -165,7 +153,7 @@ public class ArticlesControllerTest extends TestingUtil {
         );
     }
 
-    @DisplayName("다른 유저는 다른 유저의 Article을 수정할 수 없다.")
+    @DisplayName("한 유저는 다른 유저의 Article을 수정할 수 없다.")
     @Test
     public void AnotherUserCannotUpdateArticle() throws Exception {
         createUserAndArticleInit();
@@ -176,4 +164,122 @@ public class ArticlesControllerTest extends TestingUtil {
         assertStatus(responseEntity, HttpStatus.UNAUTHORIZED);
     }
 
+    @DisplayName("한 유저는 다른 유저의 Article을 삭제할 수 없다.")
+    @Test
+    public void AnotherUserCannotDeleteArticle() throws Exception {
+        createUserAndArticleInit();
+        anotherUserInit();
+
+        ResponseEntity<?> responseEntity = deleteRequestWithToken(token2);
+
+        assertStatus(responseEntity, HttpStatus.UNAUTHORIZED);
+    }
+
+    private ResponseEntity<Map> deleteRequestWithToken(String token) {
+        HttpEntity<?> requestUpdate = new HttpEntity<>(
+            null, getHttpHeadersWithToken(token)
+    );
+
+        return restTemplate.exchange(
+                slugUrl(), HttpMethod.DELETE, requestUpdate, Map.class
+        );
+    }
+
+    @Test
+    public void favoriteArticleBySlugTest() throws Exception {
+        createUserAndArticleInit();
+        userService.signIn(userSignInDto);
+
+        System.out.println("요청 시작");
+
+        ResponseEntity<ArticleResponseDto> responseEntity = restTemplate.postForEntity(
+                favoriteUrl(), getHttpEntityWithToken(), ArticleResponseDto.class
+        );
+
+        assertStatus(responseEntity, HttpStatus.OK);
+
+        ArticleDto articleDto = extractArticleDto(responseEntity);
+        assertThat(articleDto.getFavoritesCount()).isEqualTo(1);
+        assertThat(articleDto.isFavorited()).isTrue();
+    }
+
+    @Test
+    public void unfavoriteArticleBySlugTest() throws Exception {
+        favoriteArticleBySlugTest();
+
+        ResponseEntity<ArticleResponseDto> responseEntity = restTemplate.exchange(
+                favoriteUrl(), HttpMethod.DELETE, getHttpEntityWithToken(), ArticleResponseDto.class
+        );
+
+        ArticleDto articleDto = extractArticleDto(responseEntity);
+        assertThat(articleDto.getFavoritesCount()).isEqualTo(0);
+        assertThat(articleDto.isFavorited()).isFalse();
+    }
+
+    private ArticleDto extractArticleDto(ResponseEntity<ArticleResponseDto> responseEntity) {
+        ArticleResponseDto responseBody = responseEntity.getBody();
+        assert responseBody != null;
+        return responseBody.getArticle();
+    }
+
+    @DisplayName("slug로 Comment를 Post하면 comment가 저장된다. ")
+    @Test
+    public void postCommentBySlugTest() throws Exception {
+        createUserAndArticleInit();
+
+        HttpEntity<CommentCreateDto> entity = new HttpEntity<>(commentCreateDto, getHttpHeadersWithToken(token));
+
+        ResponseEntity<CommentResponseDto> responseEntity = restTemplate.postForEntity(
+                commentSlugUrl(), entity, CommentResponseDto.class);
+
+        assertStatus(responseEntity, HttpStatus.CREATED);
+        CommentResponseDto responseBody = responseEntity.getBody();
+        assert responseBody != null;
+        assertThat(responseEntity.getBody().getCommentDto().getBody()).isEqualTo(commentCreateDto.getBody());
+    }
+
+    @DisplayName("slug로 Comments를 Get하면 comments들을 가져온다")
+    @Test
+    public void getCommentsBySlugTest() throws Exception {
+        postCommentBySlugTest();
+        commentService.addCommentToArticleBySlug(createDto.getSlug(), commentCreateDto2);
+
+        ResponseEntity<CommentListDto> responseEntity = restTemplate.exchange(
+                commentSlugUrl(), HttpMethod.GET, getHttpEntityWithToken(), CommentListDto.class
+        );
+
+        assertStatus(responseEntity, HttpStatus.OK);
+
+        CommentListDto responseBody = responseEntity.getBody();
+
+        assert responseBody != null;
+        assertThat(responseBody.getComments().size()).isEqualTo(2);
+
+        CommentDto firstComment = responseBody.getComments().get(0);
+        assertThat(firstComment.getBody()).isEqualTo("이 글은 참 좋군요.");
+    }
+
+    @DisplayName("slug로 article을 찾아서 comment를 삭제한다.")
+    @Test
+    public void deleteCommentByslugTest() throws Exception {
+        postCommentBySlugTest();
+        assertThat(commentService
+                .getComments(createDto.getSlug())
+                .getComments()
+                .size()).isEqualTo(1);
+
+        System.out.println("삭제 시작");
+
+        CommentDto commentDto = commentService.getComments(createDto.getSlug()).getComments().get(0);
+        ResponseEntity<?> responseEntity =  restTemplate.exchange(
+                commentSlugUrl()+"/"+commentDto.getId(), HttpMethod.DELETE, getHttpEntityWithToken(), Map.class
+        );
+        // then
+        assertStatus(responseEntity, HttpStatus.NO_CONTENT);
+
+        assertThat(commentService
+                .getComments(createDto.getSlug())
+                .getComments()
+                .size()).isEqualTo(0);
+    }
 }

@@ -25,6 +25,12 @@ public class ArticlesServiceTest extends TestingUtil {
         ArticleDto responseDto = articlesService.findBySlug(createDto.getSlug());
 
         assertThat(responseDto.getTitle()).isEqualTo(createDto.getTitle());
+        assertInitState(responseDto);
+    }
+
+    private void assertInitState(ArticleDto responseDto) {
+        assertThat(responseDto.getAuthor().isFollowing()).isEqualTo(false);
+        assertThat(responseDto.getFavoritesCount()).isEqualTo(0);
     }
 
     @DisplayName("deleteBySlug에 slug를 넘기면 article이 삭제되어 존재하지 않는다.")
@@ -48,14 +54,15 @@ public class ArticlesServiceTest extends TestingUtil {
         createUserInit();
         assertThat(getCreatedArticle()).isEmpty();
 
-        ArticleDto articleDto = articlesService.save(createDto);
+        ArticleDto articleDto = articlesService.create(createDto);
 
         assertDtoIsEqualTo(articleDto, createDto);
         assertThat(getCreatedArticle()).isPresent();
+        assertInitState(articleDto);
     }
 
     private Optional<Articles> getCreatedArticle() {
-        return articlesRepository.findOneBySlug(createDto.getSlug());
+        return articlesRepository.findOneWithAuthorBySlug(createDto.getSlug());
     }
 
     @DisplayName("createDto를 저장하면 DB에 저장하고, 똑같은 내용의 Dto를 돌려준다.")
@@ -65,9 +72,28 @@ public class ArticlesServiceTest extends TestingUtil {
         ArticleDto updatedArticleDto = articlesService.updateArticleBySlug(createDto.getSlug(), updateDto);
 
         assertDtoIsEqualTo(updatedArticleDto, updateDto);
+        assertInitState(updatedArticleDto);
     }
 
+    @DisplayName("favoriteArticleBySlug를 하면 articleDto를 반환하고 isFavorited는 true, favoritesCount 1이다")
+    @Test
+    public void favoriteArticleBySlugTest(){
+        createUserAndArticleInit();
 
+        ArticleDto articleDto = articlesService.favoriteArticleBySlug(createDto.getSlug());
 
+        assertThat(articleDto.getFavoritesCount()).isEqualTo(1);
+        assertThat(articleDto.isFavorited()).isTrue();
+    }
 
+    @DisplayName("unfavoriteArticleBySlug를 하면 articleDto를 반환하고 isFavorited는 false, favoritesCount 0이다")
+    @Test
+    public void unfavoriteArticleBySlugTest(){
+        favoriteArticleBySlugTest();
+
+        ArticleDto articleDto = articlesService.unfavoriteArticleBySlug(createDto.getSlug());
+
+        assertThat(articleDto.getFavoritesCount()).isEqualTo(0);
+        assertThat(articleDto.isFavorited()).isFalse();
+    }
 }

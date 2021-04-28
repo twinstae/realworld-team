@@ -4,8 +4,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.annotation.LastModifiedDate;
 import study.realWorld.entity.Articles;
+import study.realWorld.entity.Profile;
 import study.realWorld.entity.User;
+
+import java.time.LocalDateTime;
 
 @Getter
 @ToString
@@ -15,6 +19,8 @@ public class ArticleCreateDto {
     private String title;
     private String description;
     private String body;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @Builder
     public ArticleCreateDto(String title, String description, String body) {
@@ -28,16 +34,16 @@ public class ArticleCreateDto {
         return title.toLowerCase().replaceAll("[\\&|[\\uFE30-\\uFFA0]|\\’|\\”|\\s?,.]+", "-");
     }
 
-    public Articles toEntity(User user){
+    public Articles toEntity(Profile profile){
         Articles article = Articles
                 .builder()
-                .slug(this.slug)
+                .slug(toSlug(this.title))
                 .title(this.title)
                 .description(this.description)
                 .body(this.body)
-                .author(user)
+                .author(profile)
                 .build();
-        user.getArticlesList().add(article);
+        profile.addArticle(article);
         return article;
     }
 }
