@@ -6,4 +6,12 @@ type ArticleProp = {
   }
 }
 
-export const Article: FunctionComponent<ArticleProp> = ({article}) => <div>{article.body}</div>;
+export const Article: FunctionComponent<ArticleProp> = ({article}) =>
+  (
+    <div>
+      {/* 헤더 */}
+      {/* ??? */}
+      {article.body}
+      {/* ??? */}
+    </div>
+  );
