@@ -12,7 +12,7 @@ class ArticlesRepositoryTest extends TestingUtil {
     public void findOneBySlugTest() throws Exception {
         createUserAndArticleInit();
 
-        Articles articles = articlesRepository.findOneBySlug(createDto.getSlug()).orElseThrow(ResourceNotFoundException::new);
+        Articles articles = articlesRepository.findOneWithAuthorBySlug(createDto.getSlug()).orElseThrow(ResourceNotFoundException::new);
         assertArticlesEqualToDto(articles, createDto);
     }
 }

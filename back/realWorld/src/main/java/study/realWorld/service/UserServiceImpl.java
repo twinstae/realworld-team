@@ -8,18 +8,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.realWorld.api.dto.profilesDtos.ProfileCreateDto;
 import study.realWorld.api.dto.userDtos.UserDto;
 import study.realWorld.api.dto.userDtos.UserSignInDto;
 import study.realWorld.api.dto.userDtos.UserSignUpDto;
 import study.realWorld.api.dto.userDtos.UserWithTokenDto;
 import study.realWorld.entity.Authority;
+import study.realWorld.entity.Profile;
 import study.realWorld.entity.User;
 import study.realWorld.jwt.TokenProvider;
 import study.realWorld.repository.AuthorityRepository;
+import study.realWorld.repository.ProfilesRepository;
 import study.realWorld.repository.UserRepository;
 import study.realWorld.util.SecurityUtil;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -50,39 +54,52 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    @Transactional
     @Override
     public UserDto signUp(UserSignUpDto userSignUpDto) {
         checkUserAlreadyExist(userSignUpDto);
         User user = userRepository.save(userSignUpDto.toEntity(passwordEncoder, getUserAuthorities()));
+        user.initProfile(ProfileCreateDto.toEntity(user));
         return UserDto.fromUser(user);
     }
 
     @Transactional(readOnly = true)
     public Set<Authority> getUserAuthorities(){
         Authority userAuthority = authorityRepository.findByAuthorityName("ROLE_USER")
-                .orElseThrow(RuntimeException::new);
+                .orElseGet(this::initAndGetUserAuthority);
         return Collections.singleton(userAuthority);
     }
 
+    public Authority initAndGetUserAuthority(){
+        return authorityRepository.save(new Authority("ROLE_USER"));
+    }
+
     private void checkUserAlreadyExist(UserSignUpDto userSignUpDto) {
-        userRepository.findByEmail(userSignUpDto.getEmail())
+        userRepository.findOneByEmail(userSignUpDto.getEmail())
                 .ifPresent((user)->{
                     throw new RuntimeException(user.getEmail() + "은 가입되어 있는 이메일입니다.");
                 });
     }
-
+    
     @Override
-    @Transactional(readOnly = true)
-    public User getUserWithAuthorities(String email) {
+    @Transactional
+    public User getUserWithAuthoritiesByEmail(String email) {
         return userRepository.findOneWithAuthoritiesByEmail(email)
                 .orElseThrow(RuntimeException::new);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public User getMyUserWithAuthorities() {
         return SecurityUtil.getCurrentUsername()
                 .flatMap(userRepository::findOneWithAuthoritiesByEmail)
                 .orElseThrow(RuntimeException::new);
+    }
+
+    @Override
+    @Transactional
+    public Optional<User> getMyUserWithProfile() {
+        return SecurityUtil.getCurrentUsername()
+                .flatMap(userRepository::findOneWithProfileByEmail);
     }
 }

@@ -12,29 +12,26 @@ import study.realWorld.api.dto.articleDtos.ArticleListDto;
 import study.realWorld.api.dto.articleDtos.ArticleResponseDto;
 import study.realWorld.service.ArticlesService;
 
-import java.util.List;
-
 @Api(tags = {"1.Articles"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/api/articles")
+@RequestMapping(path = ArticlesController.API_ARTICLES_URL)
 public class ArticlesController {
-
+    public static final String API_ARTICLES_URL = "/api/articles";
     private final ArticlesService articlesService;
 
     @GetMapping
     public ResponseEntity<ArticleListDto> getArticles(){
-        List<ArticleDto> articleDtoList = articlesService.getPage();
-
-        return ResponseEntity.ok(new ArticleListDto(articleDtoList));
+        ArticleListDto articleListDto = articlesService.getPage();
+        return ResponseEntity.ok(articleListDto);
     }
 
     @PostMapping
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<ArticleResponseDto> createArticle(
+    public ResponseEntity<ArticleResponseDto> createArticle (
             @RequestBody ArticleCreateDto articleCreateDto
     ){
-        ArticleDto articleDto = articlesService.save(articleCreateDto);
+        ArticleDto articleDto = articlesService.create(articleCreateDto);
 
         return new ResponseEntity<>(
                 new ArticleResponseDto(articleDto),
@@ -42,7 +39,7 @@ public class ArticlesController {
     }
 
     @GetMapping("/{slug}")
-    public ResponseEntity<ArticleResponseDto> getArticleBySlug(
+    public ResponseEntity<ArticleResponseDto> getArticleBySlug (
             @PathVariable String slug
     ){
         ArticleDto articleDto = articlesService.findBySlug(slug);
@@ -67,6 +64,29 @@ public class ArticlesController {
         ArticleDto updatedArticleDto = articlesService.updateArticleBySlug(slug, updateArticleDto);
 
         return ResponseEntity.ok(new ArticleResponseDto(updatedArticleDto));
+    }
+
+
+    @PostMapping("/{slug}/favorite")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<ArticleResponseDto> favoriteArticleBySlug(
+            @PathVariable String slug
+    ){
+        ArticleDto articleDto = articlesService.favoriteArticleBySlug(slug);
+        return new ResponseEntity<>(
+                new ArticleResponseDto(articleDto),
+                HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{slug}/favorite")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<ArticleResponseDto> unfavoriteArticleBySlug(
+            @PathVariable String slug
+    ){
+        ArticleDto articleDto = articlesService.unfavoriteArticleBySlug(slug);
+        return new ResponseEntity<>(
+                new ArticleResponseDto(articleDto),
+                HttpStatus.OK);
     }
 }
 
