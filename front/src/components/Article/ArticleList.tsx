@@ -36,8 +36,8 @@ export const ArticleList: FunctionComponent<ArticleListProps> = () => {
 
   useEffect(()=> {
     fakeGetArticleList()
-      .then(articlesData => setArticles(articlesData))
-  })
+      .then(articlesData => setArticles(articlesData));
+  }, []) // 빈 의존성 배열 중요!!!
 
   return (
     <ul className="ArticleList">
