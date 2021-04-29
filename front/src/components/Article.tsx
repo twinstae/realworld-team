@@ -1,17 +1,35 @@
-import {FunctionComponent} from "react";
+import React, {FunctionComponent} from "react";
+import './Article.css';
 
-type ArticleProp = {
-  article: {
-    body: string
-  }
+export type ArticleT = {
+    createdAt: string,
+    updatedAt: string,
+    slug: string,
+    title: string,
+    description: string,
+    body: string,
+    tagList: string[],
+    author: {
+        username: string,
+        bio: string | null,
+        image: string,
+        following: boolean,
+    }
+    favorited: boolean,
+    favoritesCount: number,
 }
 
-export const Article: FunctionComponent<ArticleProp> = ({article}) =>
-  (
-    <div>
-      {/* 헤더 */}
-      {/* ??? */}
-      {article.body}
-      {/* ??? */}
-    </div>
-  );
+export interface ArticleProps {
+  article: ArticleT
+}
+
+export const Article: FunctionComponent<ArticleProps> = ({article}) => {
+    const localeCreatedAt = new Date(article.createdAt).toLocaleDateString();
+    return (
+        <div className='article'>
+            <h3>{article.title}</h3>
+            <span>{localeCreatedAt}</span>
+            <p>{article.description}</p>
+        </div>
+    );
+}
