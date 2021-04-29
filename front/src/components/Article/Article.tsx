@@ -22,8 +22,8 @@ export const Article: FunctionComponent<ArticleProps> = ({article}) =>{
   
   return (
     <div className="article" >
+      <h3>{article.title}</h3>
       <span> {localeCreatedAd}</span>
-      <h3 className="article-title">{article.title}</h3>
       <p>{article.description}</p>
     </div>
   )
