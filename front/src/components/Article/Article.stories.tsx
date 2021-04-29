@@ -1,5 +1,4 @@
-import React from 'react';
-import { Story } from '@storybook/react';
+import {Story} from '@storybook/react';
 import {articleDummy} from './Article.test';
 import {Article, ArticleProps} from './Article';
 
