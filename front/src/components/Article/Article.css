@@ -1,0 +1,16 @@
+.article {
+  padding: 0.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: box-shadow 0.5s;
+}
+
+.article:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.article-title {
+/*  color: MediumSeaGreen; */
+  font-size: 1.5rem;
+  text-align: center;
+}

@@ -1,21 +1,7 @@
-import React from 'react';
-import {Story } from '@storybook/react';
-import { Article, ArticleProp } from '../components/Article';
+import { shallow } from 'enzyme';
+import {Article} from './Article';
 
-export default {
-  title: 'Example/Article',
-  component: Article,
-  argTypes: {
-    color: { control: 'color' },
-  },
-};
-
-
-const Template: Story<ArticleProp> = (args) => <Article {...args} />;
-
-export const Primary = Template.bind({});
-Primary.args = {
-  article: {
+export const articleDummy = {
     "createdAt": "2020-01-07T16:20:28.150180Z",
     "updatedAt": "2020-01-07T16:20:28.150180Z",
     "id": 2,
@@ -38,5 +24,20 @@ Primary.args = {
     },*/
     "favorited": false,
     "favoritesCount": 0
-  }
-};
+  };
+ 
+
+describe('<Article />', () => {
+  it('<Article /> 컴포넌트는 에러 없이 렌더링 된다.', () => {
+    const wrapper = shallow(<Article article={articleDummy}/>);
+    expect(wrapper).toBeVisible();
+  });
+
+  // Article에는 Header가 있어야 한다.  
+
+  // Article에는 제목과 미리보기Preview, 더 읽기Read more이 있어야 한다
+  
+  // Article에는 ~ 있어야 한다.
+  
+  // Article에는 ~ 있어야 한다.
+});
