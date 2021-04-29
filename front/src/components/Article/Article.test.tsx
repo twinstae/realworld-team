@@ -16,12 +16,12 @@ export const articleDummy = {
       "Low Latency",
       "Computer Programming"
     ],
-    /*"author": {
+    "author": {
       "username": "Aredruss",
       "bio": "",
-      "image": null,
+      "image": "https://static.productionready.io/images/smiley-cyrus.jpg",
       "following": false
-    },*/
+    },
     "favorited": false,
     "favoritesCount": 0
   };

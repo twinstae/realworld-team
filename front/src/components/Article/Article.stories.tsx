@@ -4,7 +4,7 @@ import {Article, ArticleProps} from './Article';
 
 export default {
   title: "component/Article",
-  component: Article
+  component: Article,
 }
 
 const Template: Story<ArticleProps> = (args) => <Article {...args} />;

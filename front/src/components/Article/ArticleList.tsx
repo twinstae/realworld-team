@@ -1,5 +1,6 @@
 import {FunctionComponent, useEffect, useState} from 'react';
 import {Article, ArticleT} from './Article';
+import "./ArticleList.css";
 
 export interface ArticleListProps {}
 
