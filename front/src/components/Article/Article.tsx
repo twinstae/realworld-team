@@ -24,12 +24,12 @@ export interface ArticleProps {
 };
 
 export const Article: FunctionComponent<ArticleProps> = ({article}) =>{
-  const localeCreatedAd = new Date(article.createdAt).toLocaleDateString();
+  const localeCreatedAt = new Date(article.createdAt).toLocaleDateString();
   
   return (
     <div className="article" >
       <h3>{article.title}</h3>
-      <span> {localeCreatedAd}</span>
+      <span>{localeCreatedAt}</span>
       <p>{article.description}</p>
     </div>
   )

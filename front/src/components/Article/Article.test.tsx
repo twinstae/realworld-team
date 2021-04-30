@@ -33,7 +33,7 @@ describe('<Article />', () => {
     expect(wrapper).toBeVisible();
   });
 
-  // Article에는 Header가 있어야 한다.  
+  // Article에는 글쓴이 표시, 날짜 표시가 있어야 한다.
 
   // Article에는 제목과 미리보기Preview, 더 읽기Read more이 있어야 한다
   
