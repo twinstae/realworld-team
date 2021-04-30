@@ -1,23 +1,7 @@
 import React, {FunctionComponent} from "react";
+import {ArticleT} from "../data";
 import "./Article.css";
 
-export type ArticleT = {
-  createdAt: string,
-  updatedAt: string,
-  slug: string,
-  title: string,
-  description: string,
-  body: string,
-  tagList: string[],
-  author: {
-    username: string,
-    bio: string | null,
-    image: string,
-    following: boolean,
-  }
-  favorited: boolean,
-  favoritesCount: number,
-}
 
 export interface ArticleProps {
   article: ArticleT

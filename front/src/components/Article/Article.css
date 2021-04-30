@@ -1,7 +1,9 @@
 .article {
-  margin: 0.5rem;
+  margin: 1rem;
   padding: 0.5rem;
 
+  border-radius: 0.5rem;
+  border: 1px solid lightgray;
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
   transition: box-shadow 0.2s;
 }

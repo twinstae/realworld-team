@@ -1,7 +1,8 @@
-export const articleDummy = {
+import {ArticleT} from "../data";
+
+export const articleDummy: ArticleT = {
     "createdAt": "2020-01-07T16:20:28.150180Z",
     "updatedAt": "2020-01-07T16:20:28.150180Z",
-    "id": 2,
     "slug": "deep-dive-into-websockets-e6c4c7622423",
     "title": "Deep Dive into WebSockets",
     "description": "Understand the important attributes of WebSockets that every developer should know",
