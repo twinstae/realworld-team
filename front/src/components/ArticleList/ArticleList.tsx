@@ -1,8 +1,10 @@
 import {FunctionComponent, useEffect, useState} from 'react';
-import {Article, ArticleT} from '../Article/Article';
+import {Article} from '../Article/Article';
+import {ArticleT} from '../data';
 import "./ArticleList.css";
 
 export interface ArticleListProps {}
+
 
 interface GetArticleData {
   articles: ArticleT[],
