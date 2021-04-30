@@ -1,6 +1,6 @@
 import {Story} from '@storybook/react';
-import {articleDummy} from './Article.test';
 import {Article, ArticleProps} from './Article';
+import {articleDummy} from './Article.fixture';
 
 export default {
   title: "component/Article",
