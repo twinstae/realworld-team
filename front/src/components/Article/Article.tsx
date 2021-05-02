@@ -12,7 +12,10 @@ export const Article: FunctionComponent<ArticleProps> = ({article}) =>{
   
   return (
     <div className="article" >
-      <h3>{article.title}</h3>
+      <h3>
+        {article.title}
+        <span> {article.author.username}</span>
+      </h3>
       <span>{localeCreatedAt}</span>
       <p>{article.description}</p>
     </div>

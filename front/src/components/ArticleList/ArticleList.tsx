@@ -1,8 +1,8 @@
-import {FunctionComponent, useEffect, useState} from 'react';
+import React, {FunctionComponent, useEffect, useState} from 'react';
 import {Article} from '../Article/Article';
 import {ArticleT} from '../data';
 import "./ArticleList.css";
-
+import { useQuery } from 'react-query';
 export interface ArticleListProps {}
 
 
@@ -20,18 +20,29 @@ const realGetArticleList = async ()=>{
   return data.articles;
 };
 
+interface Errors {
+  errors: {
+    body: string[]
+  }
+}
 
 export const ArticleList: FunctionComponent<ArticleListProps> = () => {
-  const [articles, setArticles] = useState<ArticleT[]>([]);
+  const { isLoading, isError, data, error } = useQuery<ArticleT[], Errors>('articles', realGetArticleList)
 
-  useEffect(()=> {
-    realGetArticleList()
-      .then(articlesData => setArticles(articlesData));
-  }, []) // 빈 의존성 배열 중요!!!
+  if (isLoading){
+    return <div>로딩 중</div>
+  }
+  if (isError && error) {
+    return (
+        <ul>
+          {error.errors.body.map(error=><li>{error}</li>)}
+        </ul>
+      )
+   }
 
   return (
     <ul className="ArticleList">
-      {articles.map(article => <li><Article article={article} /></li>)}
+      {data && data.map(article => <li><Article article={article} /></li>)}
     </ul>
   );
 }
